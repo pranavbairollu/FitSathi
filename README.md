@@ -2,7 +2,7 @@
 
 **FitSathi** is a comprehensive, privacy-focused fitness and nutrition tracking application for Android. It combines real-time activity monitoring with deep nutritional insights and personalized workout plans to help users achieve their health goals in a simple, intuitive way.
 
-![FitSathi Banner](https://raw.githubusercontent.com/pranavbairollu/FitSathi/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png)
+![FitSathi Logo](app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 
 ## ✨ Features
 
