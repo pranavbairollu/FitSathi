@@ -74,15 +74,15 @@ public class StepCounterManager {
         });
     }
 
-    public static void getLast7DaysSteps(StepHistoryCallback callback) {
+    public static void getLastNDaysSteps(int days, StepHistoryCallback callback) {
         DatabaseReference ref = getStepCountRef();
         if (ref == null) {
-            callback.onStepHistoryReceived(getEmpty7DayStepMap());
+            callback.onStepHistoryReceived(getEmptyNDayStepMap(days));
             return;
         }
 
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, -6);
+        cal.add(Calendar.DAY_OF_YEAR, -(days - 1));
         String startDate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(cal.getTime());
         String endDate = getTodayDateString();
 
@@ -91,37 +91,37 @@ public class StepCounterManager {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Integer> last7Days = getEmpty7DayStepMap();
+                Map<String, Integer> lastNDays = getEmptyNDayStepMap(days);
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String key = snapshot.getKey();
-                    if (key != null && last7Days.containsKey(key)) {
+                    if (key != null && lastNDays.containsKey(key)) {
                         Integer steps = snapshot.getValue(Integer.class);
                         if (steps != null) {
-                            last7Days.put(key, steps);
+                            lastNDays.put(key, steps);
                         }
                     }
                 }
-                callback.onStepHistoryReceived(last7Days);
+                callback.onStepHistoryReceived(lastNDays);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Failed to read last 7 days steps from Firebase.", databaseError.toException());
-                callback.onStepHistoryReceived(getEmpty7DayStepMap());
+                Log.e(TAG, "Failed to read last " + days + " days steps from Firebase.", databaseError.toException());
+                callback.onStepHistoryReceived(getEmptyNDayStepMap(days));
             }
         });
     }
 
-    private static Map<String, Integer> getEmpty7DayStepMap() {
-        LinkedHashMap<String, Integer> last7Days = new LinkedHashMap<>();
+    private static Map<String, Integer> getEmptyNDayStepMap(int days) {
+        LinkedHashMap<String, Integer> lastNDays = new LinkedHashMap<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
         Calendar dayCalendar = Calendar.getInstance();
-        dayCalendar.add(Calendar.DAY_OF_YEAR, -6);
-        for (int i = 0; i < 7; i++) {
+        dayCalendar.add(Calendar.DAY_OF_YEAR, -(days - 1));
+        for (int i = 0; i < days; i++) {
             String dateKey = dateFormat.format(dayCalendar.getTime());
-            last7Days.put(dateKey, 0);
+            lastNDays.put(dateKey, 0);
             dayCalendar.add(Calendar.DAY_OF_YEAR, 1);
         }
-        return last7Days;
+        return lastNDays;
     }
 }

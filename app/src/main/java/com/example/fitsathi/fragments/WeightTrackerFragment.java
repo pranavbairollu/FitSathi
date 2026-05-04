@@ -50,6 +50,7 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
     private static final String TAG = "WeightTrackerFragment";
     private DatabaseReference targetWeightRef;
     private ValueEventListener targetWeightListener;
+    private float currentTargetWeight = -1f;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -178,8 +179,13 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
             }
 
             XAxis xAxis = binding.weightChart.getXAxis();
+            if (currentDays == 30 || currentDays > 30) {
+                 xAxis.setLabelCount(5, true);
+            } else {
+                 xAxis.setLabelCount(weightLogs.size(), false);
+            }
             xAxis.setValueFormatter(new ValueFormatter() {
-                private final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.getDefault());
+                private final SimpleDateFormat sdf = new SimpleDateFormat(currentDays > 7 ? "MMM dd" : "EEE", Locale.getDefault());
                 @Override
                 public String getFormattedValue(float value) {
                     int index = (int) value;
@@ -232,6 +238,24 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
 
             LineData lineData = new LineData(dataSet);
             binding.weightChart.setData(lineData);
+
+            if (currentTargetWeight > 0) {
+                float minWeight = Float.MAX_VALUE;
+                float maxWeight = Float.MIN_VALUE;
+                for (WeightLog log : weightLogs) {
+                    minWeight = Math.min(minWeight, log.getWeight());
+                    maxWeight = Math.max(maxWeight, log.getWeight());
+                }
+                minWeight = Math.min(minWeight, currentTargetWeight);
+                maxWeight = Math.max(maxWeight, currentTargetWeight);
+                
+                YAxis leftAxis = binding.weightChart.getAxisLeft();
+                leftAxis.setAxisMinimum(minWeight - 5f);
+                leftAxis.setAxisMaximum(maxWeight + 5f);
+            }
+
+            updateLimitLine();
+
             binding.weightChart.animateX(500);
             binding.weightChart.invalidate();
         }
@@ -263,6 +287,8 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
         // Cache locally
         SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         prefs.edit().putFloat(TARGET_WEIGHT_KEY, weight).apply();
+        currentTargetWeight = weight;
+        updateLimitLine();
     }
 
     private void setupTargetWeightListener() {
@@ -276,17 +302,20 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Float targetWeight = dataSnapshot.getValue(Float.class);
                     if (targetWeight != null) {
+                        currentTargetWeight = targetWeight;
                         binding.targetWeightText.setText(String.format(Locale.getDefault(), "%.1f kg", targetWeight));
                     } else {
                         // Try loading from cache if Firebase returns no value
                         SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                         float cachedWeight = prefs.getFloat(TARGET_WEIGHT_KEY, -1f);
                         if (cachedWeight != -1f) {
+                            currentTargetWeight = cachedWeight;
                             binding.targetWeightText.setText(String.format(Locale.getDefault(), "%.1f kg", cachedWeight));
                         } else {
                             binding.targetWeightText.setText(R.string.weight_placeholder);
                         }
                     }
+                    updateLimitLine();
                 }
 
                 @Override
@@ -296,14 +325,33 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
                     SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                     float cachedWeight = prefs.getFloat(TARGET_WEIGHT_KEY, -1f);
                     if (cachedWeight != -1f) {
+                        currentTargetWeight = cachedWeight;
                         binding.targetWeightText.setText(String.format(Locale.getDefault(), "%.1f kg", cachedWeight));
                     } else {
                         binding.targetWeightText.setText(R.string.weight_placeholder);
                     }
+                    updateLimitLine();
                 }
             };
             targetWeightRef.addValueEventListener(targetWeightListener);
-        }    }
+        }    
+    }
+
+    private void updateLimitLine() {
+        if (binding == null || binding.weightChart == null || currentTargetWeight <= 0) return;
+        YAxis leftAxis = binding.weightChart.getAxisLeft();
+        leftAxis.removeAllLimitLines();
+        
+        com.github.mikephil.charting.components.LimitLine targetLine = new com.github.mikephil.charting.components.LimitLine(currentTargetWeight, "Target: " + currentTargetWeight + " kg");
+        targetLine.setLineWidth(2f);
+        targetLine.setLineColor(getThemeColor(com.google.android.material.R.attr.colorPrimary));
+        targetLine.setTextColor(getThemeColor(com.google.android.material.R.attr.colorOnSurface));
+        targetLine.enableDashedLine(10f, 10f, 0f);
+        targetLine.setLabelPosition(com.github.mikephil.charting.components.LimitLine.LimitLabelPosition.RIGHT_TOP);
+        
+        leftAxis.addLimitLine(targetLine);
+        binding.weightChart.invalidate();
+    }
 
 
     @Override

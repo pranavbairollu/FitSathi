@@ -47,26 +47,25 @@ public class BarChartViewModel extends ViewModel {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date);
     }
 
-    public void loadWeeklyCalorieData(Context context) {
+    public void loadCalorieData(Context context, int days) {
         UserInfoManager.getUserInfo(userInfo -> {
             if (userInfo == null) {
                 return;
             }
 
             float calorieGoal = (float) UserInfoManager.calculateDailyCalorieGoal(userInfo);
-            final int totalDays = 7;
             Map<String, List<FoodItem>> weeklyFoodData = new ConcurrentHashMap<>();
             AtomicInteger daysProcessed = new AtomicInteger(0);
 
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_YEAR, -(totalDays - 1));
+            cal.add(Calendar.DAY_OF_YEAR, -(days - 1));
 
-            for (int i = 0; i < totalDays; i++) {
+            for (int i = 0; i < days; i++) {
                 String date = formatDate(cal.getTime());
                 FoodLogManager.getFoodListForDate(date, foodList -> {
                     weeklyFoodData.put(date, foodList);
-                    if (daysProcessed.incrementAndGet() == totalDays) {
-                        processAndPostChartData(context, weeklyFoodData, calorieGoal);
+                    if (daysProcessed.incrementAndGet() == days) {
+                        processAndPostChartData(context, weeklyFoodData, calorieGoal, days);
                     }
                 });
                 cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -74,7 +73,7 @@ public class BarChartViewModel extends ViewModel {
         });
     }
 
-    private void processAndPostChartData(Context context, Map<String, List<FoodItem>> weeklyFoodData, float calorieGoal) {
+    private void processAndPostChartData(Context context, Map<String, List<FoodItem>> weeklyFoodData, float calorieGoal, int days) {
         List<BarEntry> entries = new ArrayList<>();
         List<String> shortLabels = new ArrayList<>();
         List<String> fullLabels = new ArrayList<>();
@@ -82,9 +81,9 @@ public class BarChartViewModel extends ViewModel {
         float maxCalorieValue = 0f;
 
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, -6);
+        cal.add(Calendar.DAY_OF_YEAR, -(days - 1));
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < days; i++) {
             String fullDate = formatDate(cal.getTime());
             List<FoodItem> foodList = weeklyFoodData.get(fullDate);
 
@@ -95,7 +94,12 @@ public class BarChartViewModel extends ViewModel {
 
             float roundedTotal = (float) Math.round(dailyTotal);
             entries.add(new BarEntry(i, roundedTotal));
-            shortLabels.add(DateUtils.formatShortLabel(cal.getTime()));
+            
+            if (days == 30) {
+                shortLabels.add(new SimpleDateFormat("MMM dd", Locale.getDefault()).format(cal.getTime()));
+            } else {
+                shortLabels.add(DateUtils.formatShortLabel(cal.getTime()));
+            }
             fullLabels.add(fullDate);
 
             totalCalories += roundedTotal;
@@ -116,9 +120,13 @@ public class BarChartViewModel extends ViewModel {
         });
 
         BarData finalBarData = new BarData(dataSet);
-        finalBarData.setBarWidth(0.5f);
+        if (days == 30) {
+            finalBarData.setBarWidth(0.8f);
+        } else {
+            finalBarData.setBarWidth(0.5f);
+        }
 
-        float weeklyAverage = totalCalories / 7f;
+        float weeklyAverage = totalCalories / days;
         List<LimitLine> lines = new ArrayList<>();
 
         LimitLine goalLine = new LimitLine(calorieGoal, "Goal: " + (int) calorieGoal);

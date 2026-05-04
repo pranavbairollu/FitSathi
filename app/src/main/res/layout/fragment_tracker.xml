@@ -73,6 +73,40 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
+                    <!-- Date Navigator -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageButton
+                            android:id="@+id/btn_prev_date"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/ic_media_previous"
+                            app:tint="?attr/colorOnSurface"/>
+
+                        <TextView
+                            android:id="@+id/tv_current_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="16dp"
+                            android:text="Today"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                            android:textStyle="bold"/>
+
+                        <ImageButton
+                            android:id="@+id/btn_next_date"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/ic_media_next"
+                            app:tint="?attr/colorOnSurface"
+                            android:visibility="invisible"/>
+                    </LinearLayout>
 
                     <!-- Pie Chart -->
                     <com.github.mikephil.charting.charts.PieChart

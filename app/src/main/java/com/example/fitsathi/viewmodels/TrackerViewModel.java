@@ -49,9 +49,8 @@ public class TrackerViewModel extends ViewModel {
     public LiveData<String> getNavigateToManualEntry() { return navigateToManualEntry; }
     public LiveData<FoodItem> getShowFoodDetailDialog() { return showFoodDetailDialog; }
 
-    public void loadInitialData(Context context) {
-        String today = DateUtils.getFoodLogDate(); // Switch to Local Date for consistency
-        FoodLogManager.getFoodListForDate(today, items -> {
+    public void loadDataForDate(Context context, String date) {
+        FoodLogManager.getFoodListForDate(date, items -> {
             foodList.setValue(items);
             updateSummaryText(items);
             UserInfoManager.getUserInfo(userInfo -> {
@@ -173,23 +172,23 @@ public class TrackerViewModel extends ViewModel {
         });
     }
 
-    public void removeFoodItem(Context context, FoodItem foodItem) {
-        FoodLogManager.removeFoodItem(DateUtils.getFoodLogDate(), foodItem.getKey(), success -> {
-            if (success) loadInitialData(context);
+    public void removeFoodItem(Context context, String date, FoodItem foodItem) {
+        FoodLogManager.removeFoodItem(date, foodItem.getKey(), success -> {
+            if (success) loadDataForDate(context, date);
             else toastMessage.setValue("Failed to remove item.");
         });
     }
 
-    public void addFoodItem(Context context, FoodItem foodItem) {
-        FoodLogManager.addFoodItem(DateUtils.getFoodLogDate(), foodItem, success -> {
-            if (success) loadInitialData(context);
+    public void addFoodItem(Context context, String date, FoodItem foodItem) {
+        FoodLogManager.addFoodItem(date, foodItem, success -> {
+            if (success) loadDataForDate(context, date);
             else toastMessage.setValue("Failed to add item.");
         });
     }
 
-    public void updateFoodItem(Context context, FoodItem foodItem) {
-        FoodLogManager.updateFoodItem(DateUtils.getFoodLogDate(), foodItem, success -> {
-            if (success) loadInitialData(context);
+    public void updateFoodItem(Context context, String date, FoodItem foodItem) {
+        FoodLogManager.updateFoodItem(date, foodItem, success -> {
+            if (success) loadDataForDate(context, date);
             else toastMessage.setValue("Failed to update item.");
         });
     }

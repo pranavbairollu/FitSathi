@@ -40,6 +40,10 @@ public class TrackerFragment extends Fragment implements EditFoodDialogFragment.
     private FoodAdapter foodAdapter;
     private static final String[] MEAL_TYPES = {"Breakfast", "Lunch", "Dinner", "Snacks"};
     private static final String TAG = "TrackerFragment";
+    
+    private java.util.Calendar currentCalendar = java.util.Calendar.getInstance();
+    private java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault());
+    private java.text.SimpleDateFormat displayFormat = new java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault());
 
     @Nullable
     @Override
@@ -68,7 +72,26 @@ public class TrackerFragment extends Fragment implements EditFoodDialogFragment.
     public void onResume() {
         super.onResume();
         // Refresh data every time the fragment becomes visible to ensure UI is always up-to-date
-        viewModel.loadInitialData(requireContext());
+        updateDateUI();
+    }
+
+    private void updateDateUI() {
+        if (!isAdded()) return;
+        
+        java.util.Calendar today = java.util.Calendar.getInstance();
+        boolean isToday = currentCalendar.get(java.util.Calendar.YEAR) == today.get(java.util.Calendar.YEAR) &&
+                          currentCalendar.get(java.util.Calendar.DAY_OF_YEAR) == today.get(java.util.Calendar.DAY_OF_YEAR);
+                          
+        if (isToday) {
+            binding.tvCurrentDate.setText("Today");
+            binding.btnNextDate.setVisibility(View.INVISIBLE);
+        } else {
+            binding.tvCurrentDate.setText(displayFormat.format(currentCalendar.getTime()));
+            binding.btnNextDate.setVisibility(View.VISIBLE);
+        }
+        
+        String dateString = dateFormat.format(currentCalendar.getTime());
+        viewModel.loadDataForDate(requireContext(), dateString);
     }
 
     private void setupUI() {
@@ -123,9 +146,22 @@ public class TrackerFragment extends Fragment implements EditFoodDialogFragment.
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Remove Item?")
                     .setMessage("Are you sure you want to remove " + item.getName() + "?")
-                    .setPositiveButton("Remove", (dialog, which) -> viewModel.removeFoodItem(requireContext(), item))
+                    .setPositiveButton("Remove", (dialog, which) -> {
+                        String dateString = dateFormat.format(currentCalendar.getTime());
+                        viewModel.removeFoodItem(requireContext(), dateString, item);
+                    })
                     .setNegativeButton("Cancel", null)
                     .show();
+        });
+        
+        binding.btnPrevDate.setOnClickListener(v -> {
+            currentCalendar.add(java.util.Calendar.DAY_OF_YEAR, -1);
+            updateDateUI();
+        });
+        
+        binding.btnNextDate.setOnClickListener(v -> {
+            currentCalendar.add(java.util.Calendar.DAY_OF_YEAR, 1);
+            updateDateUI();
         });
 
         binding.addButton.setOnClickListener(v -> {
@@ -250,10 +286,11 @@ public class TrackerFragment extends Fragment implements EditFoodDialogFragment.
 
     @Override
     public void onFoodItemUpdated(FoodItem foodItem) {
+        String dateString = dateFormat.format(currentCalendar.getTime());
         if (foodItem.getKey() == null) {
-            viewModel.addFoodItem(requireContext(), foodItem);
+            viewModel.addFoodItem(requireContext(), dateString, foodItem);
         } else {
-            viewModel.updateFoodItem(requireContext(), foodItem);
+            viewModel.updateFoodItem(requireContext(), dateString, foodItem);
         }
     }
 }

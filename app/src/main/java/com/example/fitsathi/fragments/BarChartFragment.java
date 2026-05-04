@@ -36,6 +36,7 @@ public class BarChartFragment extends Fragment {
     private FragmentBarChartBinding binding;
     private BarChartViewModel viewModel;
     private List<String> fullDateLabels;
+    private int currentDays = 7;
 
     @Nullable
     @Override
@@ -55,8 +56,28 @@ public class BarChartFragment extends Fragment {
         setupChartStyle();
         observeViewModel();
         setupChartListener();
+        setupToggleListener();
 
-        viewModel.loadWeeklyCalorieData(requireContext());
+        updateChartData();
+    }
+
+    private void setupToggleListener() {
+        binding.toggleButtonGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked) {
+                if (checkedId == R.id.week_button) {
+                    currentDays = 7;
+                } else if (checkedId == R.id.month_button) {
+                    currentDays = 30;
+                }
+                updateChartData();
+            }
+        });
+    }
+
+    private void updateChartData() {
+        binding.barChart.clear();
+        binding.barChart.setNoDataText("Loading data...");
+        viewModel.loadCalorieData(requireContext(), currentDays);
     }
 
     private void setupChartListener() {
@@ -146,6 +167,11 @@ public class BarChartFragment extends Fragment {
         });
 
         viewModel.getXAxisLabels().observe(getViewLifecycleOwner(), labels -> {
+            if (currentDays == 30) {
+                binding.barChart.getXAxis().setLabelCount(5, true);
+            } else {
+                binding.barChart.getXAxis().setLabelCount(7, false);
+            }
             binding.barChart.getXAxis().setValueFormatter(new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float value) {

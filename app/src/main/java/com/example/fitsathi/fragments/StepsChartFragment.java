@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
@@ -45,6 +46,8 @@ public class StepsChartFragment extends Fragment {
     private BarChart barChart;
     private ProgressBar progressBar;
     private TextView emptyTextView;
+    private MaterialButtonToggleGroup toggleButtonGroup;
+    private int currentDays = 7;
 
     @Nullable
     @Override
@@ -54,8 +57,21 @@ public class StepsChartFragment extends Fragment {
         barChart = view.findViewById(R.id.steps_bar_chart);
         progressBar = view.findViewById(R.id.chart_progress_bar);
         emptyTextView = view.findViewById(R.id.empty_chart_text);
+        toggleButtonGroup = view.findViewById(R.id.toggleButtonGroup);
 
         setupChart();
+        
+        toggleButtonGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked) {
+                if (checkedId == R.id.week_button) {
+                    currentDays = 7;
+                } else if (checkedId == R.id.month_button) {
+                    currentDays = 30;
+                }
+                updateChartData();
+            }
+        });
+        
         return view;
     }
 
@@ -99,7 +115,7 @@ public class StepsChartFragment extends Fragment {
         showLoadingState(true);
 
         // Hybrid data loading: Fetch historical data from Firebase
-        StepCounterManager.getLast7DaysSteps(stepsMap -> {
+        StepCounterManager.getLastNDaysSteps(currentDays, stepsMap -> {
             final View view = getView();
             if (!isAdded() || view == null || stepsMap == null) {
                 if (view != null) {
@@ -182,7 +198,13 @@ public class StepsChartFragment extends Fragment {
                         dataSet.setDrawValues(false);
 
                         BarData barData = new BarData(dataSet);
-                        barData.setBarWidth(0.5f);
+                        if (currentDays == 30) {
+                            barData.setBarWidth(0.8f);
+                            barChart.getXAxis().setLabelCount(5, true);
+                        } else {
+                            barData.setBarWidth(0.5f);
+                            barChart.getXAxis().setLabelCount(7, false);
+                        }
 
                         barChart.setData(barData);
                         barChart.animateY(500, Easing.EaseInOutCubic);
@@ -201,6 +223,10 @@ public class StepsChartFragment extends Fragment {
             // Special label for today
             if (dateStr.equals(new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date()))) {
                 return "Today";
+            }
+            if (currentDays == 30) {
+                SimpleDateFormat sdfMonth = new SimpleDateFormat("MMM dd", Locale.getDefault());
+                return sdfMonth.format(date);
             }
             return sdfOut.format(date);
         } catch (ParseException e) {
