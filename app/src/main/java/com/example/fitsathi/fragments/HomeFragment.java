@@ -40,6 +40,8 @@ import com.example.fitsathi.DashboardActivity;
 import com.example.fitsathi.FitnessGoalActivity;
 import com.example.fitsathi.R;
 import com.example.fitsathi.WorkoutActivity;
+import com.example.fitsathi.managers.WaterIntakeManager;
+import com.example.fitsathi.utils.DateUtils;
 import com.example.fitsathi.models.Exercise;
 import com.example.fitsathi.services.StepCounterService;
 import com.example.fitsathi.data.ExerciseLoader;
@@ -370,11 +372,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateWaterDisplay() {
-        if (waterPrefs == null || homeWaterCountText == null) return;
-        String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        int waterCount = waterPrefs.getInt(todayDate, 0);
-        int waterGoal = 8;
-        homeWaterCountText.setText(String.format(Locale.getDefault(), "%d/%d", waterCount, waterGoal));
+        if (homeWaterCountText == null) return;
+        String todayDate = DateUtils.getFoodLogDate();
+        int waterGoal = WaterIntakeManager.getWaterGoal(requireContext());
+        
+        WaterIntakeManager.getWaterLog(requireContext(), todayDate, log -> {
+            if (isAdded() && homeWaterCountText != null) {
+                homeWaterCountText.setText(String.format(Locale.getDefault(), "%d/%d", log.size(), waterGoal));
+            }
+        });
     }
 
     private void showKonfetti() {

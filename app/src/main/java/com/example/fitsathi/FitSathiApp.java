@@ -2,20 +2,30 @@ package com.example.fitsathi;
 
 import android.app.Application;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
+
 public class FitSathiApp extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        restoreAlarms();
+        createNotificationChannels();
     }
 
-    private void restoreAlarms() {
-        String[] meals = {"Breakfast", "Lunch", "Dinner", "Snacks"};
-        for (String meal : meals) {
-            int[] time = MealReminderScheduler.getSavedReminderTime(this, meal);
-            if (time != null && time[0] != -1) {
-                MealReminderScheduler.scheduleDailyReminder(this, meal, time[0], time[1]);
+    private void createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "meal_reminder_channel",
+                    "Meal Reminders",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Reminders for Breakfast, Lunch, Dinner, and Snacks");
+            
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
             }
         }
     }

@@ -15,15 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitsathi.R;
 import com.example.fitsathi.adapters.WaterLogAdapter;
+import com.example.fitsathi.managers.WaterIntakeManager;
+import com.example.fitsathi.utils.DateUtils;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
+import android.widget.EditText;
+import android.text.InputType;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,11 +36,9 @@ public class WaterFragment extends Fragment {
     private RecyclerView waterLogRecyclerView;
     private WaterLogAdapter waterLogAdapter;
 
-    private List<Long> waterLog;
-    private final int waterGoal = 8;
-    private SharedPreferences waterPrefs;
+    private List<Long> waterLog = new ArrayList<>();
+    private int waterGoal;
     private String todayDate;
-    private final Gson gson = new Gson();
 
     @Nullable
     @Override
@@ -51,36 +50,34 @@ public class WaterFragment extends Fragment {
         decreaseButton = view.findViewById(R.id.btn_decrease_water);
         waterLogRecyclerView = view.findViewById(R.id.rv_water_log);
 
-        waterPrefs = requireActivity().getSharedPreferences("WaterPrefs", Context.MODE_PRIVATE);
-        todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        todayDate = DateUtils.getFoodLogDate();
+        waterGoal = WaterIntakeManager.getWaterGoal(requireContext());
 
-        loadWaterLog();
         setupRecyclerView();
+        loadWaterData();
 
         increaseButton.setOnClickListener(v -> addWaterEntry());
         decreaseButton.setOnClickListener(v -> removeWaterEntry());
+        
+        // Long click on count text to change goal
+        waterCountText.setOnLongClickListener(v -> {
+            showChangeGoalDialog();
+            return true;
+        });
 
         updateUI();
 
         return view;
     }
 
-    private void loadWaterLog() {
-        String json = waterPrefs.getString(todayDate + "_log", null);
-        if (json != null) {
-            Type type = new TypeToken<ArrayList<Long>>() {}.getType();
-            waterLog = gson.fromJson(json, type);
-        } else {
-            waterLog = new ArrayList<>();
-        }
-    }
-
-    private void saveWaterLog() {
-        SharedPreferences.Editor editor = waterPrefs.edit();
-        editor.putInt(todayDate, waterLog.size());
-        String json = gson.toJson(waterLog);
-        editor.putString(todayDate + "_log", json);
-        editor.apply();
+    private void loadWaterData() {
+        WaterIntakeManager.getWaterLog(requireContext(), todayDate, log -> {
+            if (isAdded()) {
+                waterLog = log;
+                waterLogAdapter.updateLog(waterLog);
+                updateUI();
+            }
+        });
     }
 
     private void setupRecyclerView() {
@@ -91,20 +88,40 @@ public class WaterFragment extends Fragment {
 
     private void addWaterEntry() {
         if (waterLog.size() < 99) {
-            waterLog.add(System.currentTimeMillis());
-            saveWaterLog();
-            updateUI();
-            waterLogAdapter.updateLog(waterLog);
+            WaterIntakeManager.addWaterEntry(requireContext(), todayDate, success -> {
+                if (success) loadWaterData();
+            });
         }
     }
 
     private void removeWaterEntry() {
         if (!waterLog.isEmpty()) {
-            waterLog.remove(waterLog.size() - 1);
-            saveWaterLog();
-            updateUI();
-            waterLogAdapter.updateLog(waterLog);
+            WaterIntakeManager.removeWaterEntry(requireContext(), todayDate, success -> {
+                if (success) loadWaterData();
+            });
         }
+    }
+
+    private void showChangeGoalDialog() {
+        final EditText input = new EditText(requireContext());
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setText(String.valueOf(waterGoal));
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Set Daily Goal")
+                .setMessage("Enter your target water intake (glasses):")
+                .setView(input)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String val = input.getText().toString();
+                    if (!val.isEmpty()) {
+                        int newGoal = Integer.parseInt(val);
+                        WaterIntakeManager.setWaterGoal(requireContext(), newGoal);
+                        waterGoal = newGoal;
+                        updateUI();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void updateUI() {
