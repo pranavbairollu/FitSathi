@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors -->
+    <color name="brand_primary">#3B82F6</color>
+    <color name="brand_secondary">#10B981</color>
+    <color name="brand_accent">#F97316</color>
+    <color name="error_light">#F28B82</color> <!-- lighter red -->
+    <color name="on_error_light">#FFFFFF</color> <!-- white text on lighter red -->
+
+    <!-- Light Theme UI Colors -->
+    <color name="primary_container">#DDEBFF</color>
+    <color name="secondary_container">#D0F2E8</color>
+    <color name="background">#E9ECEF</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#E9ECEF</color>
+    <color name="outline">#CED4DA</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="on_background">#212529</color>
+    <color name="on_surface">#212529</color>
+    <color name="on_primary_container">#21005D</color>
+    <color name="on_secondary_container">#1D192B</color>
+    <color name="on_tertiary_container">#212529</color>
+    <color name="text_secondary">#6C757D</color>
+    <color name="error">#D90429</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="colorPrimaryVariant">#3700B3</color>
+
+    <!-- Common Static Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

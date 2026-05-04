@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Gradient background for active card -->
+    <gradient
+        android:startColor="#FFBB33"
+        android:endColor="#FF8800"
+        android:angle="90"/>
+
+    <!-- Rounded corners -->
+    <corners android:radius="16dp"/>
+
+    <!-- Shadow/outline effect -->
+    <stroke
+        android:width="2dp"
+        android:color="#FFAA00"/>
+
+    <!-- Optional padding -->
+    <padding
+        android:left="8dp"
+        android:top="8dp"
+        android:right="8dp"
+        android:bottom="8dp"/>
+</shape>

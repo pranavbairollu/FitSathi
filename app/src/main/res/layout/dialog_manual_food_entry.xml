@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Food Name -->
+    <EditText
+        android:id="@+id/input_food_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Food Name"
+        android:inputType="textCapWords"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"/>
+
+    <!-- Serving -->
+    <EditText
+        android:id="@+id/input_serving"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Serving (g)"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Calories -->
+    <EditText
+        android:id="@+id/input_calories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Calories"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Carbs, Protein, Fat, Fiber, Sugar -->
+    <EditText
+        android:id="@+id/input_carbs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Carbs (g)"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:layout_marginTop="6dp"/>
+
+    <EditText
+        android:id="@+id/input_protein"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Protein (g)"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:layout_marginTop="6dp"/>
+
+    <EditText
+        android:id="@+id/input_fat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fat (g)"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:layout_marginTop="6dp"/>
+
+    <EditText
+        android:id="@+id/input_fiber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fiber (g)"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:layout_marginTop="6dp"/>
+
+    <EditText
+        android:id="@+id/input_sugar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Sugar (g)"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:layout_marginTop="6dp"/>
+
+    <!-- Dynamic Macro Info -->
+    <TextView
+        android:id="@+id/macros_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Calories: 0 kcal | Carbs: 0 g | Protein: 0 g | Fat: 0 g"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="14sp"
+        android:paddingTop="10dp"/>
+</LinearLayout>

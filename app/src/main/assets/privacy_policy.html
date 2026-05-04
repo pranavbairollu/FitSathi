@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitSathi Privacy Policy</title>
+    <style>
+        :root {
+            --accent: #27ae60;
+            --accent-light: #2ecc71;
+            --bg-light: #f7f9fc;
+            --text-dark: #2c3e50;
+            --shadow: rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 32px 20px;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.7;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px var(--shadow);
+            animation: fadeIn 0.5s ease;
+        }
+
+        h1 {
+            font-size: 2.3em;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        h1::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 4px;
+            margin: 10px auto 0;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        details {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        details[open] {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        summary {
+            font-size: 1.2em;
+            font-weight: 600;
+            padding: 20px 24px;
+            cursor: pointer;
+            background: linear-gradient(to right, #f9f9f9, #fff);
+            list-style: none;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.25s ease;
+        }
+
+        summary:hover { background: #f2f4f8; }
+
+        summary::before {
+            content: '+';
+            color: var(--accent);
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-right: 16px;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            display: inline-block;
+        }
+
+        details[open] > summary::before { transform: rotate(45deg); }
+
+        .details-content {
+            padding: 0 24px 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .inner-details summary {
+            font-size: 1em;
+            font-weight: 500;
+            padding: 14px 18px;
+            border-bottom: 1px solid #ececec;
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        a:hover { text-decoration: underline; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* FAB Buttons */
+        .fab {
+            position: fixed;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .fab:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow);
+        }
+
+        #backToTop {
+            bottom: 24px;
+            right: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        #contactBtn {
+            bottom: 24px;
+            left: 24px;
+        }
+
+        .fab .tooltip {
+            position: absolute;
+            bottom: 70px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+
+        #backToTop .tooltip {
+            right: 50%;
+            transform: translateX(50%);
+        }
+        #contactBtn .tooltip {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .show-tooltip .tooltip { opacity: 1; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        details[open] .details-content {
+            animation: slideFade 0.4s ease;
+        }
+        @keyframes slideFade {
+            from { opacity: 0; transform: translateY(-5px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-light: #121212;
+                --text-dark: #ffffff;
+                --shadow: rgba(0,0,0,0.5);
+            }
+            body { background: var(--bg-light); color: #e0e0e0;}
+            .container { background: #1e1e1e; box-shadow: 0 10px 25px var(--shadow);}
+            summary { background: #1a1a1a; color: #e0e0e0;}
+            summary:hover { background: #2a2a2a; }
+            details { background: #1c1c1c; border-color: #2c2c2c; }
+            summary::before { color: var(--accent-light); }
+            strong { color: #fff; }
+
+            .fab { background: var(--accent-light); }
+            .fab:hover { background: var(--accent); }
+            .fab .tooltip { background: var(--accent-light); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🛡️ Privacy Policy for FitSathi</h1>
+    <p class="last-updated"><strong>Last Updated: October 07, 2025</strong></p>
+
+    <details open>
+        <summary>👋 1. Welcome to Your Fitness Journey</summary>
+        <div class="details-content">
+            <p>Welcome to FitSathi! We're committed to being a trustworthy partner in your fitness journey. This Privacy Policy explains how we collect, use, and protect your information when you use our app. Your privacy is a top priority.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>📊 2. The Information We Collect</summary>
+        <div class="details-content">
+            <p>To give you a personalized experience, we collect a few types of information:</p>
+            <ul>
+                <li><strong>Your Profile Data:</strong> Name, email, age, gender, fitness goals, and profile picture.</li>
+                <li><strong>Your Fitness & Health Data:</strong> Daily steps, calorie intake, water consumption, weight logs, workout history, streaks.</li>
+                <li><strong>Camera Access:</strong> Only when using barcode scanner. Images processed on-device; not stored.</li>
+            </ul>
+        </div>
+    </details>
+
+    <details>
+        <summary>⚙️ 3. How We Use Your Information</summary>
+        <div class="details-content">
+            <p>We use your data to power app features:</p>
+            <ul>
+                <li>Manage your account.</li>
+                <li>Track fitness progress with charts and stats.</li>
+                <li>Personalize experience (workouts, goal celebrations).</li>
+                <li>Enable optional features like barcode scanning.</li>
+            </ul>
+        </div>
+    </details>
+
+    <details>
+        <summary>🤝 4. Who We Share Information With</summary>
+        <div class="details-content">
+            <p>We do not sell your info. Shared only with essential partners:</p>
+            <ul>
+                <li><strong>Firebase:</strong> Auth, Database, Storage for account and fitness data.</li>
+                <li><strong>Google ML Kit:</strong> Powers on-device barcode scanner.</li>
+            </ul>
+        </div>
+    </details>
+
+    <details>
+        <summary>🔐 5. Keeping Your Information Secure</summary>
+        <div class="details-content">
+            <p>We use administrative, technical, and physical security measures, including Firebase's security, to protect your data. No system is 100% impenetrable.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>💪 6. Your Rights & Control Over Your Data</summary>
+        <div class="details-content">
+            <p>Your rights include:</p>
+            <ul>
+                <li><strong>Access & Correct:</strong> View and edit your profile anytime.</li>
+                <li><strong>Deletion:</strong> Contact us to erase account and associated data.</li>
+                <li><strong>Withdraw Consent:</strong> Revoke permissions like camera access; some features may stop working.</li>
+            </ul>
+        </div>
+    </details>
+
+    <details>
+        <summary>📜 7. Changes to This Privacy Policy</summary>
+        <div class="details-content">
+            <p>We may update this policy as the app evolves. Significant changes will be communicated; review periodically to stay informed.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>🧸 8. A Note About Children's Privacy</summary>
+        <div class="details-content">
+            <p>Not intended for children under 13. If a child under 13 has provided information, contact us immediately for action.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>✉️ 9. Have Questions? Contact Us!</summary>
+        <div class="details-content">
+            <p>For questions or comments, contact us at: <a href="mailto:pranavbairollu@gmail.com">pranavbairollu@gmail.com</a></p>
+        </div>
+    </details>
+</div>
+
+<button id="backToTop" class="fab">↑<span class="tooltip">Back to Top</span></button>
+<a href="mailto:pranavbairollu@gmail.com" id="contactBtn" class="fab">✉️<span class="tooltip">Contact Us</span></a>
+
+<script>
+    const backToTopBtn = document.getElementById("backToTop");
+    backToTopBtn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    window.addEventListener("load", () => {
+        backToTopBtn.classList.add("show-tooltip");
+        setTimeout(() => { backToTopBtn.classList.remove("show-tooltip"); }, 3000);
+    });
+
+    document.querySelectorAll("details").forEach(d => {
+        d.addEventListener("toggle", () => {
+            if(d.open){
+                d.style.transform = "translateY(-2px)";
+                setTimeout(() => { d.style.transform = "translateY(0px)"; }, 300);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

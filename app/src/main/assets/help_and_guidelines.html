@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitSathi Ultimate Help & Guide</title>
+    <style>
+        :root {
+          --accent: #27ae60;
+          --accent-light: #2ecc71;
+          --bg-light: #f7f9fc;
+          --text-dark: #2c3e50;
+          --shadow: rgba(0,0,0,0.08);
+        }
+
+        body {
+          font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+          line-height: 1.7;
+          margin: 0;
+          padding: 32px 20px;
+          background: var(--bg-light);
+          color: #333;
+          scroll-behavior: smooth;
+          transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+          max-width: 850px;
+          margin: 0 auto;
+          background: #fff;
+          padding: 40px 30px;
+          border-radius: 16px;
+          box-shadow: 0 10px 25px var(--shadow);
+          animation: fadeIn 0.5s ease;
+        }
+
+        h1 {
+          font-size: 2.3em;
+          font-weight: 800;
+          text-align: center;
+          margin-bottom: 40px;
+          color: var(--text-dark);
+          letter-spacing: -0.5px;
+        }
+
+        h1::after {
+          content: "";
+          display: block;
+          width: 80px;
+          height: 4px;
+          background: var(--accent);
+          border-radius: 4px;
+          margin: 10px auto 0;
+        }
+
+        details {
+          background: #fff;
+          border: 1px solid #e5e7eb;
+          border-radius: 12px;
+          margin-bottom: 18px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+          overflow: hidden;
+          transition: all 0.3s ease;
+        }
+
+        details[open] {
+          box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+          transform: translateY(-2px);
+        }
+
+        summary {
+          font-size: 1.2em;
+          font-weight: 600;
+          padding: 20px 24px;
+          cursor: pointer;
+          background: linear-gradient(to right, #f9f9f9, #fff);
+          list-style: none;
+          user-select: none;
+          display: flex;
+          align-items: center;
+          transition: all 0.25s ease;
+        }
+
+        summary:hover {
+          background: #f2f4f8;
+        }
+
+        summary::before {
+          content: '+';
+          color: var(--accent);
+          font-size: 1.4em;
+          font-weight: 700;
+          margin-right: 16px;
+          transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        details[open] > summary::before {
+          transform: rotate(45deg);
+        }
+
+        .details-content {
+          padding: 0 24px 20px;
+          animation: fadeIn 0.3s ease;
+        }
+
+        .inner-details summary {
+          font-size: 1em;
+          font-weight: 500;
+          padding: 14px 18px;
+          border-bottom: 1px solid #ececec;
+        }
+
+        ul {
+          margin: 0;
+          padding-left: 20px;
+        }
+
+        li {
+          margin-bottom: 12px;
+        }
+
+        strong {
+          color: var(--text-dark);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        a:hover { text-decoration: underline; }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* FAB Buttons */
+        .fab {
+            position: fixed;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .fab:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow);
+        }
+
+        #backToTop {
+            bottom: 24px;
+            right: 24px;
+        }
+
+        #contactBtn {
+            bottom: 24px;
+            left: 24px;
+        }
+
+        .fab .tooltip {
+            position: absolute;
+            bottom: 70px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+
+        #backToTop .tooltip {
+            right: 50%;
+            transform: translateX(50%);
+        }
+        #contactBtn .tooltip {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .fab:hover .tooltip {
+             opacity: 1;
+        }
+
+        details[open] .details-content {
+          animation: slideFade 0.4s ease;
+        }
+
+        @keyframes slideFade {
+          from { opacity: 0; transform: translateY(-5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --bg-light: #121212;
+            --text-dark: #ffffff;
+            --shadow: rgba(0,0,0,0.5);
+          }
+          body { background: var(--bg-light); color: #e0e0e0; }
+          .container { background: #1e1e1e; box-shadow: 0 10px 25px var(--shadow); }
+          summary { background: #1a1a1a; color: #e0e0e0; }
+          summary:hover { background: #2a2a2a; }
+          details { background: #1c1c1c; border-color: #2c2c2c; }
+          summary::before { color: var(--accent-light); }
+          strong { color: #fff; }
+          .fab { background: var(--accent-light); }
+          .fab:hover { background: var(--accent); }
+          .fab .tooltip { background: var(--accent-light); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🚀 Welcome to Your FitSathi Guide!</h1>
+
+    <details open>
+        <summary>🌟 Key Features</summary>
+        <div class="details-content">
+            <ul>
+                <li><strong>👟 Step Counter:</strong> Tracks your daily steps automatically. Tap the <strong>progress circle</strong> beside the step count number to set or update your personal daily goal!</li>
+                <li><strong>🍽️ Calorie Tracker:</strong> Log your meals easily by searching our food database or scanning barcodes. The app calculates your recommended daily calories based on your profile, activity level, and fitness mission.</li>
+                <li><strong>💧 Water Tracker:</strong> Tap the water tracker card on the home screen to quickly log your intake. Stay hydrated and track your daily water goals.</li>
+                <li><strong>🏋️ Workout Feature:</strong> Get workout plans tailored to your fitness goal. Tap the <strong>"Goal" button</strong> at the top of the home screen to update your mission anytime!</li>
+                <li><strong>📈 Weight Tracker:</strong> Log your weight regularly and watch your progress over time through intuitive charts with motivational trend lines.</li>
+            </ul>
+        </div>
+    </details>
+
+    <details>
+        <summary>💡 Pro-Gamer Moves (Tips & Tricks)</summary>
+        <div class="details-content">
+            <ul>
+                <li><strong>🔥 Build That Streak!:</strong> Log at least one food item per calendar day to maintain your streak and build healthy habits.</li>
+                <li><strong>🎉 Celebrate Your Wins!</strong> Fun animations appear when you achieve your step goals!</li>
+                <li><strong>💪 Long-Press to Delete:</strong> Mistakenly logged a food item? Long-press any entry to remove it instantly.</li>
+            </ul>
+        </div>
+    </details>
+
+    <details>
+        <summary>🤔 Frequently Asked Questions (FAQ)</summary>
+        <div class="details-content">
+            <details class="inner-details">
+                <summary>How is my streak calculated?</summary>
+                <div class="details-content">
+                    <p>Your streak depends on consistency. Log at least one meal (breakfast, lunch, dinner, or snack) per day. Missing a day will reset the streak, so stay consistent!</p>
+                </div>
+            </details>
+            <details class="inner-details">
+                <summary>How do I change my fitness goal?</summary>
+                <div class="details-content">
+                    <p>On the home screen, tap the <strong>"Goal"</strong> button next to your welcome message. Choose a new fitness mission, like <em>Weight Loss</em> or <em>Muscle Gain</em>. Your workout plans update automatically.</p>
+                </div>
+            </details>
+            <details class="inner-details">
+                <summary>Can I use the app offline?</summary>
+                <div class="details-content">
+                    <p>Yes! You can log food, water, and track steps without internet. Your data is stored locally and syncs to your account once you're back online.</p>
+                </div>
+            </details>
+            <details class="inner-details">
+                <summary>Why is my chart or graph empty?</summary>
+                <div class="details-content">
+                    <p>If you haven't logged data for a specific metric yet (like weight or calories), the chart will appear empty. Start logging and watch it come to life!</p>
+                </div>
+            </details>
+            <details class="inner-details">
+                <summary>How does Dark Mode work?</summary>
+                <div class="details-content">
+                    <p>FitSathi follows your device theme automatically. If your phone is in Dark Mode, the app switches accordingly. No manual toggle is needed.</p>
+                </div>
+            </details>
+        </div>
+    </details>
+</div>
+
+<button id="backToTop" class="fab">↑<span class="tooltip">Back to Top</span></button>
+<a href="mailto:pranavbairollu@gmail.com" id="contactBtn" class="fab">✉️<span class="tooltip">Contact Us</span></a>
+
+<script>
+    // Back to top button
+    const backToTopBtn = document.getElementById("backToTop");
+    backToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Section toggle animations
+    const details = document.querySelectorAll("details");
+    details.forEach(d => {
+      d.addEventListener("toggle", () => {
+        if(d.open){
+          d.style.transform = "translateY(-2px)";
+          setTimeout(() => { d.style.transform = "translateY(0px)"; }, 300);
+        }
+      });
+    });
+</script>
+
+</body>
+</html>

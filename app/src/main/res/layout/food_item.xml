@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="6dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardBackgroundColor="?attr/colorSurfaceContainer"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <!-- Food Name + Meal Type -->
+        <TextView
+            android:id="@+id/food_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FOOD NAME (MEALTYPE)"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="?attr/colorOnSurface" />
+
+        <!-- Calories (Highlighted) -->
+        <TextView
+            android:id="@+id/food_calories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calories: 250 kcal"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"
+            android:textColor="?attr/colorPrimary" />
+
+        <!-- Nutrient Info Row 1 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="6dp">
+
+            <TextView
+                android:id="@+id/food_carbs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Carbs: 30g"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:id="@+id/food_protein"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Protein: 10g"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:id="@+id/food_fat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fat: 8g"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <!-- Nutrient Info Row 2 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/food_fiber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fiber: 4g"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:id="@+id/food_sugar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sugar: 12g"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:id="@+id/food_grams"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Serving: 100g"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

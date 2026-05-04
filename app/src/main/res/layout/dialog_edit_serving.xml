@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/edit_serving_title"
+        android:textAppearance="?attr/textAppearanceHeadline6" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_serving_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/edit_serving_hint">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_serving"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:useDefaultMargins="true">
+
+        <TextView
+            android:text="@string/label_calories"
+            android:textAppearance="?attr/textAppearanceBody1" />
+        <TextView
+            android:id="@+id/value_calories"
+            android:layout_gravity="end"
+            android:text="0 kcal"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:text="@string/label_carbs"
+            android:textAppearance="?attr/textAppearanceBody1" />
+        <TextView
+            android:id="@+id/value_carbs"
+            android:layout_gravity="end"
+            android:text="0 g"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:text="@string/label_protein"
+            android:textAppearance="?attr/textAppearanceBody1" />
+        <TextView
+            android:id="@+id/value_protein"
+            android:layout_gravity="end"
+            android:text="0 g"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:text="@string/label_fat"
+            android:textAppearance="?attr/textAppearanceBody1" />
+        <TextView
+            android:id="@+id/value_fat"
+            android:layout_gravity="end"
+            android:text="0 g"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:text="@string/label_fiber"
+            android:textAppearance="?attr/textAppearanceBody1" />
+        <TextView
+            android:id="@+id/value_fiber"
+            android:layout_gravity="end"
+            android:text="0 g"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorOnSurface" />
+            
+        <TextView
+            android:text="@string/label_sugar"
+            android:textAppearance="?attr/textAppearanceBody1" />
+        <TextView
+            android:id="@+id/value_sugar"
+            android:layout_gravity="end"
+            android:text="0 g"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorOnSurface" />
+
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/save" />
+    </LinearLayout>
+
+</LinearLayout>

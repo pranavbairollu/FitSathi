@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base badge remains unchanged -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@android:color/transparent"/>
+        </shape>
+    </item>
+
+    <!-- Sparkle overlay -->
+    <item>
+        <rotate
+            android:fromDegrees="0"
+            android:toDegrees="360"
+            android:pivotX="50%"
+            android:pivotY="50%">
+            <shape android:shape="oval">
+                <gradient
+                    android:startColor="#80FFFFFF"
+                    android:endColor="#00FFFFFF"
+                    android:angle="45"/>
+            </shape>
+        </rotate>
+    </item>
+
+</layer-list>

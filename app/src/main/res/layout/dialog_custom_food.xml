@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?attr/colorSurface">
+
+    <EditText
+        android:id="@+id/custom_food_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Food Name"
+        android:inputType="textCapWords"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?android:attr/textColorHint"/>
+
+    <EditText
+        android:id="@+id/custom_food_calories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Calories"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?android:attr/textColorHint"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/custom_food_protein"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Protein (g)"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?android:attr/textColorHint"
+        android:layout_marginTop="6dp"/>
+
+    <EditText
+        android:id="@+id/custom_food_carbs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Carbs (g)"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?android:attr/textColorHint"
+        android:layout_marginTop="6dp"/>
+
+    <EditText
+        android:id="@+id/custom_food_fat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fat (g)"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?android:attr/textColorHint"
+        android:layout_marginTop="6dp"/>
+
+    <EditText
+        android:id="@+id/custom_food_serving"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Serving Size (e.g. 1 cup)"
+        android:inputType="text"
+        android:padding="12dp"
+        android:background="@drawable/rounded_input"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textColorHint="?android:attr/textColorHint"
+        android:layout_marginTop="6dp"/>
+</LinearLayout>

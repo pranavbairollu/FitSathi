@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Theme UI Colors -->
+    <color name="primary_container">#004395</color>
+    <color name="secondary_container">#005B3E</color>
+    <color name="background">#121212</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="surface_variant">#2C2C2C</color>
+    <color name="outline">#444444</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="on_background">#E0E0E0</color>
+    <color name="on_surface">#E0E0E0</color>
+    <color name="on_primary_container">#DDEBFF</color>
+    <color name="on_secondary_container">#D0F2E8</color>
+    <color name="on_tertiary_container">#E0E0E0</color>
+    <color name="text_secondary">#9E9E9E</color>
+    <color name="error">#CF6679</color>
+    <color name="on_error">#000000</color>
+    <color name="brand_accent">#D95F02</color>
+    <color name="colorPrimaryVariant">#BB86FC</color>
+</resources>

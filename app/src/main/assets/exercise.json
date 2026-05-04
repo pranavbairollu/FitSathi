@@ -1,0 +1,384 @@
+[
+  {
+    "id": "barbell_squat",
+    "name": "Barbell Squat",
+    "image": "barbell_squat",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Beginner", "reps": "3x10", "duration": 5 },
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "4x8", "duration": 6 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "5x5", "duration": 7 }
+    ]
+  },
+  {
+    "id": "battle_ropes",
+    "name": "Battle Ropes",
+    "image": "battle_ropes",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Lose Weight", "level": "Beginner", "reps": "3x30s", "duration": 4 },
+      { "goal": "Lose Weight", "level": "Intermediate", "reps": "3x45s", "duration": 5 },
+      { "goal": "Lose Weight", "level": "Advanced", "reps": "3x60s", "duration": 6 }
+    ]
+  },
+  {
+    "id": "bench_press",
+    "name": "Bench Press",
+    "image": "bench_press",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Beginner", "reps": "3x10", "duration": 5 },
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "4x8", "duration": 6 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "5x5", "duration": 7 }
+    ]
+  },
+  {
+    "id": "bicep_curl",
+    "name": "Bicep Curl",
+    "image": "bicep_curl",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x12", "duration": 3 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "3x15", "duration": 4 },
+      { "goal": "Tone", "level": "Advanced", "reps": "4x12", "duration": 5 }
+    ]
+  },
+  {
+    "id": "stationary_bike",
+    "name": "Stationary Bike",
+    "image": "bike",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Lose Weight", "level": "Beginner", "reps": "15 min", "duration": 15 },
+      { "goal": "Lose Weight", "level": "Intermediate", "reps": "25 min", "duration": 25 },
+      { "goal": "Lose Weight", "level": "Advanced", "reps": "35 min", "duration": 35 }
+    ]
+  },
+  {
+    "id": "box_jumps",
+    "name": "Box Jumps",
+    "image": "box_jumps",
+    "location": "Home",
+    "variants": [
+      { "goal": "Lose Weight", "level": "Beginner", "reps": "3x12", "duration": 4 },
+      { "goal": "Lose Weight", "level": "Intermediate", "reps": "3x15", "duration": 5 },
+      { "goal": "Lose Weight", "level": "Advanced", "reps": "4x15", "duration": 6 }
+    ]
+  },
+  {
+    "id": "burpees",
+    "name": "Burpees",
+    "image": "burpees",
+    "location": "Home",
+    "variants": [
+      { "goal": "Lose Weight", "level": "Beginner", "reps": "3x10", "duration": 4 },
+      { "goal": "Lose Weight", "level": "Intermediate", "reps": "3x15", "duration": 5 },
+      { "goal": "Lose Weight", "level": "Advanced", "reps": "3x20", "duration": 6 }
+    ]
+  },
+  {
+    "id": "cable_crunch",
+    "name": "Cable Crunch",
+    "image": "cable_crunch",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x15", "duration": 3 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "3x20", "duration": 4 },
+      { "goal": "Tone", "level": "Advanced", "reps": "4x20", "duration": 5 }
+    ]
+  },
+  {
+    "id": "cable_curl",
+    "name": "Cable Curl",
+    "image": "cable_curl",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Beginner", "reps": "3x12", "duration": 3 },
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x15", "duration": 4 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "4x12", "duration": 5 }
+    ]
+  },
+  {
+    "id": "cable_lateral_raise",
+    "name": "Cable Lateral Raise",
+    "image": "cable_lateral_raise",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x12", "duration": 3 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "3x15", "duration": 4 },
+      { "goal": "Tone", "level": "Advanced", "reps": "4x15", "duration": 5 }
+    ]
+  },
+  {
+    "id": "cable_pushdown",
+    "name": "Cable Pushdown",
+    "image": "cable_pushdown",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x12", "duration": 3 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "3x15", "duration": 4 },
+      { "goal": "Tone", "level": "Advanced", "reps": "4x12", "duration": 5 }
+    ]
+  },
+  {
+    "id": "calf_raise",
+    "name": "Calf Raise",
+    "image": "calf_raise",
+    "location": "Home",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x20", "duration": 3 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "4x25", "duration": 4 },
+      { "goal": "Tone", "level": "Advanced", "reps": "5x25", "duration": 5 }
+    ]
+  },
+  {
+    "id": "deadlift",
+    "name": "Deadlift",
+    "image": "deadlift",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Beginner", "reps": "3x8", "duration": 5 },
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "4x6", "duration": 7 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "5x5", "duration": 8 }
+    ]
+  },
+  {
+    "id": "dumbbell_press",
+    "name": "Dumbbell Press",
+    "image": "dumbbell_press",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Beginner", "reps": "3x10", "duration": 4 },
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x12", "duration": 5 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "4x10", "duration": 6 }
+    ]
+  },
+  {
+    "id": "dumbbell_row",
+    "name": "Dumbbell Row",
+    "image": "dumbbell_row",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Beginner", "reps": "3x10", "duration": 4 },
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x12", "duration": 5 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "4x10", "duration": 6 }
+    ]
+  },
+  {
+    "id": "dumbbell_side_bend",
+    "name": "Dumbbell Side Bend",
+    "image": "dumbbell_side_bend",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x15", "duration": 3 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "3x20", "duration": 4 },
+      { "goal": "Tone", "level": "Advanced", "reps": "4x20", "duration": 5 }
+    ]
+  },
+  {
+    "id": "glute_bridge",
+    "name": "Glute Bridge",
+    "image": "glute_bridge",
+    "location": "Home",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x15", "duration": 3 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "3x20", "duration": 4 },
+      { "goal": "Tone", "level": "Advanced", "reps": "4x20", "duration": 5 }
+    ]
+  },
+  {
+    "id": "jumping_jacks",
+    "name": "Jumping Jacks",
+    "image": "jump_jacks",
+    "location": "Home",
+    "variants": [
+      { "goal": "Lose Weight", "level": "Beginner", "reps": "3x30s", "duration": 3 },
+      { "goal": "Lose Weight", "level": "Intermediate", "reps": "3x45s", "duration": 4 },
+      { "goal": "Lose Weight", "level": "Advanced", "reps": "3x60s", "duration": 5 }
+    ]
+  },
+  {
+    "id": "jump_rope",
+    "name": "Jump Rope",
+    "image": "jumprope",
+    "location": "Home",
+    "variants": [
+      { "goal": "Lose Weight", "level": "Beginner", "reps": "10 min", "duration": 10 },
+      { "goal": "Lose Weight", "level": "Intermediate", "reps": "15 min", "duration": 15 },
+      { "goal": "Lose Weight", "level": "Advanced", "reps": "25 min", "duration": 25 }
+    ]
+  },
+  {
+    "id": "kettlebell_swings",
+    "name": "Kettlebell Swings",
+    "image": "kettlebell_swings",
+    "location": "Home",
+    "variants": [
+      { "goal": "Lose Weight", "level": "Beginner", "reps": "3x15", "duration": 4 },
+      { "goal": "Lose Weight", "level": "Intermediate", "reps": "4x20", "duration": 5 },
+      { "goal": "Lose Weight", "level": "Advanced", "reps": "5x20", "duration": 6 }
+    ]
+  },
+  {
+    "id": "lat_pulldown",
+    "name": "Lat Pulldown",
+    "image": "lat_pulldown",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Beginner", "reps": "3x12", "duration": 4 },
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x15", "duration": 5 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "4x12", "duration": 6 }
+    ]
+  },
+  {
+    "id": "leg_curl",
+    "name": "Leg Curl",
+    "image": "leg_curl",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x15", "duration": 4 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "3x20", "duration": 5 },
+      { "goal": "Tone", "level": "Advanced", "reps": "4x15", "duration": 6 }
+    ]
+  },
+  {
+    "id": "leg_press",
+    "name": "Leg Press",
+    "image": "leg_press",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Beginner", "reps": "3x12", "duration": 5 },
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x15", "duration": 6 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "4x12", "duration": 7 }
+    ]
+  },
+  {
+    "id": "lunges",
+    "name": "Lunges",
+    "image": "lunges",
+    "location": "Home",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x15", "duration": 4 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "3x20", "duration": 5 },
+      { "goal": "Tone", "level": "Advanced", "reps": "4x20", "duration": 6 }
+    ]
+  },
+  {
+    "id": "mountain_climber",
+    "name": "Mountain Climber",
+    "image": "mountain_climber",
+    "location": "Home",
+    "variants": [
+      { "goal": "Lose Weight", "level": "Beginner", "reps": "3x30s", "duration": 3 },
+      { "goal": "Lose Weight", "level": "Intermediate", "reps": "3x45s", "duration": 4 },
+      { "goal": "Lose Weight", "level": "Advanced", "reps": "3x60s", "duration": 5 }
+    ]
+  },
+  {
+    "id": "pistol_squat",
+    "name": "Pistol Squat",
+    "image": "pistol_squat",
+    "location": "Home",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x8", "duration": 5 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "4x8", "duration": 6 }
+    ]
+  },
+  {
+    "id": "plank",
+    "name": "Plank",
+    "image": "plank",
+    "location": "Home",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x45s", "duration": 3 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "3x60s", "duration": 4 },
+      { "goal": "Tone", "level": "Advanced", "reps": "3x90s", "duration": 5 }
+    ]
+  },
+  {
+    "id": "pullups",
+    "name": "Pullups",
+    "image": "pullups",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "3xMax", "duration": 5 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "5xMax", "duration": 7 }
+    ]
+  },
+  {
+    "id": "pushups",
+    "name": "Pushups",
+    "image": "pushups",
+    "location": "Home",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Beginner", "reps": "3x10", "duration": 3 },
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x20", "duration": 4 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "4x30", "duration": 5 }
+    ]
+  },
+  {
+    "id": "rowing_machine",
+    "name": "Rowing Machine",
+    "image": "rowing",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Lose Weight", "level": "Beginner", "reps": "10 min", "duration": 10 },
+      { "goal": "Lose Weight", "level": "Intermediate", "reps": "20 min", "duration": 20 },
+      { "goal": "Lose Weight", "level": "Advanced", "reps": "30 min", "duration": 30 }
+    ]
+  },
+  {
+    "id": "seated_row",
+    "name": "Seated Row",
+    "image": "seated_row",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Beginner", "reps": "3x12", "duration": 4 },
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x15", "duration": 5 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "4x12", "duration": 6 }
+    ]
+  },
+  {
+    "id": "side_plank",
+    "name": "Side Plank",
+    "image": "side_plank",
+    "location": "Home",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x30s", "duration": 3 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "3x45s", "duration": 4 },
+      { "goal": "Tone", "level": "Advanced", "reps": "3x60s", "duration": 5 }
+    ]
+  },
+  {
+    "id": "sled_push",
+    "name": "Sled Push",
+    "image": "sled_push",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Build Muscle", "level": "Intermediate", "reps": "4 sets", "duration": 7 },
+      { "goal": "Build Muscle", "level": "Advanced", "reps": "6 sets", "duration": 10 }
+    ]
+  },
+  {
+    "id": "bodyweight_squats",
+    "name": "Bodyweight Squats",
+    "image": "squats",
+    "location": "Home",
+    "variants": [
+      { "goal": "Tone", "level": "Beginner", "reps": "3x20", "duration": 4 },
+      { "goal": "Tone", "level": "Intermediate", "reps": "4x25", "duration": 5 },
+      { "goal": "Tone", "level": "Advanced", "reps": "5x25", "duration": 6 }
+    ]
+  },
+  {
+    "id": "treadmill",
+    "name": "Treadmill",
+    "image": "treadmill",
+    "location": "Gym",
+    "variants": [
+      { "goal": "Lose Weight", "level": "Beginner", "reps": "20 min", "duration": 20 },
+      { "goal": "Lose Weight", "level": "Intermediate", "reps": "30 min", "duration": 30 },
+      { "goal": "Lose Weight", "level": "Advanced", "reps": "45 min", "duration": 45 }
+    ]
+  }
+]

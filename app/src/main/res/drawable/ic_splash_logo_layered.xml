@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Layer 1: The Blue Background Shape -->
+    <!-- This creates a simple, clean, rounded-corner square -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#42C1F3" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+
+</layer-list>

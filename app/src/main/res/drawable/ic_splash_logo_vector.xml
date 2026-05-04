@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- This is the blue background square with rounded corners -->
+    <path
+        android:fillColor="#42C1F3"
+        android:pathData="M16,4.0C9.37,4.0 4.0,9.37 4.0,16.0v76.0c0.0,6.63 5.37,12.0 12.0,12.0h76.0c6.63,0.0 12.0,-5.37 12.0,-12.0V16.0c0.0,-6.63 -5.37,-12.0 -12.0,-12.0H16.0z" />
+
+    <!-- This group contains the white heart and the orange checkmark -->
+    <group
+        android:translateX="13.5"
+        android:translateY="16.875">
+        <!-- The white heart shape -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M40.5,80.11L38.4,78.33C14.04,57.51 -1.35,44.9 -1.35,29.92C-1.35,18.08 8.01,8.72 19.85,8.72c6.26,0.0 12.28,2.92 16.2,7.52c3.92,-4.6 9.94,-7.52 16.2,-7.52c11.84,0.0 21.2,9.36 21.2,21.2c0.0,14.98 -15.39,27.59 -39.75,48.41L40.5,80.11z" />
+        <!-- The orange checkmark -->
+        <path
+            android:fillColor="#F38423"
+            android:pathData="M52.38,27.6L44.8,35.18L37.76,28.14L32.4,33.5L44.8,45.9L57.74,33.0L52.38,27.6z" />
+    </group>
+
+    <!-- The "FitSathi" text -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24.8,61.56h4.52v12.2h5.5v-12.2h3.96v-4.96h-3.96v-3.08c0,-1.15 0.23,-1.76 1.76,-1.76h2.2v-5.28h-3.08c-3.74,0 -5.38,1.43 -5.38,4.72v5.4h-3.52v4.96zM46.7,73.76h5.5v-17.2h-5.5v17.2zM49.45,52.2c-1.87,0 -3.3,-1.43 -3.3,-3.3c0,-1.87 1.43,-3.3 3.3,-3.3c1.87,0 3.3,1.43 3.3,3.3c0,1.87 -1.43,3.3 -3.3,3.3zM56.88,73.76h5.5v-8.9c0,-2.31 0.33,-4.72 2.74,-4.72c2.31,0 2.42,2.74 2.42,4.84v8.78h5.5v-9.34c0,-5.06 -1.76,-7.8 -6.04,-7.8c-2.75,0 -4.07,1.32 -4.72,2.74v-2.3h-5.38v16.6zM77.29,73.76h5.5v-17.2h-5.5v17.2zM80.04,52.2c-1.87,0 -3.3,-1.43 -3.3,-3.3c0,-1.87 1.43,-3.3 3.3,-3.3c1.87,0 3.3,1.43 3.3,3.3c0,1.87 -1.43,3.3 -3.3,3.3z" />
+</vector>

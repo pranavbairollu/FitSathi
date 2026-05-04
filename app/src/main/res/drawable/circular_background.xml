@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!--
+      This tag defines the fill color of the shape.
+      It's using "@color/purple_500", which should be defined in your
+      app/src/main/res/values/colors.xml file.
+      You can change this to any color you like, for example:
+      android:color="?attr/colorPrimary" to use your theme's primary color.
+    -->
+    <solid
+        android:color="@color/brand_primary" />
+
+</shape>
