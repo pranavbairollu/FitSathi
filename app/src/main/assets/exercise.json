@@ -4,6 +4,9 @@
     "name": "Barbell Squat",
     "image": "barbell_squat",
     "location": "Gym",
+    "description": "Place a barbell on your upper back, keep your chest up, and squat down until your thighs are parallel to the floor.",
+    "muscles": ["Quads", "Glutes", "Hamstrings"],
+    "intensity": 1.5,
     "variants": [
       { "goal": "Build Muscle", "level": "Beginner", "reps": "3x10", "duration": 5 },
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "4x8", "duration": 6 },
@@ -15,6 +18,9 @@
     "name": "Battle Ropes",
     "image": "battle_ropes",
     "location": "Gym",
+    "description": "Grip the ends of the ropes and move your arms up and down rapidly to create waves in the ropes.",
+    "muscles": ["Shoulders", "Arms", "Core"],
+    "intensity": 1.8,
     "variants": [
       { "goal": "Lose Weight", "level": "Beginner", "reps": "3x30s", "duration": 4 },
       { "goal": "Lose Weight", "level": "Intermediate", "reps": "3x45s", "duration": 5 },
@@ -26,6 +32,9 @@
     "name": "Bench Press",
     "image": "bench_press",
     "location": "Gym",
+    "description": "Lie on a bench and press a barbell upwards from your chest until your arms are fully extended.",
+    "muscles": ["Chest", "Triceps", "Shoulders"],
+    "intensity": 1.4,
     "variants": [
       { "goal": "Build Muscle", "level": "Beginner", "reps": "3x10", "duration": 5 },
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "4x8", "duration": 6 },
@@ -37,6 +46,9 @@
     "name": "Bicep Curl",
     "image": "bicep_curl",
     "location": "Gym",
+    "description": "Stand with dumbbells in hands, palms facing forward. Curl the weights toward your shoulders while keeping your elbows close to your torso.",
+    "muscles": ["Biceps", "Forearms"],
+    "intensity": 1.2,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x12", "duration": 3 },
       { "goal": "Tone", "level": "Intermediate", "reps": "3x15", "duration": 4 },
@@ -48,6 +60,9 @@
     "name": "Stationary Bike",
     "image": "bike",
     "location": "Gym",
+    "description": "Pedal at a consistent pace on a stationary bike. Adjust resistance to increase intensity.",
+    "muscles": ["Quads", "Hamstrings", "Calves"],
+    "intensity": 1.3,
     "variants": [
       { "goal": "Lose Weight", "level": "Beginner", "reps": "15 min", "duration": 15 },
       { "goal": "Lose Weight", "level": "Intermediate", "reps": "25 min", "duration": 25 },
@@ -59,6 +74,9 @@
     "name": "Box Jumps",
     "image": "box_jumps",
     "location": "Home",
+    "description": "Stand in front of a sturdy box. Jump onto the box, landing softly on both feet, then step back down.",
+    "muscles": ["Quads", "Glutes", "Calves"],
+    "intensity": 1.7,
     "variants": [
       { "goal": "Lose Weight", "level": "Beginner", "reps": "3x12", "duration": 4 },
       { "goal": "Lose Weight", "level": "Intermediate", "reps": "3x15", "duration": 5 },
@@ -70,6 +88,9 @@
     "name": "Burpees",
     "image": "burpees",
     "location": "Home",
+    "description": "From a standing position, drop into a squat, kick your feet back into a plank, perform a pushup, jump your feet back to the squat, and leap into the air.",
+    "muscles": ["Full Body", "Core", "Chest"],
+    "intensity": 2.0,
     "variants": [
       { "goal": "Lose Weight", "level": "Beginner", "reps": "3x10", "duration": 4 },
       { "goal": "Lose Weight", "level": "Intermediate", "reps": "3x15", "duration": 5 },
@@ -81,6 +102,9 @@
     "name": "Cable Crunch",
     "image": "cable_crunch",
     "location": "Gym",
+    "description": "Kneel in front of a cable machine with a rope attachment. Hold the rope behind your head and crunch downwards, bringing your elbows toward your knees.",
+    "muscles": ["Abs", "Obliques"],
+    "intensity": 1.2,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x15", "duration": 3 },
       { "goal": "Tone", "level": "Intermediate", "reps": "3x20", "duration": 4 },
@@ -92,6 +116,9 @@
     "name": "Cable Curl",
     "image": "cable_curl",
     "location": "Gym",
+    "description": "Use a low-pulley cable with a straight bar. Curl the bar toward your chest, keeping your elbows stationary.",
+    "muscles": ["Biceps"],
+    "intensity": 1.2,
     "variants": [
       { "goal": "Build Muscle", "level": "Beginner", "reps": "3x12", "duration": 3 },
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x15", "duration": 4 },
@@ -103,6 +130,9 @@
     "name": "Cable Lateral Raise",
     "image": "cable_lateral_raise",
     "location": "Gym",
+    "description": "Stand sideways to a cable machine. Pull the handle across your body and out to the side until your arm is parallel to the floor.",
+    "muscles": ["Lateral Deltoids", "Traps"],
+    "intensity": 1.3,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x12", "duration": 3 },
       { "goal": "Tone", "level": "Intermediate", "reps": "3x15", "duration": 4 },
@@ -114,6 +144,9 @@
     "name": "Cable Pushdown",
     "image": "cable_pushdown",
     "location": "Gym",
+    "description": "Stand in front of a high-pulley cable. Push the bar down until your arms are fully extended, focusing on the triceps.",
+    "muscles": ["Triceps"],
+    "intensity": 1.2,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x12", "duration": 3 },
       { "goal": "Tone", "level": "Intermediate", "reps": "3x15", "duration": 4 },
@@ -125,6 +158,9 @@
     "name": "Calf Raise",
     "image": "calf_raise",
     "location": "Home",
+    "description": "Stand with feet shoulder-width apart. Raise your heels as high as possible, then slowly lower back down.",
+    "muscles": ["Calves"],
+    "intensity": 1.1,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x20", "duration": 3 },
       { "goal": "Tone", "level": "Intermediate", "reps": "4x25", "duration": 4 },
@@ -136,6 +172,9 @@
     "name": "Deadlift",
     "image": "deadlift",
     "location": "Gym",
+    "description": "Stand with feet hip-width apart, grip the barbell, and lift it by extending your hips and knees until you are standing upright.",
+    "muscles": ["Hamstrings", "Glutes", "Lower Back", "Traps"],
+    "intensity": 1.9,
     "variants": [
       { "goal": "Build Muscle", "level": "Beginner", "reps": "3x8", "duration": 5 },
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "4x6", "duration": 7 },
@@ -147,6 +186,9 @@
     "name": "Dumbbell Press",
     "image": "dumbbell_press",
     "location": "Gym",
+    "description": "Lie on a flat bench holding dumbbells above your chest. Lower the weights to the sides of your chest, then press them back up.",
+    "muscles": ["Chest", "Shoulders", "Triceps"],
+    "intensity": 1.4,
     "variants": [
       { "goal": "Build Muscle", "level": "Beginner", "reps": "3x10", "duration": 4 },
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x12", "duration": 5 },
@@ -158,6 +200,9 @@
     "name": "Dumbbell Row",
     "image": "dumbbell_row",
     "location": "Gym",
+    "description": "Place one hand and knee on a bench. With the other hand, pull a dumbbell toward your hip, keeping your back flat.",
+    "muscles": ["Lats", "Rhomboids", "Biceps"],
+    "intensity": 1.3,
     "variants": [
       { "goal": "Build Muscle", "level": "Beginner", "reps": "3x10", "duration": 4 },
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x12", "duration": 5 },
@@ -169,6 +214,9 @@
     "name": "Dumbbell Side Bend",
     "image": "dumbbell_side_bend",
     "location": "Gym",
+    "description": "Stand upright holding a dumbbell in one hand. Bend sideways toward the weight, then return to center using your obliques.",
+    "muscles": ["Obliques"],
+    "intensity": 1.1,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x15", "duration": 3 },
       { "goal": "Tone", "level": "Intermediate", "reps": "3x20", "duration": 4 },
@@ -180,6 +228,9 @@
     "name": "Glute Bridge",
     "image": "glute_bridge",
     "location": "Home",
+    "description": "Lie on your back with knees bent and feet flat. Lift your hips toward the ceiling while squeezing your glutes.",
+    "muscles": ["Glutes", "Hamstrings", "Core"],
+    "intensity": 1.2,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x15", "duration": 3 },
       { "goal": "Tone", "level": "Intermediate", "reps": "3x20", "duration": 4 },
@@ -191,6 +242,9 @@
     "name": "Jumping Jacks",
     "image": "jump_jacks",
     "location": "Home",
+    "description": "Jump to a position with legs spread wide and hands touching overhead, then jump back to the starting position.",
+    "muscles": ["Full Body", "Cardio"],
+    "intensity": 1.5,
     "variants": [
       { "goal": "Lose Weight", "level": "Beginner", "reps": "3x30s", "duration": 3 },
       { "goal": "Lose Weight", "level": "Intermediate", "reps": "3x45s", "duration": 4 },
@@ -202,6 +256,9 @@
     "name": "Jump Rope",
     "image": "jumprope",
     "location": "Home",
+    "description": "Swing a rope over your head and jump as it passes under your feet. Maintain a steady rhythm.",
+    "muscles": ["Calves", "Quads", "Cardio"],
+    "intensity": 1.8,
     "variants": [
       { "goal": "Lose Weight", "level": "Beginner", "reps": "10 min", "duration": 10 },
       { "goal": "Lose Weight", "level": "Intermediate", "reps": "15 min", "duration": 15 },
@@ -213,6 +270,9 @@
     "name": "Kettlebell Swings",
     "image": "kettlebell_swings",
     "location": "Home",
+    "description": "Hold a kettlebell with both hands. Hinge at the hips to swing the weight between your legs, then drive your hips forward to swing it to chest height.",
+    "muscles": ["Glutes", "Hamstrings", "Core", "Shoulders"],
+    "intensity": 1.7,
     "variants": [
       { "goal": "Lose Weight", "level": "Beginner", "reps": "3x15", "duration": 4 },
       { "goal": "Lose Weight", "level": "Intermediate", "reps": "4x20", "duration": 5 },
@@ -224,6 +284,9 @@
     "name": "Lat Pulldown",
     "image": "lat_pulldown",
     "location": "Gym",
+    "description": "Sit at a lat pulldown machine and pull the bar down to your upper chest, focusing on squeezing your shoulder blades together.",
+    "muscles": ["Lats", "Biceps", "Rear Deltoids"],
+    "intensity": 1.3,
     "variants": [
       { "goal": "Build Muscle", "level": "Beginner", "reps": "3x12", "duration": 4 },
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x15", "duration": 5 },
@@ -235,6 +298,9 @@
     "name": "Leg Curl",
     "image": "leg_curl",
     "location": "Gym",
+    "description": "Lie face down on a leg curl machine and curl your legs toward your glutes by contracting your hamstrings.",
+    "muscles": ["Hamstrings"],
+    "intensity": 1.2,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x15", "duration": 4 },
       { "goal": "Tone", "level": "Intermediate", "reps": "3x20", "duration": 5 },
@@ -246,6 +312,9 @@
     "name": "Leg Press",
     "image": "leg_press",
     "location": "Gym",
+    "description": "Sit in a leg press machine and push the platform away from you by extending your knees and hips.",
+    "muscles": ["Quads", "Glutes", "Hamstrings"],
+    "intensity": 1.5,
     "variants": [
       { "goal": "Build Muscle", "level": "Beginner", "reps": "3x12", "duration": 5 },
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x15", "duration": 6 },
@@ -257,6 +326,9 @@
     "name": "Lunges",
     "image": "lunges",
     "location": "Home",
+    "description": "Step forward with one leg and lower your hips until both knees are bent at a 90-degree angle.",
+    "muscles": ["Quads", "Glutes", "Hamstrings"],
+    "intensity": 1.4,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x15", "duration": 4 },
       { "goal": "Tone", "level": "Intermediate", "reps": "3x20", "duration": 5 },
@@ -268,6 +340,9 @@
     "name": "Mountain Climber",
     "image": "mountain_climber",
     "location": "Home",
+    "description": "From a plank position, alternate bringing your knees toward your chest as quickly as possible.",
+    "muscles": ["Core", "Cardio", "Shoulders"],
+    "intensity": 1.6,
     "variants": [
       { "goal": "Lose Weight", "level": "Beginner", "reps": "3x30s", "duration": 3 },
       { "goal": "Lose Weight", "level": "Intermediate", "reps": "3x45s", "duration": 4 },
@@ -279,6 +354,9 @@
     "name": "Pistol Squat",
     "image": "pistol_squat",
     "location": "Home",
+    "description": "A single-leg squat where the non-working leg is held straight out in front. Requires significant balance and strength.",
+    "muscles": ["Quads", "Glutes", "Core"],
+    "intensity": 1.8,
     "variants": [
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x8", "duration": 5 },
       { "goal": "Build Muscle", "level": "Advanced", "reps": "4x8", "duration": 6 }
@@ -289,6 +367,9 @@
     "name": "Plank",
     "image": "plank",
     "location": "Home",
+    "description": "Hold a pushup-like position but with your weight on your forearms instead of your hands. Keep your body in a straight line.",
+    "muscles": ["Core", "Shoulders", "Glutes"],
+    "intensity": 1.3,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x45s", "duration": 3 },
       { "goal": "Tone", "level": "Intermediate", "reps": "3x60s", "duration": 4 },
@@ -300,6 +381,9 @@
     "name": "Pullups",
     "image": "pullups",
     "location": "Gym",
+    "description": "Hang from a pullup bar and pull your body upward until your chin is over the bar.",
+    "muscles": ["Lats", "Biceps", "Upper Back"],
+    "intensity": 1.7,
     "variants": [
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "3xMax", "duration": 5 },
       { "goal": "Build Muscle", "level": "Advanced", "reps": "5xMax", "duration": 7 }
@@ -310,6 +394,9 @@
     "name": "Pushups",
     "image": "pushups",
     "location": "Home",
+    "description": "Lower your body until your chest nearly touches the floor, then push back up to the starting position.",
+    "muscles": ["Chest", "Triceps", "Shoulders"],
+    "intensity": 1.3,
     "variants": [
       { "goal": "Build Muscle", "level": "Beginner", "reps": "3x10", "duration": 3 },
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x20", "duration": 4 },
@@ -321,6 +408,9 @@
     "name": "Rowing Machine",
     "image": "rowing",
     "location": "Gym",
+    "description": "Sit on a rowing machine and perform a rowing motion. Focus on a smooth, powerful stroke.",
+    "muscles": ["Back", "Legs", "Arms", "Cardio"],
+    "intensity": 1.6,
     "variants": [
       { "goal": "Lose Weight", "level": "Beginner", "reps": "10 min", "duration": 10 },
       { "goal": "Lose Weight", "level": "Intermediate", "reps": "20 min", "duration": 20 },
@@ -332,6 +422,9 @@
     "name": "Seated Row",
     "image": "seated_row",
     "location": "Gym",
+    "description": "Sit at a seated row machine and pull the handle toward your abdomen while keeping your back straight.",
+    "muscles": ["Upper Back", "Lats", "Biceps"],
+    "intensity": 1.3,
     "variants": [
       { "goal": "Build Muscle", "level": "Beginner", "reps": "3x12", "duration": 4 },
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "3x15", "duration": 5 },
@@ -343,6 +436,9 @@
     "name": "Side Plank",
     "image": "side_plank",
     "location": "Home",
+    "description": "Lie on your side and support your body on your forearm. Keep your body in a straight line from head to feet.",
+    "muscles": ["Obliques", "Core", "Shoulders"],
+    "intensity": 1.2,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x30s", "duration": 3 },
       { "goal": "Tone", "level": "Intermediate", "reps": "3x45s", "duration": 4 },
@@ -354,6 +450,9 @@
     "name": "Sled Push",
     "image": "sled_push",
     "location": "Gym",
+    "description": "Push a weighted sled across a distance. Focus on driving with your legs.",
+    "muscles": ["Quads", "Glutes", "Calves", "Core"],
+    "intensity": 2.0,
     "variants": [
       { "goal": "Build Muscle", "level": "Intermediate", "reps": "4 sets", "duration": 7 },
       { "goal": "Build Muscle", "level": "Advanced", "reps": "6 sets", "duration": 10 }
@@ -364,6 +463,9 @@
     "name": "Bodyweight Squats",
     "image": "squats",
     "location": "Home",
+    "description": "Stand with feet shoulder-width apart and squat down until your thighs are parallel to the floor.",
+    "muscles": ["Quads", "Glutes", "Hamstrings"],
+    "intensity": 1.3,
     "variants": [
       { "goal": "Tone", "level": "Beginner", "reps": "3x20", "duration": 4 },
       { "goal": "Tone", "level": "Intermediate", "reps": "4x25", "duration": 5 },
@@ -375,6 +477,9 @@
     "name": "Treadmill",
     "image": "treadmill",
     "location": "Gym",
+    "description": "Walk, jog, or run on a treadmill. Adjust speed and incline to match your fitness level.",
+    "muscles": ["Legs", "Cardio"],
+    "intensity": 1.5,
     "variants": [
       { "goal": "Lose Weight", "level": "Beginner", "reps": "20 min", "duration": 20 },
       { "goal": "Lose Weight", "level": "Intermediate", "reps": "30 min", "duration": 30 },
