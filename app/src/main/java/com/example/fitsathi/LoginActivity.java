@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText emailInput, passwordInput;
     Button loginBtn, goToRegisterBtn;
     TextView welcomeText, forgotPasswordText;
+    android.widget.ProgressBar progressBar;
     FirebaseAuth mAuth;
 
     @Override
@@ -47,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn = findViewById(R.id.btn_login);
         goToRegisterBtn = findViewById(R.id.btn_goto_register);
         forgotPasswordText = findViewById(R.id.forgot_password_text);
+        progressBar = findViewById(R.id.login_progress);
 
         welcomeText.setText("Welcome Back 👋");
 
@@ -59,11 +61,19 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                emailInput.setError("Please enter a valid email address");
+                return;
+            }
+
+            setLoading(true);
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     checkUserInfoAndProceed();
                 } else {
-                    Toast.makeText(this, "Login failed. Check your credentials.", Toast.LENGTH_SHORT).show();
+                    setLoading(false);
+                    String error = task.getException() != null ? task.getException().getMessage() : "Login failed";
+                    Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -76,10 +86,20 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void setLoading(boolean isLoading) {
+        progressBar.setVisibility(isLoading ? android.view.View.VISIBLE : android.view.View.GONE);
+        loginBtn.setEnabled(!isLoading);
+        goToRegisterBtn.setEnabled(!isLoading);
+        emailInput.setEnabled(!isLoading);
+        passwordInput.setEnabled(!isLoading);
+    }
+
     private void checkUserInfoAndProceed() {
         UserInfoManager.getUserInfo(userInfo -> {
-            if (userInfo == null) {
+            if (userInfo == null || userInfo.getName() == null) {
                 startActivity(new Intent(this, UserInfoActivity.class));
+            } else if (userInfo.getFitnessGoal() == null || userInfo.getFitnessGoal().isEmpty()) {
+                startActivity(new Intent(this, FitnessGoalActivity.class));
             } else {
                 startActivity(new Intent(this, DashboardActivity.class));
             }

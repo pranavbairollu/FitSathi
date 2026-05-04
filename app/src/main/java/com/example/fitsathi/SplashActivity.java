@@ -25,12 +25,14 @@ public class SplashActivity extends AppCompatActivity {
         // Navigation logic
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             UserInfoManager.getUserInfo(userInfo -> {
-                if (userInfo != null) {
-                    startActivity(new Intent(this, DashboardActivity.class));
-                } else {
+                if (userInfo == null || userInfo.getName() == null) {
                     startActivity(new Intent(this, UserInfoActivity.class));
+                } else if (userInfo.getFitnessGoal() == null || userInfo.getFitnessGoal().isEmpty()) {
+                    startActivity(new Intent(this, FitnessGoalActivity.class));
+                } else {
+                    startActivity(new Intent(this, DashboardActivity.class));
                 }
-                finish(); // This is the fix
+                finish();
             });
         } else {
             startActivity(new Intent(this, LoginActivity.class));

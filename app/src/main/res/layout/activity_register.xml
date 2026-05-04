@@ -48,6 +48,16 @@
             android:inputType="textPassword"
             android:background="@drawable/rounded_input"
             android:padding="14dp"
+            android:layout_marginBottom="16dp"/>
+
+        <EditText
+            android:id="@+id/password_confirm_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:background="@drawable/rounded_input"
+            android:padding="14dp"
             android:layout_marginBottom="24dp"/>
 
         <Button
@@ -67,7 +77,14 @@
             android:text="Go to Login"
             android:textColor="?attr/colorOnSecondary"
             android:backgroundTint="?attr/colorSecondary"
-            android:padding="14dp"/>
+            android:padding="14dp"
+            android:layout_marginBottom="16dp"/>
+
+        <ProgressBar
+            android:id="@+id/register_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
     </LinearLayout>
 </ScrollView>

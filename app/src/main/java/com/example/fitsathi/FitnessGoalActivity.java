@@ -12,10 +12,16 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fitsathi.managers.UserInfoManager;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class FitnessGoalActivity extends AppCompatActivity {
 
     private Spinner spinnerGoal, spinnerLevel, spinnerLocation, spinnerTime;
     private Button btnSaveGoal;
+    private android.widget.ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,10 +33,9 @@ public class FitnessGoalActivity extends AppCompatActivity {
         spinnerLocation = findViewById(R.id.spinner_location);
         spinnerTime = findViewById(R.id.spinner_time);
         btnSaveGoal = findViewById(R.id.btn_save_goal);
+        progressBar = findViewById(R.id.fitness_goal_progress);
 
-        // ----------------------------
-        // Setup spinner data
-        // -----------------------------
+        // ... (ArrayAdapter setups) ...
         ArrayAdapter<String> goalAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
                 new String[]{"Select your Goal", "Lose Weight", "Build Muscle", "Tone"});
@@ -65,25 +70,23 @@ public class FitnessGoalActivity extends AppCompatActivity {
     }
 
     private void loadSavedGoal() {
-        String goal = getSharedPreferences("FitnessPrefs", Context.MODE_PRIVATE)
-                .getString("goal", "Select your Goal");
-        String level = getSharedPreferences("FitnessPrefs", Context.MODE_PRIVATE)
-                .getString("level", "Select Fitness Level");
-        String location = getSharedPreferences("FitnessPrefs", Context.MODE_PRIVATE)
-                .getString("location", "Select Workout Location");
-        String time = getSharedPreferences("FitnessPrefs", Context.MODE_PRIVATE)
-                .getString("time", "Select Workout Duration");
+        setLoading(true);
+        UserInfoManager.getUserInfo(userInfo -> {
+            setLoading(false);
+            if (userInfo != null) {
+                if (userInfo.getFitnessGoal() != null) setSpinnerSelection(spinnerGoal, userInfo.getFitnessGoal());
+                if (userInfo.getDifficultyLevel() != null) setSpinnerSelection(spinnerLevel, userInfo.getDifficultyLevel());
+                if (userInfo.getWorkoutLocation() != null) setSpinnerSelection(spinnerLocation, userInfo.getWorkoutLocation());
 
-        setSpinnerSelection(spinnerGoal, goal);
-        setSpinnerSelection(spinnerLevel, level);
-        setSpinnerSelection(spinnerLocation, location);
-
-        // Map stored "Short/Medium/Long" back to full spinner text
-        if (time.equals("Short")) time = "Short (10-20 min)";
-        else if (time.equals("Medium")) time = "Medium (20-40 min)";
-        else if (time.equals("Long")) time = "Long (40-60 min)";
-
-        setSpinnerSelection(spinnerTime, time);
+                String time = userInfo.getWorkoutDuration();
+                if (time != null) {
+                    if (time.equals("Short")) time = "Short (10-20 min)";
+                    else if (time.equals("Medium")) time = "Medium (20-40 min)";
+                    else if (time.equals("Long")) time = "Long (40-60 min)";
+                    setSpinnerSelection(spinnerTime, time);
+                }
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -109,23 +112,41 @@ public class FitnessGoalActivity extends AppCompatActivity {
         String timePref = time.startsWith("Short") ? "Short" :
                 time.startsWith("Medium") ? "Medium" : "Long";
 
-        getSharedPreferences("FitnessPrefs", Context.MODE_PRIVATE).edit()
-                .putString("goal", goal)
-                .putString("level", level)
-                .putString("location", location)
-                .putString("time", timePref)
-                .apply();
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("fitnessGoal", goal);
+        updates.put("difficultyLevel", level);
+        updates.put("workoutLocation", location);
+        updates.put("workoutDuration", timePref);
 
-        // Clear the saved daily workout so a new one is generated
-        getSharedPreferences("DailyWorkoutPrefs", Context.MODE_PRIVATE).edit()
-                .remove("workout_date")
-                .remove("workout_names")
-                .apply();
+        setLoading(true);
+        UserInfoManager.updateUserInfo(updates, success -> {
+            setLoading(false);
+            if (success) {
+                // Clear local daily workout so a new one is generated
+                getSharedPreferences("DailyWorkoutPrefs", Context.MODE_PRIVATE).edit()
+                        .remove("workout_date")
+                        .remove("workout_names")
+                        .apply();
 
-        Toast.makeText(this, "Goal saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Goal saved and synced!", Toast.LENGTH_SHORT).show();
 
-        // Return to dashboard
-        startActivity(new Intent(this, DashboardActivity.class));
-        finish();
+                // Return to dashboard
+                Intent intent = new Intent(this, DashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(this, "Failed to sync goals. Check your connection.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void setLoading(boolean isLoading) {
+        progressBar.setVisibility(isLoading ? android.view.View.VISIBLE : android.view.View.GONE);
+        btnSaveGoal.setEnabled(!isLoading);
+        spinnerGoal.setEnabled(!isLoading);
+        spinnerLevel.setEnabled(!isLoading);
+        spinnerLocation.setEnabled(!isLoading);
+        spinnerTime.setEnabled(!isLoading);
     }
 }

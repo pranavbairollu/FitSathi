@@ -23,6 +23,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private Button saveButton;
     private MaterialToolbar toolbar;
     private TextInputLayout activityLevelLayout;
+    private android.widget.ProgressBar progressBar;
 
     private static final String[] GENDER_OPTIONS = {"Male", "Female", "Other"};
     private static final String[] ACTIVITY_LEVEL_OPTIONS = {
@@ -43,6 +44,7 @@ public class UserInfoActivity extends AppCompatActivity {
         activitySpinner = findViewById(R.id.spinner_activity_level);
         saveButton = findViewById(R.id.save_button);
         activityLevelLayout = findViewById(R.id.activity_level_layout);
+        progressBar = findViewById(R.id.user_info_progress);
 
         toolbar.setNavigationOnClickListener(v -> finish());
 
@@ -176,17 +178,34 @@ public class UserInfoActivity extends AppCompatActivity {
             newUserInfo.setGender(gender);
             newUserInfo.setActivityLevel(activity);
 
-            UserInfoManager.saveUserInfo(newUserInfo);
-
-            Toast.makeText(this, "Info saved successfully!", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(UserInfoActivity.this, DashboardActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            setLoading(true);
+            UserInfoManager.saveUserInfo(newUserInfo, success -> {
+                setLoading(false);
+                if (success) {
+                    Toast.makeText(this, "Info saved successfully!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(UserInfoActivity.this, FitnessGoalActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "Failed to save info. Check your connection.", Toast.LENGTH_LONG).show();
+                }
+            });
 
         } catch (Exception e) {
+            setLoading(false);
             e.printStackTrace();
             Toast.makeText(this, "An unexpected error occurred while saving", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void setLoading(boolean isLoading) {
+        progressBar.setVisibility(isLoading ? android.view.View.VISIBLE : android.view.View.GONE);
+        saveButton.setEnabled(!isLoading);
+        nameInput.setEnabled(!isLoading);
+        ageInput.setEnabled(!isLoading);
+        heightInput.setEnabled(!isLoading);
+        weightInput.setEnabled(!isLoading);
+        genderSpinner.setEnabled(!isLoading);
+        activitySpinner.setEnabled(!isLoading);
     }
 }

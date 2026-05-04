@@ -17,9 +17,10 @@ import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText emailInput, passwordInput;
+    EditText emailInput, passwordInput, confirmPasswordInput;
     Button registerBtn, goToLoginBtn;
     TextView welcomeText;
+    android.widget.ProgressBar progressBar;
     FirebaseAuth mAuth;
 
     // Regex for the new password policy
@@ -36,38 +37,63 @@ public class RegisterActivity extends AppCompatActivity {
         welcomeText = findViewById(R.id.welcome_text);
         emailInput = findViewById(R.id.email_input);
         passwordInput = findViewById(R.id.password_input);
+        confirmPasswordInput = findViewById(R.id.password_confirm_input);
         registerBtn = findViewById(R.id.btn_register);
         goToLoginBtn = findViewById(R.id.btn_goto_login);
+        progressBar = findViewById(R.id.register_progress);
 
         welcomeText.setText("Join FitSathi 👋");
 
         registerBtn.setOnClickListener(v -> {
             String email = emailInput.getText().toString().trim();
             String password = passwordInput.getText().toString().trim();
+            String confirmPassword = confirmPasswordInput.getText().toString().trim();
 
-            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
                 Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                emailInput.setError("Please enter a valid email address");
                 return;
             }
 
             // Enforce the new password policy
             if (!isValidPassword(password)) {
-                passwordInput.setError("Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a special character.");
+                passwordInput.setError("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
                 return;
             }
 
+            if (!password.equals(confirmPassword)) {
+                confirmPasswordInput.setError("Passwords do not match");
+                return;
+            }
+
+            setLoading(true);
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                setLoading(false);
                 if (task.isSuccessful()) {
                     startActivity(new Intent(this, UserInfoActivity.class));
                     finish();
                 } else {
-                    Toast.makeText(this, "Registration failed", Toast.LENGTH_SHORT).show();
+                    String error = task.getException() != null ? task.getException().getMessage() : "Registration failed";
+                    Toast.makeText(this, error, Toast.LENGTH_LONG).show();
                 }
             });
         });
 
         goToLoginBtn.setOnClickListener(v ->
                 startActivity(new Intent(this, LoginActivity.class)));
+    }
+
+    private void setLoading(boolean isLoading) {
+        progressBar.setVisibility(isLoading ? android.view.View.VISIBLE : android.view.View.GONE);
+        registerBtn.setEnabled(!isLoading);
+        goToLoginBtn.setEnabled(!isLoading);
+        emailInput.setEnabled(!isLoading);
+        passwordInput.setEnabled(!isLoading);
+        confirmPasswordInput.setEnabled(!isLoading);
     }
 
     private boolean isValidPassword(String password) {

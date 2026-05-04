@@ -33,6 +33,10 @@ public class UserInfoManager {
         private String gender;
         private String activityLevel;
         private String profilePicUrl;
+        private String fitnessGoal;
+        private String difficultyLevel;
+        private String workoutLocation;
+        private String workoutDuration;
 
         public UserInfo() {}
 
@@ -44,6 +48,10 @@ public class UserInfoManager {
         public String getGender() { return gender; }
         public String getActivityLevel() { return activityLevel; }
         public String getProfilePicUrl() { return profilePicUrl; }
+        public String getFitnessGoal() { return fitnessGoal; }
+        public String getDifficultyLevel() { return difficultyLevel; }
+        public String getWorkoutLocation() { return workoutLocation; }
+        public String getWorkoutDuration() { return workoutDuration; }
 
         // Setters
         public void setName(String name) { this.name = name; }
@@ -53,15 +61,47 @@ public class UserInfoManager {
         public void setGender(String gender) { this.gender = gender; }
         public void setActivityLevel(String activityLevel) { this.activityLevel = activityLevel; }
         public void setProfilePicUrl(String profilePicUrl) { this.profilePicUrl = profilePicUrl; }
+        public void setFitnessGoal(String fitnessGoal) { this.fitnessGoal = fitnessGoal; }
+        public void setDifficultyLevel(String difficultyLevel) { this.difficultyLevel = difficultyLevel; }
+        public void setWorkoutLocation(String workoutLocation) { this.workoutLocation = workoutLocation; }
+        public void setWorkoutDuration(String workoutDuration) { this.workoutDuration = workoutDuration; }
+    }
+
+    public interface SaveCallback {
+        void onSaveComplete(boolean success);
     }
 
     private static DatabaseReference getUserRef() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return null;
+        String userId = user.getUid();
         return FirebaseDatabase.getInstance().getReference(FIREBASE_USERS_KEY).child(userId);
     }
 
     public static void saveUserInfo(UserInfo userInfo) {
-        getUserRef().setValue(userInfo);
+        saveUserInfo(userInfo, null);
+    }
+
+    public static void saveUserInfo(UserInfo userInfo, SaveCallback callback) {
+        DatabaseReference ref = getUserRef();
+        if (ref == null) {
+            if (callback != null) callback.onSaveComplete(false);
+            return;
+        }
+        ref.setValue(userInfo).addOnCompleteListener(task -> {
+            if (callback != null) callback.onSaveComplete(task.isSuccessful());
+        });
+    }
+
+    public static void updateUserInfo(java.util.Map<String, Object> updates, SaveCallback callback) {
+        DatabaseReference ref = getUserRef();
+        if (ref == null) {
+            if (callback != null) callback.onSaveComplete(false);
+            return;
+        }
+        ref.updateChildren(updates).addOnCompleteListener(task -> {
+            if (callback != null) callback.onSaveComplete(task.isSuccessful());
+        });
     }
 
     public static void getUserInfo(UserInfoCallback callback) {
@@ -101,20 +141,35 @@ public class UserInfoManager {
 
     public static double calculateDailyCalorieGoal(UserInfo userInfo) {
         double bmr = calculateBMR(userInfo);
-        if(userInfo.getActivityLevel() == null) return bmr * 1.2;
-        switch (userInfo.getActivityLevel()) {
-            case "Sedentary":
-                return bmr * 1.2;
+        double tdee;
+        
+        String activity = userInfo.getActivityLevel() != null ? userInfo.getActivityLevel() : "Sedentary";
+        switch (activity) {
             case "Lightly Active":
-                return bmr * 1.375;
+                tdee = bmr * 1.375;
+                break;
             case "Moderately Active":
-                return bmr * 1.55;
+                tdee = bmr * 1.55;
+                break;
             case "Very Active":
-                return bmr * 1.725;
+                tdee = bmr * 1.725;
+                break;
             case "Extra Active":
-                return bmr * 1.9;
-            default:
-                return bmr * 1.2;
+                tdee = bmr * 1.9;
+                break;
+            default: // Sedentary or null
+                tdee = bmr * 1.2;
+                break;
+        }
+
+        // Adjust based on Fitness Goal
+        String goal = userInfo.getFitnessGoal() != null ? userInfo.getFitnessGoal() : "Maintain";
+        if (goal.contains("Lose Weight")) {
+            return tdee - 500; // Caloric deficit
+        } else if (goal.contains("Build Muscle") || goal.contains("Gain")) {
+            return tdee + 300; // Caloric surplus for muscle growth
+        } else {
+            return tdee; // Maintenance
         }
     }
 
