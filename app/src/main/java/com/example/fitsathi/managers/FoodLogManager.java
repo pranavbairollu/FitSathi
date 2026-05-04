@@ -24,16 +24,26 @@ public class FoodLogManager {
         return FirebaseDatabase.getInstance().getReference(FIREBASE_FOOD_LOG_KEY).child(userId);
     }
 
-    public static void addFoodItem(String date, FoodItem newItem) {
-        getFoodLogRef().child(date).push().setValue(newItem);
+    public interface LogOperationCallback {
+        void onComplete(boolean success);
     }
 
-    public static void updateFoodItem(String date, FoodItem item) {
-        getFoodLogRef().child(date).child(item.getKey()).setValue(item);
+    public static void addFoodItem(String date, FoodItem newItem, LogOperationCallback callback) {
+        getFoodLogRef().child(date).push().setValue(newItem).addOnCompleteListener(task -> {
+            if (callback != null) callback.onComplete(task.isSuccessful());
+        });
     }
 
-    public static void removeFoodItem(String date, String key) {
-        getFoodLogRef().child(date).child(key).removeValue();
+    public static void updateFoodItem(String date, FoodItem item, LogOperationCallback callback) {
+        getFoodLogRef().child(date).child(item.getKey()).setValue(item).addOnCompleteListener(task -> {
+            if (callback != null) callback.onComplete(task.isSuccessful());
+        });
+    }
+
+    public static void removeFoodItem(String date, String key, LogOperationCallback callback) {
+        getFoodLogRef().child(date).child(key).removeValue().addOnCompleteListener(task -> {
+            if (callback != null) callback.onComplete(task.isSuccessful());
+        });
     }
 
     public static void getFoodListForDate(String date, FoodListCallback callback) {

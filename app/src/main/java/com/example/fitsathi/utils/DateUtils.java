@@ -15,6 +15,14 @@ public class DateUtils {
         return sdf.format(new Date());
     }
 
+    /**
+     * Standardized date for food logs. 
+     * Uses LOCAL time to ensure user's meals align with their current day.
+     */
+    public static String getFoodLogDate() {
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+    }
+
     // DEFINITIVE FIX: New method for food logs to ensure synchronization
     public static String getTodayDateUTC_forFoodLogs() {
         SimpleDateFormat sdfUTC = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);

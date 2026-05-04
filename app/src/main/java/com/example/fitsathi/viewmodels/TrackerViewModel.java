@@ -37,6 +37,7 @@ public class TrackerViewModel extends ViewModel {
     private final MutableLiveData<String> foodInputError = new MutableLiveData<>();
     private final MutableLiveData<String> mealTypeError = new MutableLiveData<>();
     private final MutableLiveData<String> navigateToManualEntry = new MutableLiveData<>();
+    private final MutableLiveData<FoodItem> showFoodDetailDialog = new MutableLiveData<>();
 
     public LiveData<List<FoodItem>> getFoodList() { return foodList; }
     public LiveData<PieDataSet> getPieData() { return pieData; }
@@ -46,9 +47,10 @@ public class TrackerViewModel extends ViewModel {
     public LiveData<String> getFoodInputError() { return foodInputError; }
     public LiveData<String> getMealTypeError() { return mealTypeError; }
     public LiveData<String> getNavigateToManualEntry() { return navigateToManualEntry; }
+    public LiveData<FoodItem> getShowFoodDetailDialog() { return showFoodDetailDialog; }
 
     public void loadInitialData(Context context) {
-        String today = DateUtils.getTodayDateUTC_forFoodLogs(); // Use UTC date for loading
+        String today = DateUtils.getFoodLogDate(); // Switch to Local Date for consistency
         FoodLogManager.getFoodListForDate(today, items -> {
             foodList.setValue(items);
             updateSummaryText(items);
@@ -60,16 +62,20 @@ public class TrackerViewModel extends ViewModel {
     }
 
     private void updateSummaryText(List<FoodItem> items) {
-        double totalProtein = 0, totalCarbs = 0, totalFat = 0;
+        double totalProtein = 0, totalCarbs = 0, totalFat = 0, totalFiber = 0, totalSugar = 0;
         for (FoodItem item : items) {
             totalProtein += item.getProtein();
             totalCarbs += item.getCarbs();
             totalFat += item.getFat();
+            totalFiber += item.getFibre();
+            totalSugar += item.getSugar();
         }
         Map<String, String> summary = new HashMap<>();
         summary.put("protein", String.format("%.0f g", totalProtein));
         summary.put("carbs", String.format("%.0f g", totalCarbs));
         summary.put("fat", String.format("%.0f g", totalFat));
+        summary.put("fiber", String.format("%.0f g", totalFiber));
+        summary.put("sugar", String.format("%.0f g", totalSugar));
         summaryText.setValue(summary);
     }
 
@@ -117,8 +123,7 @@ public class TrackerViewModel extends ViewModel {
             @Override
             public void onSuccess(FoodItem foodItem) {
                 foodItem.setMealType(mealType);
-                FoodLogManager.addFoodItem(DateUtils.getTodayDateUTC_forFoodLogs(), foodItem);
-                loadInitialData(context);
+                showFoodDetailDialog.setValue(foodItem);
             }
             @Override
             public void onError(String message) { toastMessage.setValue(message); }
@@ -147,8 +152,7 @@ public class TrackerViewModel extends ViewModel {
                         "Snacks",
                         "OpenFoodFacts"
                 );
-                FoodLogManager.addFoodItem(DateUtils.getTodayDateUTC_forFoodLogs(), item);
-                loadInitialData(context);
+                showFoodDetailDialog.setValue(item);
             }
 
             @Override
@@ -157,9 +161,7 @@ public class TrackerViewModel extends ViewModel {
                     @Override
                     public void onSuccess(FoodItem foodItem) {
                         foodItem.setMealType("Snacks");
-                        FoodLogManager.addFoodItem(DateUtils.getTodayDateUTC_forFoodLogs(), foodItem);
-                        loadInitialData(context);
-                        toastMessage.setValue("Found via search: " + foodItem.getName());
+                        showFoodDetailDialog.setValue(foodItem);
                     }
                     @Override
                     public void onError(String errorMessage) {
@@ -172,15 +174,27 @@ public class TrackerViewModel extends ViewModel {
     }
 
     public void removeFoodItem(Context context, FoodItem foodItem) {
-        FoodLogManager.removeFoodItem(DateUtils.getTodayDateUTC_forFoodLogs(), foodItem.getKey());
-        loadInitialData(context);
+        FoodLogManager.removeFoodItem(DateUtils.getFoodLogDate(), foodItem.getKey(), success -> {
+            if (success) loadInitialData(context);
+            else toastMessage.setValue("Failed to remove item.");
+        });
+    }
+
+    public void addFoodItem(Context context, FoodItem foodItem) {
+        FoodLogManager.addFoodItem(DateUtils.getFoodLogDate(), foodItem, success -> {
+            if (success) loadInitialData(context);
+            else toastMessage.setValue("Failed to add item.");
+        });
     }
 
     public void updateFoodItem(Context context, FoodItem foodItem) {
-        FoodLogManager.updateFoodItem(DateUtils.getTodayDateUTC_forFoodLogs(), foodItem);
-        loadInitialData(context);
+        FoodLogManager.updateFoodItem(DateUtils.getFoodLogDate(), foodItem, success -> {
+            if (success) loadInitialData(context);
+            else toastMessage.setValue("Failed to update item.");
+        });
     }
 
     public void clearToastMessage() { toastMessage.setValue(null); }
     public void doneNavigating() { navigateToManualEntry.setValue(null); }
+    public void doneShowingDetails() { showFoodDetailDialog.setValue(null); }
 }

@@ -82,6 +82,48 @@
                         android:layout_marginBottom="16dp"
                         android:background="?attr/colorSurface"/>
 
+                    <!-- 📊 Calorie Budget Status Bar (Real-time Consumed vs Goal) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="24dp"
+                        android:paddingHorizontal="8dp">
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/calorie_progress_bar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:trackThickness="12dp"
+                            app:trackCornerRadius="6dp"
+                            app:trackColor="?attr/colorSurfaceVariant"
+                            app:indicatorColor="@color/brand_primary"
+                            android:progress="45"
+                            tools:progress="60" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp">
+
+                            <TextView
+                                android:id="@+id/tv_consumed_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0 kcal consumed"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+                            <TextView
+                                android:id="@+id/tv_remaining_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:text="2000 kcal left"
+                                android:textStyle="bold"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
                     <!-- Macronutrient Summary -->
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -157,6 +199,62 @@
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                                 android:textColor="@color/brand_accent"
                                 tools:text="60g" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Row 2: Fiber & Sugar -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="12dp"
+                        android:weightSum="2"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Fiber"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                                android:textColor="?android:attr/textColorSecondary" />
+
+                            <TextView
+                                android:id="@+id/fiber_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                                android:textColor="?attr/colorTertiary"
+                                tools:text="25g" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sugar"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                                android:textColor="?android:attr/textColorSecondary" />
+
+                            <TextView
+                                android:id="@+id/sugar_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                                android:textColor="#E91E63"
+                                tools:text="15g" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

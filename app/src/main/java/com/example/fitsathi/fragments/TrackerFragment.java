@@ -160,17 +160,35 @@ public class TrackerFragment extends Fragment implements EditFoodDialogFragment.
 
         viewModel.getPieData().observe(getViewLifecycleOwner(), pieDataSet -> {
             if (pieDataSet != null && pieDataSet.getEntryCount() > 0) {
-                PieEntry consumedEntry = pieDataSet.getEntryForIndex(0);
-                float consumedValue = consumedEntry.getValue();
+                float consumedValue = pieDataSet.getEntryForIndex(0).getValue();
+                float remainingValue = pieDataSet.getEntryCount() > 1 ? pieDataSet.getEntryForIndex(1).getValue() : 0f;
+                float goalValue = consumedValue + remainingValue;
 
+                // Update Pie Chart
                 PieData pieData = new PieData(pieDataSet);
-                pieData.setDrawValues(false); // This hides the value text on slices
+                pieData.setDrawValues(false);
                 binding.pieChart.setData(pieData);
                 binding.pieChart.setCenterText(String.format(getString(R.string.consumed_kcal), consumedValue));
                 binding.pieChart.animateY(1000);
+
+                // Update Linear Progress Bar (Status Bar)
+                int progress = (int) (goalValue > 0 ? (consumedValue / goalValue) * 100 : 0);
+                binding.calorieProgressBar.setProgress(Math.min(progress, 100));
+                binding.tvConsumedLabel.setText(String.format("%.0f kcal consumed", consumedValue));
+                binding.tvRemainingLabel.setText(String.format("%.0f kcal left", remainingValue));
+                
+                // Color coding for progress bar (Red if over goal)
+                if (consumedValue > goalValue && goalValue > 0) {
+                    binding.calorieProgressBar.setIndicatorColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light));
+                } else {
+                    binding.calorieProgressBar.setIndicatorColor(getThemeColor(com.google.android.material.R.attr.colorPrimary));
+                }
             } else {
                 binding.pieChart.clear();
                 binding.pieChart.setCenterText(String.format(getString(R.string.consumed_kcal), 0f));
+                binding.calorieProgressBar.setProgress(0);
+                binding.tvConsumedLabel.setText("0 kcal consumed");
+                binding.tvRemainingLabel.setText("Goal not set");
             }
             binding.pieChart.invalidate();
         });
@@ -179,6 +197,8 @@ public class TrackerFragment extends Fragment implements EditFoodDialogFragment.
             binding.proteinValue.setText(summary.get("protein"));
             binding.carbsValue.setText(summary.get("carbs"));
             binding.fatValue.setText(summary.get("fat"));
+            binding.fiberValue.setText(summary.get("fiber"));
+            binding.sugarValue.setText(summary.get("sugar"));
         });
 
         viewModel.getStreakAndGoalText().observe(getViewLifecycleOwner(), info -> {
@@ -203,6 +223,15 @@ public class TrackerFragment extends Fragment implements EditFoodDialogFragment.
                 viewModel.doneNavigating();
             }
         });
+
+        viewModel.getShowFoodDetailDialog().observe(getViewLifecycleOwner(), foodItem -> {
+            if (foodItem != null) {
+                EditFoodDialogFragment dialogFragment = EditFoodDialogFragment.newInstance(foodItem);
+                dialogFragment.setOnFoodItemUpdatedListener(this);
+                dialogFragment.show(getParentFragmentManager(), "add_food_dialog");
+                viewModel.doneShowingDetails();
+            }
+        });
     }
 
     @OptIn(markerClass = ExperimentalGetImage.class)
@@ -221,6 +250,10 @@ public class TrackerFragment extends Fragment implements EditFoodDialogFragment.
 
     @Override
     public void onFoodItemUpdated(FoodItem foodItem) {
-        viewModel.updateFoodItem(requireContext(), foodItem);
+        if (foodItem.getKey() == null) {
+            viewModel.addFoodItem(requireContext(), foodItem);
+        } else {
+            viewModel.updateFoodItem(requireContext(), foodItem);
+        }
     }
 }

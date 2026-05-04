@@ -112,7 +112,17 @@ public class EditFoodDialogFragment extends DialogFragment {
 
             btnSave.setOnClickListener(v -> {
                 try {
-                    double newServingSize = Double.parseDouble(inputServing.getText().toString());
+                    String inputText = inputServing.getText().toString();
+                    if (inputText.isEmpty()) {
+                        Toast.makeText(requireContext(), "Please enter serving weight", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    double newServingSize = Double.parseDouble(inputText);
+                    if (newServingSize <= 0) {
+                        Toast.makeText(requireContext(), "Serving size must be greater than 0g", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    
                     foodItem.setGrams(newServingSize);
                     foodItem.setCalories(newServingSize * caloriesPerGram);
                     foodItem.setCarbs(newServingSize * carbsPerGram);
