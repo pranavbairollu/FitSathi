@@ -32,10 +32,16 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".services.MidnightResetReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
         <service
             android:name=".services.StepCounterService"
             android:exported="false"
-            android:foregroundServiceType="health" />
+            android:foregroundServiceType="health"
+            android:stopWithTask="false" />
 
         <activity
             android:name=".SplashActivity"

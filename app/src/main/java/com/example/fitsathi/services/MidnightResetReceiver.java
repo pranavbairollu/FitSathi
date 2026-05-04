@@ -11,17 +11,17 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 public class MidnightResetReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        // Reset baseline and goal flag for next day
-        SharedPreferences prefs = context.getSharedPreferences("StepPrefs", Context.MODE_PRIVATE);
-        prefs.edit().putBoolean("goal_reached_today", false).apply();
+        // Reset baseline and goal flag for next day in unified prefs
+        SharedPreferences prefs = context.getSharedPreferences("StepCounterPrefs", Context.MODE_PRIVATE);
+        prefs.edit()
+            .putInt("daily_steps", 0)
+            .putString("date", new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date()))
+            .apply();
 
-        // Broadcast zero steps to UI
-        Intent broadcastIntent = new Intent("steps_updated");
-        broadcastIntent.putExtra("steps", 0);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
-
-        // Start StepCounterService again to reschedule midnight alarm
+        // Inform StepCounterService to reset its internal state
         Intent serviceIntent = new Intent(context, StepCounterService.class);
+        serviceIntent.setAction("RESET_STEPS");
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(serviceIntent);
         } else {

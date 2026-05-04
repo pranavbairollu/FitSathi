@@ -93,6 +93,33 @@ public class StepCounterService extends Service implements SensorEventListener {
             }
         };
         handler.post(saveRunnable); // Start the runnable
+
+        scheduleMidnightReset();
+    }
+
+    private void scheduleMidnightReset() {
+        android.app.AlarmManager alarmManager = (android.app.AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, MidnightResetReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Schedule for 00:00:01 tomorrow
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.add(java.util.Calendar.DAY_OF_YEAR, 1);
+        calendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        calendar.set(java.util.Calendar.MINUTE, 0);
+        calendar.set(java.util.Calendar.SECOND, 1);
+        calendar.set(java.util.Calendar.MILLISECOND, 0);
+
+        if (alarmManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP, 
+                        calendar.getTimeInMillis(), pendingIntent);
+            } else {
+                alarmManager.setExact(android.app.AlarmManager.RTC_WAKEUP, 
+                        calendar.getTimeInMillis(), pendingIntent);
+            }
+        }
     }
 
     private void startForeground(Notification notification) {
@@ -105,8 +132,41 @@ public class StepCounterService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null && "RESET_STEPS".equals(intent.getAction())) {
+            resetStepsForNewDay();
+        }
         // If the service is killed, it will be automatically restarted.
         return START_STICKY;
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        // Ensure the service restarts if the app is swiped away
+        Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
+        restartServiceIntent.setPackage(getPackageName());
+        startService(restartServiceIntent);
+        super.onTaskRemoved(rootIntent);
+    }
+
+    private void resetStepsForNewDay() {
+        currentSteps = 0;
+        String today = getTodayDateString();
+        
+        // We need to capture the current sensor value as the new baseline
+        // If we don't have a sensor value yet, it will be handled in onSensorChanged
+        int lastSensorValue = stepPrefs.getInt(KEY_LAST_SENSOR_VALUE, -1);
+        
+        SharedPreferences.Editor editor = stepPrefs.edit();
+        editor.putString(KEY_DATE, today);
+        editor.putInt(KEY_DAILY_STEPS, 0);
+        // lastSensorValue remains the same until next sensor event
+        editor.apply();
+        
+        updateNotification(0);
+        broadcastSteps(0);
+        
+        // Reschedule for the next day
+        scheduleMidnightReset();
     }
 
     @Override
@@ -125,6 +185,8 @@ public class StepCounterService extends Service implements SensorEventListener {
         if (event.sensor.getType() != Sensor.TYPE_STEP_COUNTER) return;
 
         int currentSensorValue = (int) event.values[0];
+        if (currentSensorValue <= 0) return; // Ignore invalid sensor data
+
         String today = getTodayDateString();
 
         // Load saved state
@@ -132,43 +194,41 @@ public class StepCounterService extends Service implements SensorEventListener {
         int dailySteps = stepPrefs.getInt(KEY_DAILY_STEPS, 0);
         int lastSensorValue = stepPrefs.getInt(KEY_LAST_SENSOR_VALUE, -1);
 
-        // --- ACCURATE MIDNIGHT RESET ---
-        // If the date has changed, reset the daily step count.
+        // --- ACCURATE MIDNIGHT RESET (Double Check) ---
         if (!today.equals(lastSavedDate)) {
             dailySteps = 0;
-            // The lastSensorValue is effectively the baseline for the new day.
-            // Any steps counted today will be currentSensorValue - lastSensorValue.
+            lastSavedDate = today;
         }
 
-        // --- ROBUST REBOOT HANDLING ---
+        // --- ROBUST REBOOT & SENSOR RESET HANDLING ---
+        int stepsThisEvent = 0;
         if (lastSensorValue == -1) {
-            // First time the service is running or after prefs cleared.
-            // We can't know the delta, so we start fresh.
-            lastSensorValue = currentSensorValue;
-        }
-
-        int stepsThisEvent;
-        if (currentSensorValue < lastSensorValue) {
-            // A reboot has occurred. The sensor value reset to a low number.
-            // The steps taken since reboot are simply the new sensor value.
-            // We preserve the steps already counted for the day.
+            // First run: current sensor value is our baseline
+            stepsThisEvent = 0;
+        } else if (currentSensorValue < lastSensorValue) {
+            // Sensor reset (reboot): everything counted since boot is new steps
             stepsThisEvent = currentSensorValue;
         } else {
-            // Normal operation: calculate steps since the last sensor event.
+            // Normal operation
             stepsThisEvent = currentSensorValue - lastSensorValue;
+        }
+
+        // Prevent negative steps or massive jumps (e.g. > 10,000 steps in one event)
+        if (stepsThisEvent < 0 || stepsThisEvent > 10000) {
+            stepsThisEvent = 0;
         }
 
         int newDailyTotal = dailySteps + stepsThisEvent;
         currentSteps = newDailyTotal;
 
-        // --- PERSIST STATE FOR NEXT EVENT ---
+        // --- PERSIST STATE ---
         SharedPreferences.Editor editor = stepPrefs.edit();
         editor.putString(KEY_DATE, today);
         editor.putInt(KEY_DAILY_STEPS, newDailyTotal);
         editor.putInt(KEY_LAST_SENSOR_VALUE, currentSensorValue);
         editor.apply();
 
-        // --- UPDATE UI ONLY --- (Cloud save is now periodic)
+        // --- UPDATE UI & NOTIFICATION ---
         updateNotification(newDailyTotal);
         broadcastSteps(newDailyTotal);
     }
@@ -195,7 +255,7 @@ public class StepCounterService extends Service implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Not needed for this implementation.
+        // Not needed
     }
 
     @Nullable
@@ -205,18 +265,24 @@ public class StepCounterService extends Service implements SensorEventListener {
     }
 
     private Notification buildNotification(int steps) {
-        String contentText = (steps < 0) ? "Loading steps..." : (steps + " Steps Today");
+        String contentText = (steps < 0) ? "Initializing tracker..." : 
+                           (steps == 0) ? "Starting your journey! 👟" :
+                           (steps + " steps taken today. Keep going!");
+        
         Intent notificationIntent = new Intent(this, DashboardActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        
         return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("FitSathi - Step Tracker")
+                .setContentTitle("FitSathi - Active Tracking")
                 .setContentText(contentText)
                 .setSmallIcon(R.drawable.ic_shoe)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setOnlyAlertOnce(true)
                 .setNotificationSilent()
                 .build();

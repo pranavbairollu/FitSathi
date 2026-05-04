@@ -3,9 +3,11 @@ package com.example.fitsathi.fragments;
 import android.animation.ObjectAnimator;
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -82,10 +84,8 @@ public class HomeFragment extends Fragment {
             });
 
     private final ServiceConnection connection = new ServiceConnection() {
-
         @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
+        public void onServiceConnected(ComponentName className, IBinder service) {
             StepCounterService.StepCounterBinder binder = (StepCounterService.StepCounterBinder) service;
             mService = binder.getService();
             mBound = true;
@@ -98,6 +98,34 @@ public class HomeFragment extends Fragment {
         }
     };
 
+    private final BroadcastReceiver stepUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (StepCounterService.ACTION_STEPS_UPDATED.equals(intent.getAction())) {
+                currentSteps = intent.getIntExtra("steps", 0);
+                updateStepDisplay();
+            }
+        }
+    };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getContext() != null) {
+            androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(requireContext())
+                    .registerReceiver(stepUpdateReceiver, new android.content.IntentFilter(StepCounterService.ACTION_STEPS_UPDATED));
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (getContext() != null) {
+            androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(requireContext())
+                    .unregisterReceiver(stepUpdateReceiver);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -107,7 +135,19 @@ public class HomeFragment extends Fragment {
         }
         updateWaterDisplay();
         updateStepsFromService();
+        loadUserInfoAndRefresh();
     }
+
+    private void loadUserInfoAndRefresh() {
+        com.example.fitsathi.managers.UserInfoManager.getUserInfo(userInfo -> {
+            if (isAdded() && userInfo != null) {
+                mUserInfo = userInfo;
+                requireActivity().runOnUiThread(() -> updateStepDisplay());
+            }
+        });
+    }
+
+    private com.example.fitsathi.managers.UserInfoManager.UserInfo mUserInfo;
 
     @Override
     public void onPause() {
@@ -123,6 +163,12 @@ public class HomeFragment extends Fragment {
             currentSteps = mService.getSteps();
             if (isAdded()) {
                 requireActivity().runOnUiThread(() -> updateStepDisplay());
+            }
+        } else {
+            // Fallback: Read from SharedPreferences if service not bound yet
+            currentSteps = stepPrefs.getInt("daily_steps", 0);
+            if (isAdded()) {
+                updateStepDisplay();
             }
         }
     }
@@ -157,10 +203,18 @@ public class HomeFragment extends Fragment {
         konfettiView = view.findViewById(R.id.konfettiView);
 
         Context context = requireContext();
-        stepPrefs = context.getSharedPreferences("StepPrefs", Context.MODE_PRIVATE);
+        // Unify SharedPreferences to StepCounterPrefs
+        stepPrefs = context.getSharedPreferences("StepCounterPrefs", Context.MODE_PRIVATE);
         fitnessPrefs = context.getSharedPreferences("FitnessPrefs", Context.MODE_PRIVATE);
         waterPrefs = context.getSharedPreferences("WaterPrefs", Context.MODE_PRIVATE);
 
+        // Check for legacy goal in StepPrefs and migrate if needed
+        if (!stepPrefs.contains("daily_goal")) {
+            SharedPreferences legacyPrefs = context.getSharedPreferences("StepPrefs", Context.MODE_PRIVATE);
+            int legacyGoal = legacyPrefs.getInt("daily_goal", 10000);
+            stepPrefs.edit().putInt("daily_goal", legacyGoal).apply();
+        }
+        
         stepGoal = stepPrefs.getInt("daily_goal", 10000);
 
         initCircularProgressBar();
@@ -266,14 +320,36 @@ public class HomeFragment extends Fragment {
 
     private void updateStepDisplay() {
         if (stepsText == null || circularProgressBar == null) return;
+        
+        // Handle "No Sensor" or initial state
+        if (currentSteps < 0) {
+            stepsText.setText("Tracker loading...");
+            return;
+        }
+
         stepsText.setText(String.format(Locale.getDefault(), "%d / %d Steps", currentSteps, stepGoal));
         float progress = Math.min(currentSteps, stepGoal);
         ObjectAnimator.ofFloat(circularProgressBar, "progress", circularProgressBar.getProgress(), progress)
                 .setDuration(400)
                 .start();
 
-        float calories = currentSteps * 0.04f;
-        float distance = currentSteps * 0.0008f;
+        // --- PRECISION CALCULATIONS ---
+        float calories;
+        float distance;
+
+        if (mUserInfo != null && mUserInfo.getHeight() > 0 && mUserInfo.getWeight() > 0) {
+            // Formula: Stride length (m) = height (cm) * 0.415 / 100
+            float strideLength = (mUserInfo.getHeight() * 0.415f) / 100f;
+            distance = (currentSteps * strideLength) / 1000f; // in km
+            
+            // Formula: Calories = steps * 0.04 * (weight / 70)
+            calories = currentSteps * 0.04f * (mUserInfo.getWeight() / 70f);
+        } else {
+            // Default fallbacks
+            calories = currentSteps * 0.04f;
+            distance = currentSteps * 0.0008f;
+        }
+
         caloriesText.setText(String.format(Locale.getDefault(), "🔥 %d Kcal", Math.round(calories)));
         distanceText.setText(String.format(Locale.US, "📍 %.2f km", distance));
 
