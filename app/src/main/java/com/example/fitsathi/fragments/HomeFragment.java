@@ -206,9 +206,9 @@ public class HomeFragment extends Fragment {
 
         Context context = requireContext();
         // Unify SharedPreferences to StepCounterPrefs
-        stepPrefs = context.getSharedPreferences("StepCounterPrefs", Context.MODE_PRIVATE);
-        fitnessPrefs = context.getSharedPreferences("FitnessPrefs", Context.MODE_PRIVATE);
-        waterPrefs = context.getSharedPreferences("WaterPrefs", Context.MODE_PRIVATE);
+        stepPrefs = com.example.fitsathi.managers.SecurePrefsManager.getPrefs(context, "StepCounterPrefs");
+        fitnessPrefs = com.example.fitsathi.managers.SecurePrefsManager.getPrefs(context, "FitnessPrefs");
+        waterPrefs = com.example.fitsathi.managers.SecurePrefsManager.getPrefs(context, "WaterPrefs");
 
         // Check for legacy goal in StepPrefs and migrate if needed
         if (!stepPrefs.contains("daily_goal")) {

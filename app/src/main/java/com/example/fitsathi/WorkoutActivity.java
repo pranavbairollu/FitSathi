@@ -72,7 +72,7 @@ public class WorkoutActivity extends BaseActivity {
 
         if (currentSession == null || !today.equals(currentSession.date)) {
             // New day or no session, create new
-            SharedPreferences fitnessPrefs = getSharedPreferences("FitnessPrefs", Context.MODE_PRIVATE);
+            SharedPreferences fitnessPrefs = getSecurePrefs("FitnessPrefs");
             String goal = fitnessPrefs.getString("goal", "");
             String level = fitnessPrefs.getString("level", "");
             String location = fitnessPrefs.getString("location", "");

@@ -7,6 +7,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
+import com.example.fitsathi.managers.SecurePrefsManager;
 import com.example.fitsathi.receivers.MealAlarmReceiver;
 
 public class MealReminderScheduler {
@@ -40,7 +41,7 @@ public class MealReminderScheduler {
         }
 
         // Save reminder time for UI and restoration purposes
-        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        SecurePrefsManager.getPrefs(context, PREF_NAME)
                 .edit()
                 .putInt(meal + "_hour", hour24)
                 .putInt(meal + "_minute", minute)
@@ -63,7 +64,7 @@ public class MealReminderScheduler {
         }
 
         // Remove saved reminder time
-        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        SecurePrefsManager.getPrefs(context, PREF_NAME)
                 .edit()
                 .remove(meal + "_hour")
                 .remove(meal + "_minute")
@@ -101,9 +102,9 @@ public class MealReminderScheduler {
     }
 
     public static int[] getSavedReminderTime(Context context, String meal) {
-        int h = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        int h = SecurePrefsManager.getPrefs(context, PREF_NAME)
                 .getInt(meal + "_hour", -1);
-        int m = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        int m = SecurePrefsManager.getPrefs(context, PREF_NAME)
                 .getInt(meal + "_minute", -1);
         return new int[]{h, m};
     }

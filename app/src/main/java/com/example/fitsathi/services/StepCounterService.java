@@ -24,8 +24,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.fitsathi.DashboardActivity;
 import com.example.fitsathi.R;
+import com.example.fitsathi.managers.SecurePrefsManager;
 import com.example.fitsathi.managers.StepCounterManager;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -68,7 +68,7 @@ public class StepCounterService extends Service implements SensorEventListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        stepPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        stepPrefs = SecurePrefsManager.getPrefs(this, PREFS_NAME);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);

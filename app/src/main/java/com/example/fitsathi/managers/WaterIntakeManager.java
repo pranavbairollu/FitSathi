@@ -132,7 +132,7 @@ public class WaterIntakeManager {
     }
 
     private static List<Long> getLocalLog(Context context, String date) {
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = SecurePrefsManager.getPrefs(context, PREF_NAME);
         String json = prefs.getString(date + "_log", null);
         if (json != null) {
             Type type = new TypeToken<ArrayList<Long>>() {}.getType();
@@ -142,7 +142,7 @@ public class WaterIntakeManager {
     }
 
     private static void saveLocalLog(Context context, String date, List<Long> log) {
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = SecurePrefsManager.getPrefs(context, PREF_NAME);
         prefs.edit()
                 .putInt(date, log.size()) // Compatibility with old logic
                 .putString(date + "_log", gson.toJson(log))
@@ -150,12 +150,12 @@ public class WaterIntakeManager {
     }
 
     public static int getWaterGoal(Context context) {
-        return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        return SecurePrefsManager.getPrefs(context, PREF_NAME)
                 .getInt(KEY_GOAL, DEFAULT_GOAL);
     }
 
     public static void setWaterGoal(Context context, int goal) {
-        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        SecurePrefsManager.getPrefs(context, PREF_NAME)
                 .edit()
                 .putInt(KEY_GOAL, goal)
                 .apply();

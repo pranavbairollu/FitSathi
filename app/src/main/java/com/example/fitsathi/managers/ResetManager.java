@@ -22,8 +22,10 @@ public class ResetManager {
         // 1. Clear SharedPreferences
         String[] prefNames = context.getResources().getStringArray(R.array.preference_files);
         for (String prefName : prefNames) {
-            SharedPreferences prefs = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
-            prefs.edit().clear().commit(); // Use commit to ensure it's immediate
+            // Clear plain-text prefs
+            context.getSharedPreferences(prefName, Context.MODE_PRIVATE).edit().clear().commit();
+            // Clear secure prefs
+            SecurePrefsManager.getPrefs(context, prefName).edit().clear().commit();
         }
 
         // 2. Sign out from Firebase

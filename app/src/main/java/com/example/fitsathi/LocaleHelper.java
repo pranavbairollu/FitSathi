@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.LocaleList;
 
+import com.example.fitsathi.managers.SecurePrefsManager;
 import java.util.Locale;
 
 public class LocaleHelper {
@@ -26,12 +27,12 @@ public class LocaleHelper {
     }
 
     public static String getSavedLanguage(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = SecurePrefsManager.getPrefs(context, PREFS_NAME);
         return prefs.getString(KEY_LANGUAGE, "en");
     }
 
     private static void saveLanguage(Context context, String lang) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = SecurePrefsManager.getPrefs(context, PREFS_NAME);
         prefs.edit().putString(KEY_LANGUAGE, lang).apply();
     }
 

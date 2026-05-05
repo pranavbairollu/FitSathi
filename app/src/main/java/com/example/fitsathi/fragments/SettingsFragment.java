@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.fitsathi.HelpAndGuidelinesActivity;
 import com.example.fitsathi.LocaleHelper;
+import com.example.fitsathi.managers.SecurePrefsManager;
 import com.example.fitsathi.MealReminderScheduler;
 import com.example.fitsathi.PrivacyPolicyActivity;
 import com.example.fitsathi.R;
@@ -54,7 +55,7 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         applyFadeInAnimation(view);
-        prefs = requireActivity().getSharedPreferences(getString(R.string.settings_prefs_name), Context.MODE_PRIVATE);
+        prefs = SecurePrefsManager.getPrefs(requireActivity(), getString(R.string.settings_prefs_name));
 
         setupDarkModeSwitch();
         setupMealSwitches(); // New, robust method

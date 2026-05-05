@@ -19,7 +19,7 @@ public class StepsLogManager {
 
     /** Save steps for a given date */
     public static void saveStepsForDate(Context context, String dateKey, int steps) {
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = SecurePrefsManager.getPrefs(context, PREF_NAME);
         prefs.edit().putInt(dateKey, steps).apply();
     }
 
@@ -31,7 +31,7 @@ public class StepsLogManager {
 
     /** Get steps for a given date */
     public static int getStepsForDate(Context context, String dateKey) {
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = SecurePrefsManager.getPrefs(context, PREF_NAME);
         return prefs.getInt(dateKey, 0);
     }
 

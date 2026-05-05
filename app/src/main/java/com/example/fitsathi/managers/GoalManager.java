@@ -10,7 +10,7 @@ public class GoalManager {
 
     // Save custom goal
     public static void setDailyGoal(Context context, int steps) {
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = SecurePrefsManager.getPrefs(context, PREF_NAME);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(KEY_GOAL, steps);
         editor.apply();
@@ -18,7 +18,7 @@ public class GoalManager {
 
     // Get saved goal (or default if none set)
     public static int getDailyGoal(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = SecurePrefsManager.getPrefs(context, PREF_NAME);
         return prefs.getInt(KEY_GOAL, DEFAULT_GOAL);
     }
 
@@ -29,7 +29,7 @@ public class GoalManager {
 
     // Check if custom goal is set
     public static boolean isCustomGoalSet(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = SecurePrefsManager.getPrefs(context, PREF_NAME);
         return prefs.contains(KEY_GOAL) && prefs.getInt(KEY_GOAL, DEFAULT_GOAL) != DEFAULT_GOAL;
     }
 }

@@ -1,7 +1,9 @@
 package com.example.fitsathi;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import com.example.fitsathi.managers.SecurePrefsManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
  * All activities in the app should extend this class.
  */
 public abstract class BaseActivity extends AppCompatActivity {
+
+    protected SharedPreferences getSecurePrefs(String name) {
+        return SecurePrefsManager.getPrefs(this, name);
+    }
 
     @Override
     protected void attachBaseContext(Context newBase) {

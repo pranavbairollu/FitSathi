@@ -41,7 +41,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void applySavedTheme() {
-        SharedPreferences prefs = getSharedPreferences(getString(R.string.settings_prefs_name), MODE_PRIVATE);
+        SharedPreferences prefs = getSecurePrefs(getString(R.string.settings_prefs_name));
         boolean darkMode = prefs.getBoolean(getString(R.string.dark_mode_enabled_key), false);
         AppCompatDelegate.setDefaultNightMode(
                 darkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO

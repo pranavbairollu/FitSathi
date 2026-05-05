@@ -28,7 +28,7 @@ public class WorkoutHistoryManager {
     private Gson gson;
 
     public WorkoutHistoryManager(Context context) {
-        prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        prefs = SecurePrefsManager.getPrefs(context, PREF_NAME);
         gson = new Gson();
     }
 

@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 
+import com.example.fitsathi.managers.SecurePrefsManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class MidnightResetReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // Reset baseline and goal flag for next day in unified prefs
-        SharedPreferences prefs = context.getSharedPreferences("StepCounterPrefs", Context.MODE_PRIVATE);
+        SharedPreferences prefs = SecurePrefsManager.getPrefs(context, "StepCounterPrefs");
         prefs.edit()
             .putInt("daily_steps", 0)
             .putString("date", new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date()))

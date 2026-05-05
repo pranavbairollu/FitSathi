@@ -72,6 +72,7 @@ dependencies {
     implementation("nl.dionsegijn:konfetti:1.2.5")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.github.yalantis:ucrop:2.2.8")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.5.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")

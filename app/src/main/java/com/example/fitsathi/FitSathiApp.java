@@ -20,12 +20,20 @@ public class FitSathiApp extends Application {
         }
         applySavedTheme();
         createNotificationChannels();
+        migratePreferences();
+    }
+
+    private void migratePreferences() {
+        String[] prefFiles = getResources().getStringArray(R.array.preference_files);
+        for (String fileName : prefFiles) {
+            com.example.fitsathi.managers.SecurePrefsManager.migrate(this, fileName);
+        }
     }
 
     private void applySavedTheme() {
-        android.content.SharedPreferences prefs = getSharedPreferences(
-                getString(R.string.settings_prefs_name),
-                MODE_PRIVATE
+        android.content.SharedPreferences prefs = com.example.fitsathi.managers.SecurePrefsManager.getPrefs(
+                this,
+                getString(R.string.settings_prefs_name)
         );
         boolean darkMode = prefs.getBoolean(getString(R.string.dark_mode_enabled_key), false);
         androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(

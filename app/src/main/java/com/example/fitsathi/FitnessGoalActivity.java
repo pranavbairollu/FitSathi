@@ -123,7 +123,7 @@ public class FitnessGoalActivity extends BaseActivity {
             setLoading(false);
             if (success) {
                 // Clear local daily workout so a new one is generated
-                getSharedPreferences("DailyWorkoutPrefs", Context.MODE_PRIVATE).edit()
+                getSecurePrefs("DailyWorkoutPrefs").edit()
                         .remove("workout_date")
                         .remove("workout_names")
                         .apply();
