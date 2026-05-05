@@ -34,7 +34,12 @@ public class ResetManager {
         // 3. Cancel all alarms
         com.example.fitsathi.MealReminderScheduler.cancelAllReminders(context);
 
-        // 4. Clear Cache
+        // 4. Clear Room Database (Async)
+        new Thread(() -> {
+            com.example.fitsathi.data.AppDatabase.getDatabase(context).clearAllTables();
+        }).start();
+
+        // 5. Clear Cache
         deleteCache(context);
     }
 

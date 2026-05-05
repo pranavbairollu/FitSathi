@@ -109,7 +109,7 @@ public class WorkoutFragment extends Fragment {
 
                         cardLayout.animate().alpha(0.5f).setDuration(500).start();
 
-                        historyManager.addWorkout(ex);
+                        historyManager.addCompletedExercise(getContext(), ex);
                         completedExercisesToday++;
                         updateDailyProgress();
 

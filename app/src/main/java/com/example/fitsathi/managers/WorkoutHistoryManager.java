@@ -2,30 +2,37 @@ package com.example.fitsathi.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
+import android.os.Handler;
+import android.os.Looper;
+import com.example.fitsathi.data.AppDatabase;
+import com.example.fitsathi.data.entities.WorkoutLog;
 import com.example.fitsathi.models.Exercise;
 import com.example.fitsathi.models.WorkoutSession;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WorkoutHistoryManager {
 
     private static final String PREF_NAME = "WorkoutHistoryPrefs";
     private static final String KEY_LAST_DATE = "lastWorkoutDate";
     private static final String KEY_DAY_INDEX = "dayIndex";
-    private static final String KEY_MODE = "workout_mode"; // auto or catchup
-    private static final String KEY_HISTORY = "workout_history_json";
+    private static final String KEY_MODE = "workout_mode";
     private static final String KEY_CURRENT_SESSION = "current_workout_session";
 
     private SharedPreferences prefs;
     private Gson gson;
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private static final Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    public interface HistoryCallback {
+        void onHistoryReceived(List<Exercise> history);
+    }
 
     public WorkoutHistoryManager(Context context) {
         prefs = SecurePrefsManager.getPrefs(context, PREF_NAME);
@@ -49,10 +56,6 @@ public class WorkoutHistoryManager {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public void clearCurrentSession() {
-        prefs.edit().remove(KEY_CURRENT_SESSION).apply();
     }
 
     public void setMode(String mode) {
@@ -86,55 +89,48 @@ public class WorkoutHistoryManager {
         }
     }
 
-    /**
-     * Save a completed exercise to history with timestamp
-     */
-    public void addCompletedExercise(Exercise exercise) {
+    public void addCompletedExercise(Context context, Exercise exercise) {
         if (exercise == null) return;
         
-        // Set timestamp if not set
         if (exercise.completionTimestamp == 0) {
             exercise.completionTimestamp = System.currentTimeMillis();
         }
 
-        List<Exercise> history = getWorkoutHistory();
-        history.add(exercise);
-        
-        // Keep only last 100 exercises to avoid SharedPreferences size limits
-        if (history.size() > 100) {
-            history = history.subList(history.size() - 100, history.size());
-        }
-
-        String json = gson.toJson(history);
-        prefs.edit().putString(KEY_HISTORY, json).apply();
+        executor.execute(() -> {
+            AppDatabase db = AppDatabase.getDatabase(context);
+            db.workoutLogDao().insert(new WorkoutLog(
+                    exercise.name,
+                    exercise.calories,
+                    exercise.completionTimestamp,
+                    exercise.getDurationCategory()
+            ));
+        });
     }
 
-    /**
-     * Legacy method for compatibility
-     */
-    public void addWorkout(Exercise exercise) {
-        addCompletedExercise(exercise);
+    public void getWorkoutHistory(Context context, HistoryCallback callback) {
+        executor.execute(() -> {
+            AppDatabase db = AppDatabase.getDatabase(context);
+            List<WorkoutLog> logs = db.workoutLogDao().getAllHistory();
+            List<Exercise> history = new ArrayList<>();
+            
+            for (WorkoutLog log : logs) {
+                Exercise ex = new Exercise();
+                ex.name = log.getExerciseName();
+                ex.calories = log.getCaloriesBurned();
+                ex.completionTimestamp = log.getTimestamp();
+                history.add(ex);
+            }
+
+            if (callback != null) {
+                mainHandler.post(() -> callback.onHistoryReceived(history));
+            }
+        });
     }
 
-    /**
-     * Retrieve workout history as list of Exercise objects
-     */
-    public List<Exercise> getWorkoutHistory() {
-        String json = prefs.getString(KEY_HISTORY, "");
-        if (json.isEmpty()) return new ArrayList<>();
-        try {
-            Type type = new TypeToken<List<Exercise>>() {}.getType();
-            List<Exercise> history = gson.fromJson(json, type);
-            return history != null ? history : new ArrayList<>();
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
-    }
-
-    /**
-     * Clear workout history (optional)
-     */
-    public void clearHistory() {
-        prefs.edit().remove(KEY_HISTORY).apply();
+    public void clearHistory(Context context) {
+        executor.execute(() -> {
+            AppDatabase db = AppDatabase.getDatabase(context);
+            db.workoutLogDao().deleteAll();
+        });
     }
 }

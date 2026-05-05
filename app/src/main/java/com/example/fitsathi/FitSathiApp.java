@@ -8,6 +8,8 @@ import android.os.Build;
 
 public class FitSathiApp extends Application {
 
+    private final java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -21,6 +23,7 @@ public class FitSathiApp extends Application {
         applySavedTheme();
         createNotificationChannels();
         migratePreferences();
+        migrateToRoom();
     }
 
     private void migratePreferences() {
@@ -39,6 +42,39 @@ public class FitSathiApp extends Application {
         androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
                 darkMode ? androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES : androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
         );
+    }
+
+    private void migrateToRoom() {
+        android.content.SharedPreferences migrationPrefs = getSharedPreferences("MigrationPrefs", MODE_PRIVATE);
+        if (migrationPrefs.getBoolean("room_migrated", false)) return;
+
+        executor.execute(() -> {
+            com.example.fitsathi.data.AppDatabase db = com.example.fitsathi.data.AppDatabase.getDatabase(this);
+            
+            // 1. Migrate Steps
+            android.content.SharedPreferences stepsPrefs = com.example.fitsathi.managers.SecurePrefsManager.getPrefs(this, "StepsLogPrefs");
+            java.util.Map<String, ?> allSteps = stepsPrefs.getAll();
+            for (java.util.Map.Entry<String, ?> entry : allSteps.entrySet()) {
+                if (entry.getValue() instanceof Integer) {
+                    db.stepLogDao().insertOrUpdate(new com.example.fitsathi.data.entities.StepLog(entry.getKey(), (Integer) entry.getValue()));
+                }
+            }
+
+            // 2. Migrate Water
+            android.content.SharedPreferences waterPrefs = com.example.fitsathi.managers.SecurePrefsManager.getPrefs(this, "WaterPrefs");
+            java.util.Map<String, ?> allWater = waterPrefs.getAll();
+            for (java.util.Map.Entry<String, ?> entry : allWater.entrySet()) {
+                String key = entry.getKey();
+                if (key.endsWith("_log")) {
+                    String date = key.replace("_log", "");
+                    String json = (String) entry.getValue();
+                    java.util.List<Long> log = com.example.fitsathi.data.Converters.fromString(json);
+                    db.waterLogDao().insertOrUpdate(new com.example.fitsathi.data.entities.WaterLog(date, log));
+                }
+            }
+
+            migrationPrefs.edit().putBoolean("room_migrated", true).apply();
+        });
     }
 
     private void createNotificationChannels() {

@@ -213,7 +213,7 @@ public class WorkoutActivity extends BaseActivity {
         activeTimer = null;
         currentSession.markCompleted(index);
         Exercise ex = currentSession.exercises.get(index);
-        historyManager.addCompletedExercise(ex);
+        historyManager.addCompletedExercise(this, ex);
         
         updateDailyProgress();
 
