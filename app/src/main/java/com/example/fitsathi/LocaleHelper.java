@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.LocaleList;
 
 import java.util.Locale;
 
@@ -43,11 +44,26 @@ public class LocaleHelper {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             config.setLocale(locale);
-            context = context.createConfigurationContext(config);
+            LocaleList localeList = new LocaleList(locale);
+            LocaleList.setDefault(localeList);
+            config.setLocales(localeList);
+            return context.createConfigurationContext(config);
         } else {
             config.locale = locale;
             res.updateConfiguration(config, res.getDisplayMetrics());
+            return context;
         }
-        return context;
+    }
+
+    /**
+     * Returns the display name of the current language.
+     */
+    public static String getCurrentLanguageDisplayName(Context context) {
+        String lang = getSavedLanguage(context);
+        switch (lang) {
+            case "hi": return "हिन्दी (Hindi)";
+            case "es": return "Español (Spanish)";
+            default: return "English";
+        }
     }
 }

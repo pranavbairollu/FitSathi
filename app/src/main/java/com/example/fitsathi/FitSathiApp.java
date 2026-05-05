@@ -11,7 +11,19 @@ public class FitSathiApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        applySavedTheme();
         createNotificationChannels();
+    }
+
+    private void applySavedTheme() {
+        android.content.SharedPreferences prefs = getSharedPreferences(
+                getString(R.string.settings_prefs_name),
+                MODE_PRIVATE
+        );
+        boolean darkMode = prefs.getBoolean(getString(R.string.dark_mode_enabled_key), false);
+        androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
+                darkMode ? androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES : androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+        );
     }
 
     private void createNotificationChannels() {

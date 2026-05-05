@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
 
-public class HelpAndGuidelinesActivity extends AppCompatActivity {
+public class HelpAndGuidelinesActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

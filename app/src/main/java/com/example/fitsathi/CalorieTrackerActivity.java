@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CalorieTrackerActivity extends AppCompatActivity {
+public class CalorieTrackerActivity extends BaseActivity {
 
     private EditText foodInput;
     private Button trackButton;

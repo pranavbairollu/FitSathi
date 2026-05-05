@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">FitSathi</string>
+    <string name="login">लॉगिन</string>
+    <string name="register">पंजीकरण</string>
+    <string name="welcome">FitSathi में आपका स्वागत है</string>
+    <string name="calorie_tracker">कैलोरी ट्रैकर</string>
+    <string name="profile">प्रोफ़ाइल</string>
+    <string name="save">सहेजें</string>
+    <string name="yes">हाँ</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="ok">ठीक है</string>
+    <string name="close">बंद करें</string>
+    <string name="reset_button_text">रीसेट</string>
+
+    <string name="settings_select_language">भाषा चुनें</string>
+    <string name="language_changed">भाषा बदलकर %1$s कर दी गई है</string>
+    <string name="step_goal_updated">कदम लक्ष्य अपडेट किया गया</string>
+    <string name="dark_mode_enabled">डार्क मोड सक्षम</string>
+    <string name="dark_mode_disabled">डार्क मोड अक्षम</string>
+    <string name="reset_data_dialog_title">सभी ऐप डेटा रीसेट करें?</string>
+    <string name="reset_data_dialog_message">यह आपके सभी प्रगति, लक्ष्यों और लॉग किए गए डेटा को स्थायी रूप से हटा देगा। इस क्रिया को पूर्ववत नहीं किया जा सकता है।</string>
+    <string name="all_app_data_reset_toast">सभी ऐप डेटा रीसेट कर दिया गया है।</string>
+    <string name="about_title">FitSathi के बारे में</string>
+    <string name="about_message">ऐप संस्करण: 1.0\nडेवलपर: प्रणव बैरोलू\nसंपर्क: pranavbairollu@gmail.com\n\nFitSathi आपको सरल और गेमिफाइड तरीके से कदम, कैलोरी और बहुत कुछ ट्रैक करने में मदद करता है!</string>
+
+    <string name="reset_data">डेटा रीसेट करें</string>
+    <string name="about">के बारे में</string>
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="help_and_guidelines">सहायता और दिशानिर्देश</string>
+
+    <string name="meal_breakfast">नाश्ता</string>
+    <string name="meal_lunch">दोपहर का भोजन</string>
+    <string name="meal_dinner">रात का खाना</string>
+    <string name="meal_snacks">स्नैक्स</string>
+    <string name="meal_reminder_cancelled_toast">%1$s अनुस्मारक रद्द कर दिया गया</string>
+    <string name="meal_reminder_set_toast">%s अनुस्मारक %02d:%02d के लिए सेट किया गया</string>
+
+    <string name="home_welcome">FitSathi में आपका स्वागत है!</string>
+    <string name="home_subtitle">आज अपने लक्ष्यों को प्राप्त करें।</string>
+    <string name="home_goal_button">लक्ष्य</string>
+    <string name="home_quick_access">त्वरित पहुँच</string>
+    <string name="home_tracker">ट्रैकर</string>
+    <string name="home_calories">कैलोरी</string>
+    <string name="home_steps">कदम</string>
+    <string name="home_profile">प्रोफ़ाइल</string>
+    <string name="home_water">पानी</string>
+    <string name="home_todays_workout">आज का वर्कआउट</string>
+    <string name="home_start_workout">शुरू करें</string>
+
+    <string name="consumed_kcal">%1.0f\nkcal खपत</string>
+    <string name="goal_kcal">लक्ष्य: %1$d kcal</string>
+</resources>

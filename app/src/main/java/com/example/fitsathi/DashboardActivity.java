@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends BaseActivity {
 
     private BottomNavigationView bottomNavigationView;
     private static final int PERMISSION_REQUEST_CODE = 101;

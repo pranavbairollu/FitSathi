@@ -107,4 +107,11 @@ public class MealReminderScheduler {
                 .getInt(meal + "_minute", -1);
         return new int[]{h, m};
     }
+
+    public static void cancelAllReminders(Context context) {
+        String[] meals = {"Breakfast", "Lunch", "Dinner", "Snacks"};
+        for (String meal : meals) {
+            cancelReminder(context, meal);
+        }
+    }
 }

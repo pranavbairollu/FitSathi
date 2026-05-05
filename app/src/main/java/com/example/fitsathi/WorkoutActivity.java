@@ -30,7 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class WorkoutActivity extends AppCompatActivity {
+public class WorkoutActivity extends BaseActivity {
 
     private LinearLayout workoutListContainer;
     private ProgressBar dailyProgressBar;

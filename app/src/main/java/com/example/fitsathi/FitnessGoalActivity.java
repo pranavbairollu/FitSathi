@@ -17,7 +17,7 @@ import com.example.fitsathi.managers.UserInfoManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FitnessGoalActivity extends AppCompatActivity {
+public class FitnessGoalActivity extends BaseActivity {
 
     private Spinner spinnerGoal, spinnerLevel, spinnerLocation, spinnerTime;
     private Button btnSaveGoal;

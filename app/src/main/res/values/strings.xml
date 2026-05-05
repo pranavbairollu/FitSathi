@@ -47,6 +47,8 @@
         <item>@string/water_prefs_name</item>
         <item>@string/food_log_prefs_name</item>
         <item>@string/weight_log_prefs_name</item>
+        <item>WorkoutHistoryPrefs</item>
+        <item>fitsathi_reminder_prefs</item>
     </string-array>
 
     <!-- ===================================================================================== -->

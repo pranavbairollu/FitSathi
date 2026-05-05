@@ -18,7 +18,7 @@ import com.example.fitsathi.managers.UserInfoManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     EditText emailInput, passwordInput;
     Button loginBtn, goToRegisterBtn;

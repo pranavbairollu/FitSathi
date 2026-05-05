@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import com.example.fitsathi.managers.UserInfoManager;
 
-public class UserInfoActivity extends AppCompatActivity {
+public class UserInfoActivity extends BaseActivity {
 
     private TextInputEditText nameInput, ageInput, heightInput, weightInput;
     private AutoCompleteTextView genderSpinner, activitySpinner;

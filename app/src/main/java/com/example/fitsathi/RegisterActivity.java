@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
 
     EditText emailInput, passwordInput, confirmPasswordInput;
     Button registerBtn, goToLoginBtn;

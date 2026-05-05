@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class GoalSettingActivity extends AppCompatActivity {
+public class GoalSettingActivity extends BaseActivity {
 
     private RadioGroup goalRadioGroup;
     private RadioButton rbDefault, rbCustom;

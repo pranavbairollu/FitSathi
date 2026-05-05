@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.fitsathi.HelpAndGuidelinesActivity;
+import com.example.fitsathi.LocaleHelper;
 import com.example.fitsathi.MealReminderScheduler;
 import com.example.fitsathi.PrivacyPolicyActivity;
 import com.example.fitsathi.R;
@@ -137,6 +138,12 @@ public class SettingsFragment extends Fragment {
 
 
     private void setupGeneralSection() {
+        View languageRow = binding.rowLanguage.getRoot();
+        TextView languageTitle = languageRow.findViewById(R.id.setting_title);
+        ImageView languageIcon = languageRow.findViewById(R.id.setting_icon);
+        languageTitle.setText(getString(R.string.settings_select_language) + ": " + LocaleHelper.getCurrentLanguageDisplayName(requireContext()));
+        languageIcon.setImageResource(R.drawable.ic_language);
+
         View resetDataRow = binding.rowResetData.getRoot();
         TextView resetDataTitle = resetDataRow.findViewById(R.id.setting_title);
         ImageView resetDataIcon = resetDataRow.findViewById(R.id.setting_icon);
@@ -163,10 +170,48 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupClickListeners() {
+        binding.rowLanguage.getRoot().setOnClickListener(v -> showLanguageDialog());
         binding.rowResetData.getRoot().setOnClickListener(v -> showResetDataDialog());
         binding.rowAbout.getRoot().setOnClickListener(v -> showAboutDialog());
         binding.rowPrivacyPolicy.getRoot().setOnClickListener(v -> showPrivacyPolicy());
         binding.rowHelp.getRoot().setOnClickListener(v -> showHelpAndGuidelines());
+    }
+
+    private void showLanguageDialog() {
+        String[] languages = {"English", "हिन्दी (Hindi)"};
+        String[] languageCodes = {"en", "hi"};
+
+        int checkedItem = 0;
+        String currentLang = LocaleHelper.getSavedLanguage(requireContext());
+        for (int i = 0; i < languageCodes.length; i++) {
+            if (languageCodes[i].equals(currentLang)) {
+                checkedItem = i;
+                break;
+            }
+        }
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.settings_select_language)
+                .setSingleChoiceItems(languages, checkedItem, (dialog, which) -> {
+                    String selectedLang = languageCodes[which];
+                    if (!selectedLang.equals(currentLang)) {
+                        LocaleHelper.setLocale(requireContext(), selectedLang);
+                        Toast.makeText(getContext(), getString(R.string.language_changed, languages[which]), Toast.LENGTH_SHORT).show();
+                        restartApp();
+                    }
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void restartApp() {
+        Intent i = requireContext().getPackageManager().getLaunchIntentForPackage(requireContext().getPackageName());
+        if (i != null) {
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+            requireActivity().finish();
+        }
     }
 
     @Override
@@ -212,24 +257,24 @@ public class SettingsFragment extends Fragment {
                 .setTitle(R.string.reset_data_dialog_title)
                 .setMessage(R.string.reset_data_dialog_message)
                 .setPositiveButton(R.string.reset_button_text, (dialog, which) -> {
-                    clearAllSharedPreferences();
-                    Toast.makeText(getContext(), R.string.all_app_data_reset_toast, Toast.LENGTH_SHORT).show();
-                    Intent i = requireContext().getPackageManager().getLaunchIntentForPackage(requireContext().getPackageName());
-                    if (i != null) {
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(i);
-                        requireActivity().finish();
-                    }
+                    // Double Confirmation
+                    new MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("Are you absolutely sure?")
+                            .setMessage("This will sign you out and clear everything on this device. This is the final warning.")
+                            .setPositiveButton("Reset Everything", (dialog2, which2) -> {
+                                com.example.fitsathi.managers.ResetManager.performGlobalReset(requireContext());
+                                Toast.makeText(getContext(), R.string.all_app_data_reset_toast, Toast.LENGTH_LONG).show();
+                                restartApp();
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
     private void clearAllSharedPreferences() {
-        String[] prefNames = getResources().getStringArray(R.array.preference_files);
-        for (String prefName : prefNames) {
-            requireActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE).edit().clear().apply();
-        }
+        // No longer used, handled by ResetManager
     }
 
     private void showAboutDialog() {
