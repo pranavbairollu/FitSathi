@@ -11,6 +11,13 @@ public class FitSathiApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        // Enable Firebase disk persistence for offline support
+        try {
+            com.google.firebase.database.FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        } catch (Exception e) {
+            // Persistence must be set before any other usage of the database
+            e.printStackTrace();
+        }
         applySavedTheme();
         createNotificationChannels();
     }
