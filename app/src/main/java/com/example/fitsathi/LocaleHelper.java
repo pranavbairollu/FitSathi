@@ -63,6 +63,7 @@ public class LocaleHelper {
         switch (lang) {
             case "hi": return "हिन्दी (Hindi)";
             case "es": return "Español (Spanish)";
+            case "fr": return "Français (French)";
             default: return "English";
         }
     }

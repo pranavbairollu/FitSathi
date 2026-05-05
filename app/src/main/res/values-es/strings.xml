@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">FitSathi</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="register">Registrarse</string>
+    <string name="welcome">Bienvenido a FitSathi</string>
+    <string name="calorie_tracker">Contador de Calorías</string>
+    <string name="profile">Perfil</string>
+    <string name="save">Guardar</string>
+    <string name="yes">Sí</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">Aceptar</string>
+    <string name="close">Cerrar</string>
+    <string name="reset_button_text">Restablecer</string>
+
+    <string name="settings_select_language">Seleccionar idioma</string>
+    <string name="language_changed">Idioma cambiado a %1$s</string>
+    <string name="step_goal_updated">Meta de pasos actualizada</string>
+    <string name="dark_mode_enabled">Modo oscuro activado</string>
+    <string name="dark_mode_disabled">Modo oscuro desactivado</string>
+    <string name="reset_data_dialog_title">¿Restablecer todos los datos?</string>
+    <string name="reset_data_dialog_message">Esto eliminará permanentemente todo su progreso y datos. Esta acción no se puede deshacer.</string>
+    <string name="all_app_data_reset_toast">Se han restablecido todos los datos.</string>
+    <string name="about_title">Acerca de FitSathi</string>
+    <string name="about_message">Versión: 1.0\nDesarrollador: Pranav Bairollu\n\n¡FitSathi te ayuda a alcanzar tus metas de salud de forma sencilla!</string>
+
+    <string name="reset_data">Restablecer datos</string>
+    <string name="about">Acerca de</string>
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="help_and_guidelines">Ayuda y guías</string>
+
+    <string name="meal_breakfast">Desayuno</string>
+    <string name="meal_lunch">Almuerzo</string>
+    <string name="meal_dinner">Cena</string>
+    <string name="meal_snacks">Meriendas</string>
+
+    <string name="home_welcome">¡Bienvenido a FitSathi!</string>
+    <string name="home_subtitle">Logremos tus metas hoy.</string>
+    <string name="home_goal_button">Meta</string>
+    <string name="home_quick_access">Acceso rápido</string>
+    <string name="home_tracker">Rastreador</string>
+    <string name="home_calories">Calorías</string>
+    <string name="home_steps">Pasos</string>
+    <string name="home_water">Agua</string>
+    <string name="home_todays_workout">Entrenamiento de hoy</string>
+    <string name="home_start_workout">Comenzar</string>
+
+    <string name="consumed_kcal">%1.0f\nkcal consumidas</string>
+    <string name="goal_kcal">Meta: %1$d kcal</string>
+</resources>

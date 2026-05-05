@@ -178,8 +178,8 @@ public class SettingsFragment extends Fragment {
     }
 
     private void showLanguageDialog() {
-        String[] languages = {"English", "हिन्दी (Hindi)"};
-        String[] languageCodes = {"en", "hi"};
+        String[] languages = {"English", "हिन्दी (Hindi)", "Español (Spanish)", "Français (French)"};
+        String[] languageCodes = {"en", "hi", "es", "fr"};
 
         int checkedItem = 0;
         String currentLang = LocaleHelper.getSavedLanguage(requireContext());
