@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 
 import com.example.fitsathi.databinding.FragmentWeightTrackerBinding;
 import com.example.fitsathi.R;
+import com.example.fitsathi.managers.ProjectionManager;
 import com.example.fitsathi.managers.WeightLogManager;
 import com.example.fitsathi.models.WeightLog;
 import com.github.mikephil.charting.components.XAxis;
@@ -51,6 +52,9 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
     private DatabaseReference targetWeightRef;
     private ValueEventListener targetWeightListener;
     private float currentTargetWeight = -1f;
+    private int projectionDays = 30;
+    private boolean isProjectionEnabled = false;
+    private List<WeightLog> currentHistoricalLogs = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,7 +67,9 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
         super.onViewCreated(view, savedInstanceState);
         setupChart();
         setupClickListeners();
+        setupProjectionListeners();
         binding.toggleButtonGroup.check(R.id.week_button);
+        binding.projectionRangeToggle.check(R.id.projection_30_days);
         updateChart(currentDays);
         setupTargetWeightListener();
     }
@@ -128,6 +134,23 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
         });
     }
 
+    private void setupProjectionListeners() {
+        binding.projectionSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            isProjectionEnabled = isChecked;
+            binding.projectionSummaryLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            refreshVisualization();
+        });
+
+        binding.projectionRangeToggle.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked) {
+                if (checkedId == R.id.projection_30_days) projectionDays = 30;
+                else if (checkedId == R.id.projection_60_days) projectionDays = 60;
+                else if (checkedId == R.id.projection_90_days) projectionDays = 90;
+                refreshVisualization();
+            }
+        });
+    }
+
     private void setupChart() {
         binding.weightChart.getDescription().setEnabled(false);
         binding.weightChart.getLegend().setEnabled(false);
@@ -158,107 +181,181 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
     @Override
     public void onLogsReceived(List<WeightLog> weightLogs) {
         if (isAdded() && binding != null) {
-            if (weightLogs == null || weightLogs.isEmpty()) {
-                binding.weightChart.setVisibility(View.GONE);
-                binding.emptyChartText.setVisibility(View.VISIBLE);
-                binding.currentWeightText.setText(R.string.weight_placeholder);
-                binding.weightChangeText.setText(R.string.weight_placeholder);
-                return;
+            this.currentHistoricalLogs = weightLogs != null ? weightLogs : new ArrayList<>();
+            refreshVisualization();
+        }
+    }
+
+    private void refreshVisualization() {
+        if (!isAdded() || binding == null) return;
+
+        if (currentHistoricalLogs.isEmpty()) {
+            binding.weightChart.setVisibility(View.GONE);
+            binding.emptyChartText.setVisibility(View.VISIBLE);
+            binding.currentWeightText.setText(R.string.weight_placeholder);
+            binding.weightChangeText.setText(R.string.weight_placeholder);
+            return;
+        }
+
+        binding.weightChart.setVisibility(View.VISIBLE);
+        binding.emptyChartText.setVisibility(View.GONE);
+
+        float currentWeight = currentHistoricalLogs.get(currentHistoricalLogs.size() - 1).getWeight();
+        binding.currentWeightText.setText(String.format(Locale.getDefault(), "%.1f kg", currentWeight));
+
+        // Historical Stats
+        if (currentHistoricalLogs.size() > 1) {
+            float firstWeight = currentHistoricalLogs.get(0).getWeight();
+            float change = currentWeight - firstWeight;
+            binding.weightChangeText.setText(String.format(Locale.getDefault(), "%+.1f kg", change));
+            int changeColor;
+            if (change < 0) {
+                changeColor = ContextCompat.getColor(requireContext(), R.color.brand_secondary);
+            } else if (change > 0) {
+                changeColor = getThemeColor(com.google.android.material.R.attr.colorError);
+            } else {
+                changeColor = getThemeColor(com.google.android.material.R.attr.colorOnSurface);
             }
+            binding.weightChangeText.setTextColor(changeColor);
+        } else {
+            binding.weightChangeText.setText("No change");
+            binding.weightChangeText.setTextColor(getThemeColor(com.google.android.material.R.attr.colorOnSurface));
+        }
 
-            binding.weightChart.setVisibility(View.VISIBLE);
-            binding.emptyChartText.setVisibility(View.GONE);
+        if (isProjectionEnabled) {
+            ProjectionManager.getWeightProjection(requireContext(), currentWeight, currentTargetWeight, projectionDays, new ProjectionManager.ProjectionCallback() {
+                @Override
+                public void onProjectionCalculated(List<WeightLog> projection, double dailyChange, String reachTargetDate) {
+                    if (isAdded() && binding != null) {
+                        binding.reachTargetDateText.setText(reachTargetDate);
+                        if (!projection.isEmpty()) {
+                            float lastProj = projection.get(projection.size() - 1).getWeight();
+                            binding.projectedWeightText.setText(String.format(Locale.getDefault(), "%.1f kg", lastProj));
+                        }
+                        updateChartData(currentHistoricalLogs, projection);
+                    }
+                }
 
-            ArrayList<Entry> entries = new ArrayList<>();
-            final ArrayList<Long> timestamps = new ArrayList<>();
+                @Override
+                public void onError(String message) {
+                    if (isAdded() && binding != null) {
+                        Toast.makeText(requireContext(), "Projection error: " + message, Toast.LENGTH_SHORT).show();
+                        updateChartData(currentHistoricalLogs, null);
+                    }
+                }
+            });
+        } else {
+            updateChartData(currentHistoricalLogs, null);
+        }
+    }
 
-            for (int i = 0; i < weightLogs.size(); i++) {
-                WeightLog log = weightLogs.get(i);
-                entries.add(new Entry(i, log.getWeight()));
+    private void updateChartData(List<WeightLog> historical, List<WeightLog> projection) {
+        ArrayList<Entry> historicalEntries = new ArrayList<>();
+        final ArrayList<Long> timestamps = new ArrayList<>();
+
+        for (int i = 0; i < historical.size(); i++) {
+            WeightLog log = historical.get(i);
+            historicalEntries.add(new Entry(i, log.getWeight()));
+            timestamps.add(log.getTimestamp());
+        }
+
+        LineDataSet historicalDataSet = new LineDataSet(historicalEntries, getString(R.string.weight_label));
+        styleHistoricalDataSet(historicalDataSet);
+
+        LineData lineData = new LineData(historicalDataSet);
+
+        if (projection != null && !projection.isEmpty()) {
+            ArrayList<Entry> projectionEntries = new ArrayList<>();
+            // Start from the last historical point to make it continuous
+            WeightLog lastHist = historical.get(historical.size() - 1);
+            projectionEntries.add(new Entry(historical.size() - 1, lastHist.getWeight()));
+            
+            for (int i = 0; i < projection.size(); i++) {
+                WeightLog log = projection.get(i);
+                projectionEntries.add(new Entry(historical.size() + i, log.getWeight()));
                 timestamps.add(log.getTimestamp());
             }
 
-            XAxis xAxis = binding.weightChart.getXAxis();
-            if (currentDays == 30 || currentDays > 30) {
-                 xAxis.setLabelCount(5, true);
-            } else {
-                 xAxis.setLabelCount(weightLogs.size(), false);
-            }
-            xAxis.setValueFormatter(new ValueFormatter() {
-                private final SimpleDateFormat sdf = new SimpleDateFormat(currentDays > 7 ? "MMM dd" : "EEE", Locale.getDefault());
-                @Override
-                public String getFormattedValue(float value) {
-                    int index = (int) value;
-                    if (index >= 0 && index < timestamps.size()) {
-                        return sdf.format(new Date(timestamps.get(index)));
-                    }
-                    return "";
-                }
-            });
-
-            float currentWeight = weightLogs.get(weightLogs.size() - 1).getWeight();
-            binding.currentWeightText.setText(String.format(Locale.getDefault(), "%.1f kg", currentWeight));
-
-            if (weightLogs.size() > 1) {
-                float firstWeight = weightLogs.get(0).getWeight();
-                float change = currentWeight - firstWeight;
-                binding.weightChangeText.setText(String.format(Locale.getDefault(), "%+.1f kg", change));
-                 int changeColor;
-                if (change < 0) {
-                    changeColor = ContextCompat.getColor(requireContext(), R.color.brand_secondary);
-                } else if (change > 0) {
-                    changeColor = getThemeColor(com.google.android.material.R.attr.colorError);
-                } else {
-                    changeColor = getThemeColor(com.google.android.material.R.attr.colorOnSurface);
-                }
-                binding.weightChangeText.setTextColor(changeColor);
-            } else {
-                binding.weightChangeText.setText("No change");
-                 binding.weightChangeText.setTextColor(getThemeColor(com.google.android.material.R.attr.colorOnSurface));
-            }
-
-
-            LineDataSet dataSet = new LineDataSet(entries, getString(R.string.weight_label));
-            dataSet.setLineWidth(2.5f);
-            dataSet.setCircleRadius(4.5f);
-            dataSet.setCircleHoleRadius(2f);
-            dataSet.setColor(getThemeColor(com.google.android.material.R.attr.colorPrimary));
-            dataSet.setCircleColor(getThemeColor(com.google.android.material.R.attr.colorPrimary));
-            dataSet.setHighLightColor(getThemeColor(com.google.android.material.R.attr.colorSecondary));
-            dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-            dataSet.setDrawFilled(true);
-            dataSet.setDrawValues(false);
-
-            GradientDrawable gd = new GradientDrawable(
-                    GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[]{getThemeColor(com.google.android.material.R.attr.colorPrimaryContainer),
-                            ContextCompat.getColor(requireContext(), android.R.color.transparent)}
-            );
-            dataSet.setFillDrawable(gd);
-
-            LineData lineData = new LineData(dataSet);
-            binding.weightChart.setData(lineData);
-
-            if (currentTargetWeight > 0) {
-                float minWeight = Float.MAX_VALUE;
-                float maxWeight = Float.MIN_VALUE;
-                for (WeightLog log : weightLogs) {
-                    minWeight = Math.min(minWeight, log.getWeight());
-                    maxWeight = Math.max(maxWeight, log.getWeight());
-                }
-                minWeight = Math.min(minWeight, currentTargetWeight);
-                maxWeight = Math.max(maxWeight, currentTargetWeight);
-                
-                YAxis leftAxis = binding.weightChart.getAxisLeft();
-                leftAxis.setAxisMinimum(minWeight - 5f);
-                leftAxis.setAxisMaximum(maxWeight + 5f);
-            }
-
-            updateLimitLine();
-
-            binding.weightChart.animateX(500);
-            binding.weightChart.invalidate();
+            LineDataSet projectionDataSet = new LineDataSet(projectionEntries, "Predicted Path");
+            styleProjectionDataSet(projectionDataSet);
+            lineData.addDataSet(projectionDataSet);
         }
+
+        XAxis xAxis = binding.weightChart.getXAxis();
+        if (timestamps.size() > 7) {
+            xAxis.setLabelCount(5, true);
+        } else {
+            xAxis.setLabelCount(timestamps.size(), false);
+        }
+
+        xAxis.setValueFormatter(new ValueFormatter() {
+            private final SimpleDateFormat sdf = new SimpleDateFormat(currentDays > 7 || isProjectionEnabled ? "MMM dd" : "EEE", Locale.getDefault());
+            @Override
+            public String getFormattedValue(float value) {
+                int index = (int) value;
+                if (index >= 0 && index < timestamps.size()) {
+                    return sdf.format(new Date(timestamps.get(index)));
+                }
+                return "";
+            }
+        });
+
+        binding.weightChart.setData(lineData);
+
+        // Adjust Y-axis scale
+        float minW = Float.MAX_VALUE;
+        float maxW = Float.MIN_VALUE;
+        for (WeightLog log : historical) {
+            minW = Math.min(minW, log.getWeight());
+            maxW = Math.max(maxW, log.getWeight());
+        }
+        if (projection != null) {
+            for (WeightLog log : projection) {
+                minW = Math.min(minW, log.getWeight());
+                maxW = Math.max(maxW, log.getWeight());
+            }
+        }
+        if (currentTargetWeight > 0) {
+            minW = Math.min(minW, currentTargetWeight);
+            maxW = Math.max(maxW, currentTargetWeight);
+        }
+
+        YAxis leftAxis = binding.weightChart.getAxisLeft();
+        leftAxis.setAxisMinimum(minW - 3f);
+        leftAxis.setAxisMaximum(maxW + 3f);
+
+        updateLimitLine();
+        binding.weightChart.animateX(500);
+        binding.weightChart.invalidate();
+    }
+
+    private void styleHistoricalDataSet(LineDataSet dataSet) {
+        dataSet.setLineWidth(2.5f);
+        dataSet.setCircleRadius(4.5f);
+        dataSet.setCircleHoleRadius(2f);
+        dataSet.setColor(getThemeColor(com.google.android.material.R.attr.colorPrimary));
+        dataSet.setCircleColor(getThemeColor(com.google.android.material.R.attr.colorPrimary));
+        dataSet.setHighLightColor(getThemeColor(com.google.android.material.R.attr.colorSecondary));
+        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        dataSet.setDrawFilled(true);
+        dataSet.setDrawValues(false);
+
+        GradientDrawable gd = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{getThemeColor(com.google.android.material.R.attr.colorPrimaryContainer),
+                        ContextCompat.getColor(requireContext(), android.R.color.transparent)}
+        );
+        dataSet.setFillDrawable(gd);
+    }
+
+    private void styleProjectionDataSet(LineDataSet dataSet) {
+        dataSet.setLineWidth(2.5f);
+        dataSet.setDrawCircles(false);
+        dataSet.setColor(getThemeColor(com.google.android.material.R.attr.colorTertiary));
+        dataSet.enableDashedLine(10f, 10f, 0f);
+        dataSet.setMode(LineDataSet.Mode.LINEAR);
+        dataSet.setDrawFilled(false);
+        dataSet.setDrawValues(false);
     }
 
 

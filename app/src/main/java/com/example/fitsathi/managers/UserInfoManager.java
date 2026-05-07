@@ -139,10 +139,10 @@ public class UserInfoManager {
         }
     }
 
-    public static double calculateDailyCalorieGoal(UserInfo userInfo) {
+    public static double calculateTDEE(UserInfo userInfo) {
         double bmr = calculateBMR(userInfo);
         double tdee;
-        
+
         String activity = userInfo.getActivityLevel() != null ? userInfo.getActivityLevel() : "Sedentary";
         switch (activity) {
             case "Lightly Active":
@@ -161,6 +161,11 @@ public class UserInfoManager {
                 tdee = bmr * 1.2;
                 break;
         }
+        return tdee;
+    }
+
+    public static double calculateDailyCalorieGoal(UserInfo userInfo) {
+        double tdee = calculateTDEE(userInfo);
 
         // Adjust based on Fitness Goal
         String goal = userInfo.getFitnessGoal() != null ? userInfo.getFitnessGoal() : "Maintain";
