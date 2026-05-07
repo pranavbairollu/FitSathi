@@ -148,6 +148,8 @@
 
                 <include android:id="@+id/row_language" layout="@layout/settings_row_clickable" />
                 <View style="@style/DividerApp" />
+                <include android:id="@+id/row_health_sync" layout="@layout/settings_row_clickable" />
+                <View style="@style/DividerApp" />
                 <include android:id="@+id/row_reset_data" layout="@layout/settings_row_clickable" />
                 <View style="@style/DividerApp" />
                 <include android:id="@+id/row_about" layout="@layout/settings_row_clickable" />

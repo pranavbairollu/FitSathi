@@ -169,4 +169,8 @@ public class DashboardActivity extends BaseActivity {
     public void openWaterFragment() {
         openFragment(new WaterFragment(), true);
     }
+
+    public void openHealthSyncFragment() {
+        openFragment(new com.example.fitsathi.fragments.HealthSyncFragment(), true);
+    }
 }

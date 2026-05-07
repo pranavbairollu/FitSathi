@@ -33,7 +33,7 @@
     <string name="meal_dinner">रात का खाना</string>
     <string name="meal_snacks">स्नैक्स</string>
     <string name="meal_reminder_cancelled_toast">%1$s अनुस्मारक रद्द कर दिया गया</string>
-    <string name="meal_reminder_set_toast">%s अनुस्मारक %02d:%02d के लिए सेट किया गया</string>
+    <string name="meal_reminder_set_toast">%1$s अनुस्मारक %2$02d:%3$02d के लिए सेट किया गया</string>
 
     <string name="home_welcome">FitSathi में आपका स्वागत है!</string>
     <string name="home_subtitle">आज अपने लक्ष्यों को प्राप्त करें।</string>
@@ -71,4 +71,24 @@
     <string name="projection_title">अनुमानित वजन पथ</string>
     <string name="projection_target_reach_date_label">लक्ष्य तक पहुँचने की तिथि</string>
     <string name="projection_projected_weight_label">अनुमानित वजन</string>
+
+    <!-- Health Connect Strings -->
+    <string name="health_sync_title">हेल्थ कनेक्ट सिंक</string>
+    <string name="health_sync_subtitle">अपने फिटनेस डेटा को गूगल फिट, सैमसंग हेल्थ और अन्य के साथ सिंक करें।</string>
+    <string name="health_sync_connect">हेल्थ कनेक्ट से जुड़ें</string>
+    <string name="health_sync_disconnect">डिस्कनेक्ट करें</string>
+    <string name="health_sync_status_connected">जुड़ा हुआ</string>
+    <string name="health_sync_status_disconnected">जुड़ा नहीं है</string>
+    <string name="health_sync_now">अभी सिंक करें</string>
+    <string name="health_sync_success">डेटा सफलतापूर्वक सिंक हो गया!</string>
+    <string name="health_sync_error">सिंक विफल रहा। कृपया पुनः प्रयास करें।</string>
+    <string name="health_sync_not_available">हेल्थ कनेक्ट इस डिवाइस पर उपलब्ध नहीं है।</string>
+    <string name="health_sync_install_hc">हेल्थ कनेक्ट इंस्टॉल करें</string>
+    <string name="health_sync_permissions_required">सिंक्रनाइज़ेशन के लिए अनुमतियाँ आवश्यक हैं।</string>
+    <string name="health_sync_rationale_title">हमें हेल्थ कनेक्ट की आवश्यकता क्यों है?</string>
+    <string name="health_sync_rationale_desc">FitSathi हेल्थ कनेक्ट का उपयोग अन्य स्वास्थ्य ऐप्स से आपके कदम और वजन को आयात करने के लिए करता है, यह सुनिश्चित करता है कि आपकी प्रगति मैन्युअल लॉगिंग के बिना हमेशा अपडेट रहे।</string>
+    <string name="health_sync_steps">कदम सिंक</string>
+    <string name="health_sync_weight">वजन सिंक</string>
+    <string name="health_sync_water">हाइड्रेशन सिंक</string>
+    <string name="health_sync_workouts">वर्कआउट सिंक</string>
 </resources>

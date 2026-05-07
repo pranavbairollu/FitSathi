@@ -106,6 +106,16 @@ public class WaterIntakeManager {
             log.add(timestamp);
             db.waterLogDao().insertOrUpdate(new WaterLog(date, log));
 
+            // Sync with Health Connect (Assume 250ml per cup)
+            HealthConnectManager hcManager = HealthConnectManager.getInstance(context);
+            hcManager.checkPermissions(allGranted -> {
+                if (allGranted) {
+                    hcManager.writeRecords(com.example.fitsathi.utils.HealthDataMapper.mapToHydrationRecords(
+                            date, java.util.Collections.singletonList(250L)
+                    ));
+                }
+            });
+
             // 2. Update Firebase
             DatabaseReference ref = getWaterLogRef();
             if (ref != null) {

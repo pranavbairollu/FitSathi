@@ -168,10 +168,17 @@ public class SettingsFragment extends Fragment {
         ImageView helpIcon = helpRow.findViewById(R.id.setting_icon);
         helpTitle.setText(R.string.help_and_guidelines);
         helpIcon.setImageResource(R.drawable.ic_help_outline);
+
+        View healthSyncRow = binding.rowHealthSync.getRoot();
+        TextView healthSyncTitle = healthSyncRow.findViewById(R.id.setting_title);
+        ImageView healthSyncIcon = healthSyncRow.findViewById(R.id.setting_icon);
+        healthSyncTitle.setText(R.string.health_sync_title);
+        healthSyncIcon.setImageResource(R.drawable.ic_launcher_foreground); // Placeholder icon
     }
 
     private void setupClickListeners() {
         binding.rowLanguage.getRoot().setOnClickListener(v -> showLanguageDialog());
+        binding.rowHealthSync.getRoot().setOnClickListener(v -> showHealthSync());
         binding.rowResetData.getRoot().setOnClickListener(v -> showResetDataDialog());
         binding.rowAbout.getRoot().setOnClickListener(v -> showAboutDialog());
         binding.rowPrivacyPolicy.getRoot().setOnClickListener(v -> showPrivacyPolicy());
@@ -302,6 +309,13 @@ public class SettingsFragment extends Fragment {
     private void showHelpAndGuidelines() {
         Intent intent = new Intent(requireContext(), HelpAndGuidelinesActivity.class);
         startActivity(intent);
+    }
+
+    private void showHealthSync() {
+        if (getActivity() instanceof com.example.fitsathi.DashboardActivity) {
+            com.example.fitsathi.DashboardActivity activity = (com.example.fitsathi.DashboardActivity) getActivity();
+            activity.openHealthSyncFragment();
+        }
     }
 
     @Override

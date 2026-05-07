@@ -151,4 +151,23 @@
     <!-- Tracker Fragment -->
     <string name="consumed_kcal">%1.0f\nkcal Consumed</string>
     <string name="goal_kcal">Goal: %1$d kcal</string>
+    <!-- Health Connect Strings -->
+    <string name="health_sync_title">Health Connect Sync</string>
+    <string name="health_sync_subtitle">Sync your fitness data with Google Fit, Samsung Health, and more.</string>
+    <string name="health_sync_connect">Connect to Health Connect</string>
+    <string name="health_sync_disconnect">Disconnect</string>
+    <string name="health_sync_status_connected">Connected</string>
+    <string name="health_sync_status_disconnected">Disconnected</string>
+    <string name="health_sync_now">Sync Now</string>
+    <string name="health_sync_success">Data synced successfully!</string>
+    <string name="health_sync_error">Sync failed. Please try again.</string>
+    <string name="health_sync_not_available">Health Connect is not available on this device.</string>
+    <string name="health_sync_install_hc">Install Health Connect</string>
+    <string name="health_sync_permissions_required">Permissions required for synchronization.</string>
+    <string name="health_sync_rationale_title">Why we need Health Connect?</string>
+    <string name="health_sync_rationale_desc">FitSathi uses Health Connect to import your steps and weight from other health apps, ensuring your progress is always up to date without manual logging.</string>
+    <string name="health_sync_steps">Steps Sync</string>
+    <string name="health_sync_weight">Weight Sync</string>
+    <string name="health_sync_water">Hydration Sync</string>
+    <string name="health_sync_workouts">Workouts Sync</string>
 </resources>

@@ -68,4 +68,24 @@
     <string name="projection_title">Camino de Peso Predictivo</string>
     <string name="projection_target_reach_date_label">Fecha para Alcanzar el Objetivo</string>
     <string name="projection_projected_weight_label">Peso Proyectado</string>
+
+    <!-- Health Connect Strings -->
+    <string name="health_sync_title">Sincronización de Health Connect</string>
+    <string name="health_sync_subtitle">Sincroniza tus datos de fitness con Google Fit, Samsung Health y más.</string>
+    <string name="health_sync_connect">Conectar a Health Connect</string>
+    <string name="health_sync_disconnect">Desconectar</string>
+    <string name="health_sync_status_connected">Conectado</string>
+    <string name="health_sync_status_disconnected">Desconectado</string>
+    <string name="health_sync_now">Sincronizar ahora</string>
+    <string name="health_sync_success">¡Datos sincronizados con éxito!</string>
+    <string name="health_sync_error">Error de sincronización. Inténtalo de nuevo.</string>
+    <string name="health_sync_not_available">Health Connect no está disponible en este dispositivo.</string>
+    <string name="health_sync_install_hc">Instalar Health Connect</string>
+    <string name="health_sync_permissions_required">Se requieren permisos para la sincronización.</string>
+    <string name="health_sync_rationale_title">¿Por qué necesitamos Health Connect?</string>
+    <string name="health_sync_rationale_desc">FitSathi utiliza Health Connect para importar tus pasos y peso de otras aplicaciones de salud, asegurando que tu progreso esté siempre actualizado sin registro manual.</string>
+    <string name="health_sync_steps">Sincronización de Pasos</string>
+    <string name="health_sync_weight">Sincronización de Peso</string>
+    <string name="health_sync_water">Sincronización de Hidratación</string>
+    <string name="health_sync_workouts">Sincronización de Entrenamientos</string>
 </resources>

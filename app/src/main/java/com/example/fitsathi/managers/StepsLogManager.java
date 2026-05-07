@@ -40,7 +40,22 @@ public class StepsLogManager {
 
     /** Save steps for today (Async) */
     public static void saveTodaySteps(Context context, int steps) {
-        saveStepsForDate(context, getTodayKey(), steps);
+        String dateKey = getTodayKey();
+        saveStepsForDate(context, dateKey, steps);
+        
+        // Sync with Health Connect
+        executor.execute(() -> {
+            HealthConnectManager hcManager = HealthConnectManager.getInstance(context);
+            hcManager.checkPermissions(allGranted -> {
+                if (allGranted) {
+                    hcManager.writeRecords(java.util.Collections.singletonList(
+                            com.example.fitsathi.utils.HealthDataMapper.mapToStepsRecord(
+                                    new com.example.fitsathi.data.entities.StepLog(dateKey, steps)
+                            )
+                    ));
+                }
+            });
+        });
     }
 
     /** Get steps for a given date (Async) */

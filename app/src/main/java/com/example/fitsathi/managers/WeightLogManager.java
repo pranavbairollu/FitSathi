@@ -39,10 +39,22 @@ public class WeightLogManager {
 
     public static void saveWeight(Context context, float weight) {
         DatabaseReference dbRef = getDbRef();
+        long timestamp = System.currentTimeMillis();
         if (dbRef != null) {
-            WeightLog log = new WeightLog(System.currentTimeMillis(), weight);
+            WeightLog log = new WeightLog(timestamp, weight);
             dbRef.push().setValue(log)
-                    .addOnSuccessListener(aVoid -> Log.d(TAG, "Weight saved successfully"))
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "Weight saved successfully");
+                        // Sync with Health Connect
+                        HealthConnectManager hcManager = HealthConnectManager.getInstance(context);
+                        hcManager.checkPermissions(allGranted -> {
+                            if (allGranted) {
+                                hcManager.writeRecords(java.util.Collections.singletonList(
+                                        com.example.fitsathi.utils.HealthDataMapper.mapToWeightRecord(log)
+                                ));
+                            }
+                        });
+                    })
                     .addOnFailureListener(e -> Log.e(TAG, "Failed to save weight", e));
         } else {
             Log.e(TAG, "Cannot save weight, user not authenticated");
