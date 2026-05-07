@@ -47,63 +47,73 @@ public class HealthSyncWorker extends Worker {
         Log.d(TAG, "Starting Health Connect background sync...");
         
         if (HealthConnectManager.isHealthConnectAvailable(getApplicationContext()) != HealthConnectClient.SDK_AVAILABLE) {
+            Log.e(TAG, "Health Connect SDK not available.");
             return Result.failure();
         }
 
-        CountDownLatch latch = new CountDownLatch(1);
+        CountDownLatch latch = new CountDownLatch(4); // Permissions + 3 Sync tasks
         final boolean[] success = {true};
 
         hcManager.checkPermissions(allGranted -> {
             if (!allGranted) {
                 Log.w(TAG, "Permissions not granted for Health Connect sync.");
                 success[0] = false;
-                latch.countDown();
+                // Since permissions failed, we skip other tasks but need to clear the latch
+                while (latch.getCount() > 0) latch.countDown();
                 return;
             }
+            latch.countDown(); // Permission check done
 
-            syncSteps();
-            syncWeight();
-            syncHydration();
-            
-            // For simplicity in this demo, we assume success or handle internal errors
-            latch.countDown();
+            syncSteps(latch);
+            syncWeight(latch);
+            syncHydration(latch);
         });
 
         try {
-            latch.await(30, TimeUnit.SECONDS);
+            boolean completed = latch.await(1, TimeUnit.MINUTES);
+            if (!completed) {
+                Log.e(TAG, "Sync timed out");
+                return Result.retry();
+            }
         } catch (InterruptedException e) {
             Log.e(TAG, "Sync interrupted", e);
+            Thread.currentThread().interrupt();
             return Result.retry();
         }
 
         return success[0] ? Result.success() : Result.failure();
     }
 
-    private void syncSteps() {
+    private void syncSteps(CountDownLatch latch) {
         Instant startTime = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant endTime = Instant.now();
 
         hcManager.readRecords(StepsRecord.class, startTime, endTime, new HealthConnectManager.RecordsCallback<StepsRecord>() {
             @Override
             public void onResult(List<StepsRecord> records) {
-                long totalSteps = 0;
-                for (StepsRecord record : records) {
-                    totalSteps += record.getCount();
+                try {
+                    long totalSteps = 0;
+                    for (StepsRecord record : records) {
+                        totalSteps += record.getCount();
+                    }
+                    
+                    String todayKey = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                    db.stepLogDao().insertOrUpdate(new StepLog(todayKey, (int) totalSteps));
+                    Log.d(TAG, "Synced " + totalSteps + " steps from Health Connect");
+                } finally {
+                    latch.countDown();
                 }
-                
-                String todayKey = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-                db.stepLogDao().insertOrUpdate(new StepLog(todayKey, (int) totalSteps));
-                Log.d(TAG, "Synced " + totalSteps + " steps from Health Connect");
             }
 
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, "Error syncing steps", t);
+                latch.countDown();
             }
         });
     }
 
-    private void syncWeight() {
+    private void syncWeight(CountDownLatch latch) {
         // Sync weight from last 7 days
         Instant startTime = Instant.now().minus(7, ChronoUnit.DAYS);
         Instant endTime = Instant.now();
@@ -111,43 +121,54 @@ public class HealthSyncWorker extends Worker {
         hcManager.readRecords(WeightRecord.class, startTime, endTime, new HealthConnectManager.RecordsCallback<WeightRecord>() {
             @Override
             public void onResult(List<WeightRecord> records) {
-                for (WeightRecord record : records) {
-                    float weightKg = (float) record.getWeight().getKilograms();
-                    long timestamp = record.getTime().toEpochMilli();
-                    // We don't have a WeightLog Room entity yet, but we can sync to Firebase if needed
-                    // For now, let's just log it or update local state if available.
-                    // WeightLogManager.saveWeight(getApplicationContext(), weightKg); // This might cause infinite loop if not careful
+                try {
+                    for (WeightRecord record : records) {
+                        float weightKg = (float) record.getWeight().getKilograms();
+                        long timestamp = record.getTime().toEpochMilli();
+                        // Implementation note: Ideally we'd have a Room WeightLog entity
+                        // For now, we just ensure the call completes
+                        Log.d(TAG, "Read weight from HC: " + weightKg + "kg at " + timestamp);
+                    }
+                } finally {
+                    latch.countDown();
                 }
             }
 
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, "Error syncing weight", t);
+                latch.countDown();
             }
         });
     }
 
-    private void syncHydration() {
+    private void syncHydration(CountDownLatch latch) {
         Instant startTime = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant();
         Instant endTime = Instant.now();
 
         hcManager.readRecords(HydrationRecord.class, startTime, endTime, new HealthConnectManager.RecordsCallback<HydrationRecord>() {
             @Override
             public void onResult(List<HydrationRecord> records) {
-                List<Long> timestamps = new ArrayList<>();
-                for (HydrationRecord record : records) {
-                    timestamps.add(record.getStartTime().toEpochMilli());
-                }
-                
-                if (!timestamps.isEmpty()) {
-                    String todayKey = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-                    db.waterLogDao().insertOrUpdate(new WaterLog(todayKey, timestamps));
+                try {
+                    List<Long> timestamps = new ArrayList<>();
+                    for (HydrationRecord record : records) {
+                        timestamps.add(record.getStartTime().toEpochMilli());
+                    }
+                    
+                    if (!timestamps.isEmpty()) {
+                        String todayKey = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                        db.waterLogDao().insertOrUpdate(new WaterLog(todayKey, timestamps));
+                        Log.d(TAG, "Synced " + records.size() + " hydration records from Health Connect");
+                    }
+                } finally {
+                    latch.countDown();
                 }
             }
 
             @Override
             public void onError(Throwable t) {
                 Log.e(TAG, "Error syncing hydration", t);
+                latch.countDown();
             }
         });
     }

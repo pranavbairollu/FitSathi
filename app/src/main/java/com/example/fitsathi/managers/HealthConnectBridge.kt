@@ -32,7 +32,12 @@ object HealthConnectBridge {
         request: ReadRecordsRequest<T>
     ): ListenableFuture<ReadRecordsResponse<T>> {
         return scope.future {
-            client.readRecords(request)
+            try {
+                client.readRecords(request)
+            } catch (e: Exception) {
+                android.util.Log.e("HCBridge", "Read error: ${e.message}")
+                throw e
+            }
         }
     }
 
@@ -58,8 +63,13 @@ object HealthConnectBridge {
     @JvmStatic
     fun insertRecords(client: HealthConnectClient, records: List<Record>): ListenableFuture<Unit> {
         return scope.future {
-            client.insertRecords(records)
-            Unit
+            try {
+                client.insertRecords(records)
+                Unit
+            } catch (e: Exception) {
+                android.util.Log.e("HCBridge", "Insert error: ${e.message}")
+                throw e
+            }
         }
     }
 

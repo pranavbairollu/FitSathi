@@ -32,6 +32,7 @@ public class HealthConnectManager {
     private static final String TAG = "HealthConnectManager";
     private static HealthConnectManager instance;
     private final HealthConnectClient healthConnectClient;
+    private final Context appContext;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public static final Set<String> PERMISSIONS = new HashSet<String>(Arrays.asList(
@@ -48,12 +49,13 @@ public class HealthConnectManager {
     ));
 
     private HealthConnectManager(Context context) {
-        this.healthConnectClient = HealthConnectClient.getOrCreate(context);
+        this.appContext = context.getApplicationContext();
+        this.healthConnectClient = HealthConnectClient.getOrCreate(appContext);
     }
 
     public static synchronized HealthConnectManager getInstance(Context context) {
         if (instance == null) {
-            instance = new HealthConnectManager(context.getApplicationContext());
+            instance = new HealthConnectManager(context);
         }
         return instance;
     }
@@ -79,6 +81,10 @@ public class HealthConnectManager {
      * Checks if all required permissions are granted.
      */
     public void checkPermissions(PermissionCallback callback) {
+        if (isHealthConnectAvailable(appContext) != HealthConnectClient.SDK_AVAILABLE) {
+            callback.onResult(false);
+            return;
+        }
         executor.execute(() -> {
             try {
                 Set<String> grantedPermissions = HealthConnectBridge.getGrantedPermissions(healthConnectClient).get();
@@ -94,12 +100,20 @@ public class HealthConnectManager {
      * Writes records to Health Connect.
      */
     public void writeRecords(List<? extends Record> records) {
+        if (records == null || records.isEmpty()) return;
+        
+        if (isHealthConnectAvailable(appContext) != HealthConnectClient.SDK_AVAILABLE) {
+            Log.e(TAG, "Health Connect SDK not available for writing.");
+            return;
+        }
+
         executor.execute(() -> {
             try {
                 HealthConnectBridge.insertRecords(healthConnectClient, (List<Record>) records).get();
                 Log.d(TAG, "Successfully wrote " + records.size() + " records to Health Connect");
             } catch (Exception e) {
-                Log.e(TAG, "Error writing records", e);
+                Log.e(TAG, "Error writing records to Health Connect", e);
+                // In a production app, we might want to queue these for retry
             }
         });
     }
@@ -108,13 +122,18 @@ public class HealthConnectManager {
      * Reads records of a specific type within a time range.
      */
     public <T extends Record> void readRecords(Class<T> recordType, Instant startTime, Instant endTime, RecordsCallback<T> callback) {
+        if (isHealthConnectAvailable(appContext) != HealthConnectClient.SDK_AVAILABLE) {
+            callback.onError(new IllegalStateException("Health Connect SDK not available"));
+            return;
+        }
+
         executor.execute(() -> {
             try {
                 ReadRecordsRequest<T> request = HealthConnectBridge.createReadRequest(recordType, startTime, endTime);
                 List<T> result = HealthConnectBridge.readRecords(healthConnectClient, request).get().getRecords();
                 callback.onResult(result);
             } catch (Exception e) {
-                Log.e(TAG, "Error reading records", e);
+                Log.e(TAG, "Error reading records from Health Connect", e);
                 callback.onError(e);
             }
         });

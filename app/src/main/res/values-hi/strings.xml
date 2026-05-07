@@ -91,4 +91,5 @@
     <string name="health_sync_weight">वजन सिंक</string>
     <string name="health_sync_water">हाइड्रेशन सिंक</string>
     <string name="health_sync_workouts">वर्कआउट सिंक</string>
+    <string name="health_sync_manage_permissions">ऐप अनुमतियां प्रबंधित करें</string>
 </resources>

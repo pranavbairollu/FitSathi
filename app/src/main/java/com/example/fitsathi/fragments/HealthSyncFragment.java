@@ -1,5 +1,6 @@
 package com.example.fitsathi.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,9 @@ public class HealthSyncFragment extends Fragment {
     private TextView lastSyncText;
     private Button btnConnect;
     private Button btnSyncNow;
+    private Button btnManagePermissions;
     private ImageView statusIcon;
+    private View progressOverlay;
 
     private final ActivityResultLauncher<Set<String>> requestPermissionLauncher =
             registerForActivityResult(PermissionController.createRequestPermissionResultContract(), granted -> {
@@ -58,27 +61,46 @@ public class HealthSyncFragment extends Fragment {
         lastSyncText = view.findViewById(R.id.last_sync_text);
         btnConnect = view.findViewById(R.id.btn_connect);
         btnSyncNow = view.findViewById(R.id.btn_sync_now);
+        btnManagePermissions = view.findViewById(R.id.btn_manage_permissions);
         statusIcon = view.findViewById(R.id.status_icon);
+        progressOverlay = view.findViewById(R.id.progress_overlay);
 
         checkAvailability(view);
 
         btnConnect.setOnClickListener(v -> {
             hcManager.checkPermissions(granted -> {
                 if (granted) {
-                    // Already granted
-                    requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Already connected", Toast.LENGTH_SHORT).show());
+                    // Guide user to manage permissions if they want to disconnect
+                    openHealthConnectSettings();
                 } else {
                     requestPermissionLauncher.launch(HealthConnectManager.PERMISSIONS);
                 }
             });
         });
 
+        btnManagePermissions.setOnClickListener(v -> openHealthConnectSettings());
+
         btnSyncNow.setOnClickListener(v -> {
             hcManager.checkPermissions(granted -> {
                 if (granted) {
+                    showLoading(true);
                     OneTimeWorkRequest syncRequest = new OneTimeWorkRequest.Builder(HealthSyncWorker.class).build();
                     WorkManager.getInstance(requireContext()).enqueue(syncRequest);
-                    requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), R.string.health_sync_now, Toast.LENGTH_SHORT).show());
+                    
+                    // Observe work status
+                    WorkManager.getInstance(requireContext())
+                            .getWorkInfoByIdLiveData(syncRequest.getId())
+                            .observe(getViewLifecycleOwner(), workInfo -> {
+                                if (workInfo != null && workInfo.getState().isFinished()) {
+                                    showLoading(false);
+                                    if (workInfo.getState() == androidx.work.WorkInfo.State.SUCCEEDED) {
+                                        Toast.makeText(getContext(), "Sync successful!", Toast.LENGTH_SHORT).show();
+                                        updateLastSyncTime();
+                                    } else {
+                                        Toast.makeText(getContext(), "Sync failed. Check permissions.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                 } else {
                     requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), R.string.health_sync_permissions_required, Toast.LENGTH_SHORT).show());
                 }
@@ -86,6 +108,27 @@ public class HealthSyncFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void openHealthConnectSettings() {
+        Intent intent = new Intent("androidx.health.ACTION_HEALTH_CONNECT_SETTINGS");
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Could not open settings", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showLoading(boolean loading) {
+        if (progressOverlay != null) {
+            progressOverlay.setVisibility(loading ? View.VISIBLE : View.GONE);
+        }
+        btnSyncNow.setEnabled(!loading);
+    }
+
+    private void updateLastSyncTime() {
+        String now = java.text.DateFormat.getDateTimeInstance().format(new java.util.Date());
+        lastSyncText.setText("Last sync: " + now);
     }
 
     @Override
@@ -100,6 +143,7 @@ public class HealthSyncFragment extends Fragment {
             view.findViewById(R.id.hc_not_installed_text).setVisibility(View.VISIBLE);
             btnConnect.setEnabled(false);
             btnSyncNow.setEnabled(false);
+            btnManagePermissions.setEnabled(false);
             if (status == HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED) {
                 ((TextView)view.findViewById(R.id.hc_not_installed_text)).setText("Update Health Connect to proceed");
             }
@@ -112,13 +156,19 @@ public class HealthSyncFragment extends Fragment {
             if (connected) {
                 statusText.setText(R.string.health_sync_status_connected);
                 statusText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
-                btnConnect.setText(R.string.health_sync_disconnect);
+                btnConnect.setText("Managed in App");
+                btnConnect.setEnabled(false);
+                btnManagePermissions.setVisibility(View.VISIBLE);
                 statusIcon.setImageResource(android.R.drawable.presence_online);
+                btnSyncNow.setEnabled(true);
             } else {
                 statusText.setText(R.string.health_sync_status_disconnected);
                 statusText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
                 btnConnect.setText(R.string.health_sync_connect);
+                btnConnect.setEnabled(true);
+                btnManagePermissions.setVisibility(View.GONE);
                 statusIcon.setImageResource(android.R.drawable.presence_offline);
+                btnSyncNow.setEnabled(false);
             }
         });
     }

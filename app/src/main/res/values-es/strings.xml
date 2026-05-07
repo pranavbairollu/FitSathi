@@ -88,4 +88,5 @@
     <string name="health_sync_weight">Sincronización de Peso</string>
     <string name="health_sync_water">Sincronización de Hidratación</string>
     <string name="health_sync_workouts">Sincronización de Entrenamientos</string>
+    <string name="health_sync_manage_permissions">Gestionar permisos de la aplicación</string>
 </resources>

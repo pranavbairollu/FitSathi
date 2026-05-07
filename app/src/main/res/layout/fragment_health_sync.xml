@@ -1,198 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/health_sync_title"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorPrimary"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/health_sync_subtitle"
-            android:textSize="16sp"
-            android:alpha="0.7"
-            android:layout_marginBottom="24dp" />
+            android:orientation="vertical"
+            android:padding="20dp">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/status_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            android:layout_marginBottom="24dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/health_sync_title"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginBottom="8dp" />
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="20dp"
-                android:gravity="center_vertical">
+                android:text="@string/health_sync_subtitle"
+                android:textSize="16sp"
+                android:alpha="0.7"
+                android:layout_marginBottom="24dp" />
 
-                <ImageView
-                    android:id="@+id/status_icon"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_launcher_foreground"
-                    app:tint="?attr/colorPrimary"
-                    android:contentDescription="@null" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/status_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutlineVariant"
+                android:layout_marginBottom="24dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
 
-                    <TextView
-                        android:id="@+id/status_text"
+                    <ImageView
+                        android:id="@+id/status_icon"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_launcher_foreground"
+                        app:tint="?attr/colorPrimary"
+                        android:contentDescription="@null" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:id="@+id/status_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/health_sync_status_disconnected"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/last_sync_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Last sync: Never"
+                            android:textSize="14sp"
+                            android:alpha="0.6" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_connect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/health_sync_status_disconnected"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/last_sync_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Last sync: Never"
-                        android:textSize="14sp"
-                        android:alpha="0.6" />
+                        android:text="@string/health_sync_connect"
+                        style="@style/Widget.Material3.Button.TonalButton" />
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_connect"
-                    android:layout_width="wrap_content"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_manage_permissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Manage App Permissions"
+                android:visibility="gone"
+                android:layout_marginBottom="24dp"
+                style="@style/Widget.Material3.Button.OutlinedButton" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data Categories"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Steps Sync -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="12dp"
+                app:strokeWidth="0.5dp"
+                app:strokeColor="?attr/colorOutlineVariant">
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/health_sync_connect"
-                    style="@style/Widget.Material3.Button.TonalButton" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/health_sync_steps"
+                        android:textSize="16sp"
+                        android:layout_centerVertical="true" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switch_steps"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:checked="true" />
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Weight Sync -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="12dp"
+                app:strokeWidth="0.5dp"
+                app:strokeColor="?attr/colorOutlineVariant">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/health_sync_weight"
+                        android:textSize="16sp"
+                        android:layout_centerVertical="true" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switch_weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:checked="true" />
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Water Sync -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="12dp"
+                app:strokeWidth="0.5dp"
+                app:strokeColor="?attr/colorOutlineVariant">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/health_sync_water"
+                        android:textSize="16sp"
+                        android:layout_centerVertical="true" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switch_water"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:checked="true" />
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_sync_now"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="@string/health_sync_now"
+                android:layout_marginTop="24dp"
+                app:cornerRadius="28dp"
+                style="@style/Widget.Material3.Button" />
+
+            <TextView
+                android:id="@+id/hc_not_installed_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/health_sync_not_available"
+                android:textColor="?attr/colorError"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/progress_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:indicatorColor="?attr/colorOnPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Data Categories"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
-
-        <!-- Steps Sync -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
-            android:layout_marginBottom="12dp"
-            app:strokeWidth="0.5dp"
-            app:strokeColor="?attr/colorOutlineVariant">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/health_sync_steps"
-                    android:textSize="16sp"
-                    android:layout_centerVertical="true" />
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switch_steps"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:checked="true" />
-            </RelativeLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Weight Sync -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
-            android:layout_marginBottom="12dp"
-            app:strokeWidth="0.5dp"
-            app:strokeColor="?attr/colorOutlineVariant">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/health_sync_weight"
-                    android:textSize="16sp"
-                    android:layout_centerVertical="true" />
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switch_weight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:checked="true" />
-            </RelativeLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Water Sync -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
-            android:layout_marginBottom="12dp"
-            app:strokeWidth="0.5dp"
-            app:strokeColor="?attr/colorOutlineVariant">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/health_sync_water"
-                    android:textSize="16sp"
-                    android:layout_centerVertical="true" />
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switch_water"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:checked="true" />
-            </RelativeLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_sync_now"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="@string/health_sync_now"
-            android:layout_marginTop="24dp"
-            app:cornerRadius="28dp"
-            style="@style/Widget.Material3.Button" />
-
-        <TextView
-            android:id="@+id/hc_not_installed_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/health_sync_not_available"
-            android:textColor="?attr/colorError"
             android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:visibility="gone" />
-
+            android:text="Synchronizing Data..."
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
     </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+
+</FrameLayout>

@@ -80,6 +80,8 @@ public class DashboardActivity extends BaseActivity {
         if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.nav_home);
         }
+
+        setupHealthSync();
     }
 
     // -----------------------------
@@ -168,6 +170,26 @@ public class DashboardActivity extends BaseActivity {
 
     public void openWaterFragment() {
         openFragment(new WaterFragment(), true);
+    }
+
+    private void setupHealthSync() {
+        com.example.fitsathi.managers.HealthConnectManager.getInstance(this).checkPermissions(allGranted -> {
+            if (allGranted) {
+                androidx.work.PeriodicWorkRequest syncRequest =
+                        new androidx.work.PeriodicWorkRequest.Builder(com.example.fitsathi.workers.HealthSyncWorker.class, 4, java.util.concurrent.TimeUnit.HOURS)
+                                .setConstraints(new androidx.work.Constraints.Builder()
+                                        .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+                                        .build())
+                                .build();
+
+                androidx.work.WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                        "HealthConnectSync",
+                        androidx.work.ExistingPeriodicWorkPolicy.KEEP,
+                        syncRequest
+                );
+                android.util.Log.d("DashboardActivity", "Health Connect periodic sync scheduled.");
+            }
+        });
     }
 
     public void openHealthSyncFragment() {

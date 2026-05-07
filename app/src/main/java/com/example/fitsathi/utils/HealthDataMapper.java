@@ -25,46 +25,63 @@ public class HealthDataMapper {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public static StepsRecord mapToStepsRecord(StepLog stepLog) {
-        LocalDate date = LocalDate.parse(stepLog.getDate(), DATE_FORMATTER);
-        Instant startOfDay = date.atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        if (stepLog == null || stepLog.getDate() == null || stepLog.getSteps() < 0) return null;
+        try {
+            LocalDate date = LocalDate.parse(stepLog.getDate(), DATE_FORMATTER);
+            Instant startOfDay = date.atStartOfDay(ZoneId.systemDefault()).toInstant();
+            Instant endOfDay = date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant();
 
-        return HealthConnectBridge.createStepsRecord(
-                startOfDay,
-                ZoneId.systemDefault().getRules().getOffset(startOfDay),
-                endOfDay,
-                ZoneId.systemDefault().getRules().getOffset(endOfDay),
-                (long) stepLog.getSteps()
-        );
+            return HealthConnectBridge.createStepsRecord(
+                    startOfDay,
+                    ZoneId.systemDefault().getRules().getOffset(startOfDay),
+                    endOfDay,
+                    ZoneId.systemDefault().getRules().getOffset(endOfDay),
+                    (long) stepLog.getSteps()
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static WeightRecord mapToWeightRecord(WeightLog weightLog) {
-        Instant time = Instant.ofEpochMilli(weightLog.getTimestamp());
-        return HealthConnectBridge.createWeightRecord(
-                time,
-                ZoneId.systemDefault().getRules().getOffset(time),
-                Mass.kilograms(weightLog.getWeight())
-        );
+        if (weightLog == null || weightLog.getWeight() <= 0) return null;
+        try {
+            Instant time = Instant.ofEpochMilli(weightLog.getTimestamp());
+            return HealthConnectBridge.createWeightRecord(
+                    time,
+                    ZoneId.systemDefault().getRules().getOffset(time),
+                    Mass.kilograms(weightLog.getWeight())
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static List<HydrationRecord> mapToHydrationRecords(String dateStr, List<Long> intakeList) {
         List<HydrationRecord> records = new ArrayList<>();
-        LocalDate date = LocalDate.parse(dateStr, DATE_FORMATTER);
+        if (dateStr == null || intakeList == null || intakeList.isEmpty()) return records;
         
-        Instant baseTime = date.atStartOfDay(ZoneId.systemDefault()).toInstant();
-        
-        for (int i = 0; i < intakeList.size(); i++) {
-            Long amountMl = intakeList.get(i);
-            Instant startTime = baseTime.plusSeconds(i * 3600);
-            Instant endTime = startTime.plusSeconds(60); // 1 minute duration
+        try {
+            LocalDate date = LocalDate.parse(dateStr, DATE_FORMATTER);
+            Instant baseTime = date.atStartOfDay(ZoneId.systemDefault()).toInstant();
             
-            records.add(HealthConnectBridge.createHydrationRecord(
-                    startTime,
-                    ZoneId.systemDefault().getRules().getOffset(startTime),
-                    endTime,
-                    ZoneId.systemDefault().getRules().getOffset(endTime),
-                    Volume.milliliters(amountMl.doubleValue())
-            ));
+            for (int i = 0; i < intakeList.size(); i++) {
+                Long amountMl = intakeList.get(i);
+                if (amountMl == null || amountMl <= 0) continue;
+                
+                Instant startTime = baseTime.plusSeconds(i * 3600);
+                Instant endTime = startTime.plusSeconds(60);
+                
+                records.add(HealthConnectBridge.createHydrationRecord(
+                        startTime,
+                        ZoneId.systemDefault().getRules().getOffset(startTime),
+                        endTime,
+                        ZoneId.systemDefault().getRules().getOffset(endTime),
+                        Volume.milliliters(amountMl.doubleValue())
+                ));
+            }
+        } catch (Exception e) {
+            // Ignore malformed data
         }
         return records;
     }
