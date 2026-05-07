@@ -55,6 +55,7 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
     private int projectionDays = 30;
     private boolean isProjectionEnabled = false;
     private List<WeightLog> currentHistoricalLogs = new ArrayList<>();
+    private int currentProjectionRequestId = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -223,27 +224,31 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
         }
 
         if (isProjectionEnabled) {
-            ProjectionManager.getWeightProjection(requireContext(), currentWeight, currentTargetWeight, projectionDays, new ProjectionManager.ProjectionCallback() {
-                @Override
-                public void onProjectionCalculated(List<WeightLog> projection, double dailyChange, String reachTargetDate) {
-                    if (isAdded() && binding != null) {
-                        binding.reachTargetDateText.setText(reachTargetDate);
-                        if (!projection.isEmpty()) {
-                            float lastProj = projection.get(projection.size() - 1).getWeight();
-                            binding.projectedWeightText.setText(String.format(Locale.getDefault(), "%.1f kg", lastProj));
+            Context context = getContext();
+            if (context != null) {
+                final int requestId = ++currentProjectionRequestId;
+                ProjectionManager.getWeightProjection(context, currentWeight, currentTargetWeight, projectionDays, new ProjectionManager.ProjectionCallback() {
+                    @Override
+                    public void onProjectionCalculated(List<WeightLog> projection, double dailyChange, String reachTargetDate) {
+                        if (requestId == currentProjectionRequestId && isAdded() && binding != null) {
+                            binding.reachTargetDateText.setText(reachTargetDate);
+                            if (!projection.isEmpty()) {
+                                float lastProj = projection.get(projection.size() - 1).getWeight();
+                                binding.projectedWeightText.setText(String.format(Locale.getDefault(), "%.1f kg", lastProj));
+                            }
+                            updateChartData(currentHistoricalLogs, projection);
                         }
-                        updateChartData(currentHistoricalLogs, projection);
                     }
-                }
 
-                @Override
-                public void onError(String message) {
-                    if (isAdded() && binding != null) {
-                        Toast.makeText(requireContext(), "Projection error: " + message, Toast.LENGTH_SHORT).show();
-                        updateChartData(currentHistoricalLogs, null);
+                    @Override
+                    public void onError(String message) {
+                        if (requestId == currentProjectionRequestId && isAdded() && binding != null) {
+                            Toast.makeText(getContext(), "Projection error: " + message, Toast.LENGTH_SHORT).show();
+                            updateChartData(currentHistoricalLogs, null);
+                        }
                     }
-                }
-            });
+                });
+            }
         } else {
             updateChartData(currentHistoricalLogs, null);
         }
@@ -276,7 +281,7 @@ public class WeightTrackerFragment extends Fragment implements WeightLogManager.
                 timestamps.add(log.getTimestamp());
             }
 
-            LineDataSet projectionDataSet = new LineDataSet(projectionEntries, "Predicted Path");
+            LineDataSet projectionDataSet = new LineDataSet(projectionEntries, getString(R.string.predicted_path_label));
             styleProjectionDataSet(projectionDataSet);
             lineData.addDataSet(projectionDataSet);
         }

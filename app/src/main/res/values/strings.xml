@@ -111,6 +111,19 @@
     <string name="target_weight_saved">Target weight saved!</string>
     <string name="please_enter_target_weight">Please enter a target weight</string>
     <string name="weight_label">Weight</string>
+    <string name="predicted_path_label">Predicted Path</string>
+    <string name="projection_never">Never</string>
+    <string name="projection_target_reached">Target Reached!</string>
+    <string name="projection_weight_gain">Projected Weight Gain</string>
+    <string name="projection_weight_loss">Projected Weight Loss</string>
+    <string name="projection_stable_trend">Stable Weight Trend</string>
+    <string name="projection_set_target">Set Target Weight</string>
+    <string name="projection_trend_disclaimer">Based on your last 14 days of calorie logging.</string>
+    <string name="projection_show_label">Show Projection</string>
+    <string name="projection_range_label">Projection Range</string>
+    <string name="projection_title">Predictive Weight Path</string>
+    <string name="projection_target_reach_date_label">Target Reach Date</string>
+    <string name="projection_projected_weight_label">Projected Weight</string>
     
     <!-- Home Fragment -->
     <string name="home_welcome">Welcome to FitSathi!</string>

@@ -49,4 +49,26 @@
 
     <string name="consumed_kcal">%1.0f\nkcal खपत</string>
     <string name="goal_kcal">लक्ष्य: %1$d kcal</string>
+
+    <!-- Weight Tracker Strings -->
+    <string name="weight_placeholder">– किग्रा</string>
+    <string name="weight_saved">वजन सहेजा गया!</string>
+    <string name="invalid_weight">अमान्य वजन</string>
+    <string name="please_enter_weight">कृपया वजन दर्ज करें</string>
+    <string name="target_weight_saved">लक्ष्य वजन सहेजा गया!</string>
+    <string name="please_enter_target_weight">कृपया लक्ष्य वजन दर्ज करें</string>
+    <string name="weight_label">वजन</string>
+    <string name="predicted_path_label">अनुमानित पथ</string>
+    <string name="projection_never">कभी नहीं</string>
+    <string name="projection_target_reached">लक्ष्य प्राप्त!</string>
+    <string name="projection_weight_gain">अनुमानित वजन बढ़ना</string>
+    <string name="projection_weight_loss">अनुमानित वजन घटना</string>
+    <string name="projection_stable_trend">स्थिर वजन का रुझान</string>
+    <string name="projection_set_target">लक्ष्य वजन निर्धारित करें</string>
+    <string name="projection_trend_disclaimer">आपके पिछले 14 दिनों के कैलोरी लॉगिंग के आधार पर।</string>
+    <string name="projection_show_label">प्रोजेक्शन दिखाएं</string>
+    <string name="projection_range_label">प्रोजेक्शन रेंज</string>
+    <string name="projection_title">अनुमानित वजन पथ</string>
+    <string name="projection_target_reach_date_label">लक्ष्य तक पहुँचने की तिथि</string>
+    <string name="projection_projected_weight_label">अनुमानित वजन</string>
 </resources>

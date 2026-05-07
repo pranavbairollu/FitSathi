@@ -46,4 +46,26 @@
 
     <string name="consumed_kcal">%1.0f\nkcal consommées</string>
     <string name="goal_kcal">Objectif : %1$d kcal</string>
+
+    <!-- Weight Tracker Strings -->
+    <string name="weight_placeholder">– kg</string>
+    <string name="weight_saved">Poids enregistré !</string>
+    <string name="invalid_weight">Poids invalide</string>
+    <string name="please_enter_weight">Veuillez entrer un poids</string>
+    <string name="target_weight_saved">Poids cible enregistré !</string>
+    <string name="please_enter_target_weight">Veuillez entrer un poids cible</string>
+    <string name="weight_label">Poids</string>
+    <string name="predicted_path_label">Chemin Prédit</string>
+    <string name="projection_never">Jamais</string>
+    <string name="projection_target_reached">Objectif Atteint !</string>
+    <string name="projection_weight_gain">Gain de Poids Projeté</string>
+    <string name="projection_weight_loss">Perte de Poids Projetée</string>
+    <string name="projection_stable_trend">Tendance de Poids Stable</string>
+    <string name="projection_set_target">Définir le Poids Cible</string>
+    <string name="projection_trend_disclaimer">Basé sur vos 14 derniers jours de suivi des calories.</string>
+    <string name="projection_show_label">Afficher la Projection</string>
+    <string name="projection_range_label">Plage de Projection</string>
+    <string name="projection_title">Chemin de Poids Prédictif</string>
+    <string name="projection_target_reach_date_label">Date de Réussite de l\'Objectif</string>
+    <string name="projection_projected_weight_label">Poids Projeté</string>
 </resources>
