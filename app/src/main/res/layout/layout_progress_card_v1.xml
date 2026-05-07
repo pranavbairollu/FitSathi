@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/infographic_card"
+    android:layout_width="1080px"
+    android:layout_height="1920px"
+    android:background="@drawable/bg_progress_card"
+    android:padding="64px">
+
+    <!-- Header: App Name & Date Range -->
+    <TextView
+        android:id="@+id/tv_app_brand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FITSATHI"
+        android:textColor="#3B82F6"
+        android:textSize="48px"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_date_range"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="May 01 - May 07"
+        android:textColor="#94A3B8"
+        android:textSize="36px"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- User Profile Section -->
+    <LinearLayout
+        android:id="@+id/user_profile_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80px"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/tv_app_brand">
+
+        <ImageView
+            android:id="@+id/iv_user_avatar"
+            android:layout_width="160px"
+            android:layout_height="160px"
+            android:src="@drawable/ic_profile"
+            app:tint="#FFFFFF" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40px"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="John Doe"
+                android:textColor="#FFFFFF"
+                android:textSize="64px"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Weekly Achievement Recap"
+                android:textColor="#94A3B8"
+                android:textSize="32px" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Main Title -->
+    <TextView
+        android:id="@+id/tv_main_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120px"
+        android:gravity="center"
+        android:text="CRUSHED IT!"
+        android:textColor="#FFFFFF"
+        android:textSize="120px"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/user_profile_section" />
+
+    <!-- Steps Chart Container -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/chart_card"
+        android:layout_width="match_parent"
+        android:layout_height="600px"
+        android:layout_marginTop="80px"
+        app:cardBackgroundColor="#1E293B"
+        app:cardCornerRadius="48px"
+        app:cardElevation="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_main_title"
+        app:strokeColor="#334155"
+        app:strokeWidth="2px">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="40px">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STEPS ACTIVITY"
+                android:textColor="#3B82F6"
+                android:textSize="28px"
+                android:textStyle="bold" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/sharing_bar_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20px" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Stats Grid -->
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80px"
+        android:columnCount="2"
+        android:rowCount="2"
+        app:layout_constraintTop_toBottomOf="@id/chart_card">
+
+        <!-- Steps -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="20px">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Steps"
+                android:textColor="#94A3B8"
+                android:textSize="32px" />
+            <TextView
+                android:id="@+id/tv_stat_steps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="74,200"
+                android:textColor="#FFFFFF"
+                android:textSize="64px"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Calories -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="20px">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Avg Calories"
+                android:textColor="#94A3B8"
+                android:textSize="32px" />
+            <TextView
+                android:id="@+id/tv_stat_calories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2,150"
+                android:textColor="#F97316"
+                android:textSize="64px"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Water -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="20px">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Water Intake"
+                android:textColor="#94A3B8"
+                android:textSize="32px" />
+            <TextView
+                android:id="@+id/tv_stat_water"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="56 Glasses"
+                android:textColor="#3B82F6"
+                android:textSize="64px"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Workouts -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="20px">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Workouts"
+                android:textColor="#94A3B8"
+                android:textSize="32px" />
+            <TextView
+                android:id="@+id/tv_stat_workouts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 Days"
+                android:textColor="#10B981"
+                android:textSize="64px"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </GridLayout>
+
+    <!-- Footer -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40px"
+        android:text="JOIN THE TRIBE @ FITSATHI"
+        android:textColor="#475569"
+        android:textSize="32px"
+        android:textStyle="bold"
+        android:letterSpacing="0.2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

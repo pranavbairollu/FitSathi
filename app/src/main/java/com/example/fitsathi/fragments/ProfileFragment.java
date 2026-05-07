@@ -134,6 +134,11 @@ public class ProfileFragment extends Fragment {
 
         binding.editProfilePicFab.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
 
+        binding.shareProgressButton.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), com.example.fitsathi.ProgressShareActivity.class);
+            startActivity(intent);
+        });
+
         binding.logoutButton.setOnClickListener(v -> {
             mAuth.signOut();
             Intent intent = new Intent(requireActivity(), LoginActivity.class);

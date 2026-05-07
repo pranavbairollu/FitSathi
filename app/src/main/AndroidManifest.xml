@@ -79,5 +79,18 @@
         <activity android:name=".PrivacyPolicyActivity" android:exported="false" />
         <activity android:name=".HelpAndGuidelinesActivity" android:exported="false" />
         <activity android:name=".SquadLeaderboardActivity" android:exported="false" />
+        <activity android:name=".ProgressShareActivity" android:exported="false" 
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitSathi" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 </manifest>

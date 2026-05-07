@@ -14,6 +14,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -171,5 +173,38 @@ public class WaterIntakeManager {
                 .edit()
                 .putInt(KEY_GOAL, goal)
                 .apply();
+    }
+
+    public interface WaterHistoryCallback {
+        void onWaterHistoryReceived(Map<String, Integer> waterHistory);
+    }
+
+    public static void getLastNDaysWater(Context context, int days, WaterHistoryCallback callback) {
+        executor.execute(() -> {
+            AppDatabase db = AppDatabase.getDatabase(context);
+            
+            // Get date range
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault());
+            
+            Map<String, Integer> history = new java.util.LinkedHashMap<>();
+            
+            // Prepare dates in reverse order to match getLastNDaysSteps logic if needed, 
+            // but usually we want chronological for charts.
+            // Let's use chronological.
+            java.util.Calendar rangeCal = java.util.Calendar.getInstance();
+            rangeCal.add(java.util.Calendar.DAY_OF_YEAR, -(days - 1));
+            
+            for (int i = 0; i < days; i++) {
+                String dateKey = sdf.format(rangeCal.getTime());
+                com.example.fitsathi.data.entities.WaterLog log = db.waterLogDao().getWaterLogForDate(dateKey);
+                history.put(dateKey, log != null ? log.getIntakeList().size() : 0);
+                rangeCal.add(java.util.Calendar.DAY_OF_YEAR, 1);
+            }
+
+            if (callback != null) {
+                mainHandler.post(() -> callback.onWaterHistoryReceived(history));
+            }
+        });
     }
 }

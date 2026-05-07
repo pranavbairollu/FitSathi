@@ -10,6 +10,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class FoodLogManager {
 
@@ -64,6 +70,42 @@ public class FoodLogManager {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 callback.onFoodListReceived(new ArrayList<>());
+            }
+        });
+    }
+
+    public interface CalorieHistoryCallback {
+        void onCalorieHistoryReceived(Map<String, Integer> calorieHistory);
+    }
+
+    public static void getLastNDaysCalories(int days, CalorieHistoryCallback callback) {
+        getFoodLogRef().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Integer> history = new LinkedHashMap<>();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.DAY_OF_YEAR, -(days - 1));
+
+                for (int i = 0; i < days; i++) {
+                    String dateKey = sdf.format(cal.getTime());
+                    int totalCalories = 0;
+                    DataSnapshot daySnapshot = dataSnapshot.child(dateKey);
+                    for (DataSnapshot itemSnapshot : daySnapshot.getChildren()) {
+                        FoodItem item = itemSnapshot.getValue(FoodItem.class);
+                        if (item != null) {
+                            totalCalories += item.getCalories();
+                        }
+                    }
+                    history.put(dateKey, totalCalories);
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                }
+                callback.onCalorieHistoryReceived(history);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onCalorieHistoryReceived(new HashMap<>());
             }
         });
     }
