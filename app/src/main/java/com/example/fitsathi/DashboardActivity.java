@@ -62,6 +62,8 @@ public class DashboardActivity extends BaseActivity {
                 selectedFragment = new WeightTrackerFragment();
             } else if (itemId == R.id.nav_profile) {
                 selectedFragment = new ProfileFragment();
+            } else if (itemId == R.id.nav_community) {
+                selectedFragment = new com.example.fitsathi.fragments.SquadsFragment();
             } else if (itemId == R.id.nav_settings) {
                 selectedFragment = new SettingsFragment();
             }

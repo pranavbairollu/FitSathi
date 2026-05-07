@@ -78,5 +78,6 @@
             android:exported="false" />
         <activity android:name=".PrivacyPolicyActivity" android:exported="false" />
         <activity android:name=".HelpAndGuidelinesActivity" android:exported="false" />
+        <activity android:name=".SquadLeaderboardActivity" android:exported="false" />
     </application>
 </manifest>

@@ -17,6 +17,9 @@ public interface WorkoutLogDao {
     @Query("SELECT * FROM workout_logs ORDER BY timestamp DESC LIMIT :limit")
     List<WorkoutLog> getRecentHistory(int limit);
 
+    @Query("SELECT SUM(caloriesBurned) FROM workout_logs WHERE timestamp >= :startTime AND timestamp <= :endTime")
+    int getCaloriesForRange(long startTime, long endTime);
+
     @Query("DELETE FROM workout_logs")
     void deleteAll();
 }

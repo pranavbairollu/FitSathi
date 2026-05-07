@@ -22,6 +22,11 @@
         android:title="Profile" />
 
     <item
+        android:id="@+id/nav_community"
+        android:icon="@drawable/ic_community"
+        android:title="Community" />
+
+    <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_settings"
         android:title="Settings" />

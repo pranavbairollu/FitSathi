@@ -18,6 +18,9 @@ public interface StepLogDao {
     @Query("SELECT * FROM step_logs WHERE date IN (:dates) ORDER BY date ASC")
     List<StepLog> getStepsForDates(List<String> dates);
 
+    @Query("SELECT SUM(steps) FROM step_logs WHERE date IN (:dates)")
+    int getTotalStepsForDates(List<String> dates);
+
     @Query("DELETE FROM step_logs")
     void deleteAll();
 }

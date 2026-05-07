@@ -24,6 +24,24 @@ public class FitSathiApp extends Application {
         createNotificationChannels();
         migratePreferences();
         migrateToRoom();
+        scheduleSquadSync();
+    }
+
+    private void scheduleSquadSync() {
+        androidx.work.PeriodicWorkRequest syncRequest =
+                new androidx.work.PeriodicWorkRequest.Builder(
+                        com.example.fitsathi.workers.SquadSyncWorker.class,
+                        1, java.util.concurrent.TimeUnit.HOURS)
+                        .setConstraints(new androidx.work.Constraints.Builder()
+                                .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+                                .build())
+                        .build();
+
+        androidx.work.WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "SquadSync",
+                androidx.work.ExistingPeriodicWorkPolicy.KEEP,
+                syncRequest
+        );
     }
 
     private void migratePreferences() {
