@@ -17,67 +17,101 @@ public class ProgressStatsManager {
     public static void getWeeklyProgress(Context context, ProgressCallback callback) {
         WeeklyProgress progress = new WeeklyProgress();
         AtomicInteger pendingTasks = new AtomicInteger(5);
+        java.util.concurrent.atomic.AtomicBoolean callbackFired = new java.util.concurrent.atomic.AtomicBoolean(false);
 
-        // 1. Load User Info
-        UserInfoManager.getUserInfo(userInfo -> {
-            if (userInfo != null) {
-                progress.setUserName(userInfo.getName());
-                progress.setProfilePicUrl(userInfo.getProfilePicUrl());
-            }
-            checkTasks(pendingTasks, progress, callback);
-        });
+        // 1. Load User Info (Firebase)
+        try {
+            UserInfoManager.getUserInfo(userInfo -> {
+                if (userInfo != null) {
+                    progress.setUserName(userInfo.getName());
+                    progress.setProfilePicUrl(userInfo.getProfilePicUrl());
+                }
+                safeCheckTasks(pendingTasks, progress, callback, callbackFired);
+            });
+        } catch (Exception e) {
+            safeCheckTasks(pendingTasks, progress, callback, callbackFired);
+        }
 
-        // 2. Load Steps History
-        StepCounterManager.getLastNDaysSteps(7, stepsHistory -> {
-            progress.setStepsHistory(stepsHistory);
-            checkTasks(pendingTasks, progress, callback);
-        });
+        // 2. Load Steps History (Firebase)
+        try {
+            StepCounterManager.getLastNDaysSteps(7, stepsHistory -> {
+                progress.setStepsHistory(stepsHistory);
+                safeCheckTasks(pendingTasks, progress, callback, callbackFired);
+            });
+        } catch (Exception e) {
+            safeCheckTasks(pendingTasks, progress, callback, callbackFired);
+        }
 
-        // 3. Load Water History
-        WaterIntakeManager.getLastNDaysWater(context, 7, waterHistory -> {
-            progress.setWaterHistory(waterHistory);
-            checkTasks(pendingTasks, progress, callback);
-        });
+        // 3. Load Water History (Local Room)
+        try {
+            WaterIntakeManager.getLastNDaysWater(context, 7, waterHistory -> {
+                progress.setWaterHistory(waterHistory);
+                safeCheckTasks(pendingTasks, progress, callback, callbackFired);
+            });
+        } catch (Exception e) {
+            safeCheckTasks(pendingTasks, progress, callback, callbackFired);
+        }
 
-        // 4. Load Calorie History
-        FoodLogManager.getLastNDaysCalories(7, calorieHistory -> {
-            progress.setCalorieHistory(calorieHistory);
-            checkTasks(pendingTasks, progress, callback);
-        });
+        // 4. Load Calorie History (Firebase)
+        try {
+            FoodLogManager.getLastNDaysCalories(7, calorieHistory -> {
+                progress.setCalorieHistory(calorieHistory);
+                safeCheckTasks(pendingTasks, progress, callback, callbackFired);
+            });
+        } catch (Exception e) {
+            safeCheckTasks(pendingTasks, progress, callback, callbackFired);
+        }
 
         // 5. Load Workouts (Room)
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        long endTime = cal.getTimeInMillis();
-        cal.add(java.util.Calendar.DAY_OF_YEAR, -7);
-        long startTime = cal.getTimeInMillis();
+        try {
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            long endTime = cal.getTimeInMillis();
+            cal.add(java.util.Calendar.DAY_OF_YEAR, -7);
+            long startTime = cal.getTimeInMillis();
 
-        // Format dates for display
-        SimpleDateFormat displaySdf = new SimpleDateFormat("MMM dd", Locale.getDefault());
-        progress.setEndDate(displaySdf.format(new Date()));
-        progress.setStartDate(displaySdf.format(cal.getTime()));
+            SimpleDateFormat displaySdf = new SimpleDateFormat("MMM dd", Locale.getDefault());
+            progress.setEndDate(displaySdf.format(new Date()));
+            progress.setStartDate(displaySdf.format(cal.getTime()));
 
-        new Thread(() -> {
-            com.example.fitsathi.data.AppDatabase db = com.example.fitsathi.data.AppDatabase.getDatabase(context);
-            // We need a way to count workouts in range. 
-            // Let's just get the list and count them for now or add a DAO method.
-            // For now, let's use the existing getCaloriesForRange logic but for count.
-            // Wait, I can just use getRecentHistory and filter.
-            java.util.List<com.example.fitsathi.data.entities.WorkoutLog> logs = db.workoutLogDao().getAllHistory();
-            int count = 0;
-            for (com.example.fitsathi.data.entities.WorkoutLog log : logs) {
-                if (log.getTimestamp() >= startTime && log.getTimestamp() <= endTime) {
-                    count++;
+            new Thread(() -> {
+                try {
+                    com.example.fitsathi.data.AppDatabase db = com.example.fitsathi.data.AppDatabase.getDatabase(context);
+                    java.util.List<com.example.fitsathi.data.entities.WorkoutLog> logs = db.workoutLogDao().getAllHistory();
+                    int count = 0;
+                    if (logs != null) {
+                        for (com.example.fitsathi.data.entities.WorkoutLog log : logs) {
+                            if (log.getTimestamp() >= startTime && log.getTimestamp() <= endTime) {
+                                count++;
+                            }
+                        }
+                    }
+                    progress.setTotalWorkouts(count);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    safeCheckTasks(pendingTasks, progress, callback, callbackFired);
                 }
+            }).start();
+        } catch (Exception e) {
+            safeCheckTasks(pendingTasks, progress, callback, callbackFired);
+        }
+
+        // Safety Timeout: If data takes longer than 15s, return whatever we have
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+            if (!callbackFired.get()) {
+                callbackFired.set(true);
+                if (callback != null) callback.onProgressLoaded(progress);
             }
-            progress.setTotalWorkouts(count);
-            checkTasks(pendingTasks, progress, callback);
-        }).start();
+        }, 15000);
     }
 
-    private static void checkTasks(AtomicInteger pendingTasks, WeeklyProgress progress, ProgressCallback callback) {
-        if (pendingTasks.decrementAndGet() == 0) {
-            if (callback != null) {
-                new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> callback.onProgressLoaded(progress));
+    private static void safeCheckTasks(AtomicInteger pendingTasks, WeeklyProgress progress, ProgressCallback callback, java.util.concurrent.atomic.AtomicBoolean callbackFired) {
+        if (pendingTasks.decrementAndGet() <= 0) {
+            if (!callbackFired.get()) {
+                callbackFired.set(true);
+                if (callback != null) {
+                    new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> callback.onProgressLoaded(progress));
+                }
             }
         }
     }

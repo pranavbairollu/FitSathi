@@ -49,12 +49,34 @@ public class ShareUtils {
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
+        boolean packageFound = false;
         if ("whatsapp".equalsIgnoreCase(platform)) {
             intent.setPackage("com.whatsapp");
+            packageFound = isPackageInstalled(context, "com.whatsapp");
         } else if ("instagram".equalsIgnoreCase(platform)) {
             intent.setPackage("com.instagram.android");
+            packageFound = isPackageInstalled(context, "com.instagram.android");
         }
 
-        context.startActivity(Intent.createChooser(intent, "Share Progress via"));
+        if (platform != null && !packageFound) {
+            android.widget.Toast.makeText(context, platform + " is not installed", android.widget.Toast.LENGTH_SHORT).show();
+            intent.setPackage(null); // Fallback to chooser
+        }
+
+        Intent chooser = Intent.createChooser(intent, "Share Progress via");
+        if (intent.resolveActivity(context.getPackageManager()) != null || chooser.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(chooser);
+        } else {
+            android.widget.Toast.makeText(context, "No app found to share image", android.widget.Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private static boolean isPackageInstalled(Context context, String packageName) {
+        try {
+            context.getPackageManager().getPackageInfo(packageName, 0);
+            return true;
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 }

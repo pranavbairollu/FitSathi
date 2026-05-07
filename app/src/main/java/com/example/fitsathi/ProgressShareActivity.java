@@ -114,49 +114,60 @@ public class ProgressShareActivity extends BaseActivity {
     }
 
     private void setupChart(BarChart chart) {
-        if (chart == null || weeklyProgress.getStepsHistory() == null) return;
-
-        List<BarEntry> entries = new ArrayList<>();
-        List<String> labels = new ArrayList<>();
-        int i = 0;
-        for (Map.Entry<String, Integer> entry : weeklyProgress.getStepsHistory().entrySet()) {
-            entries.add(new BarEntry(i, entry.getValue()));
-            // Just take day of week if possible or last 2 digits
-            labels.add(entry.getKey().substring(Math.max(0, entry.getKey().length() - 2)));
-            i++;
+        if (chart == null || weeklyProgress == null || weeklyProgress.getStepsHistory() == null || weeklyProgress.getStepsHistory().isEmpty()) {
+            if (chart != null) chart.setNoDataText("No step data available for this week");
+            return;
         }
 
-        BarDataSet dataSet = new BarDataSet(entries, "Steps");
-        dataSet.setColor(0xFF3B82F6);
-        dataSet.setDrawValues(false);
-
-        BarData barData = new BarData(dataSet);
-        barData.setBarWidth(0.6f);
-        chart.setData(barData);
-
-        chart.getDescription().setEnabled(false);
-        chart.getLegend().setEnabled(false);
-        chart.getAxisRight().setEnabled(false);
-        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        chart.getXAxis().setTextColor(0xFF94A3B8);
-        chart.getXAxis().setDrawGridLines(false);
-        chart.getAxisLeft().setTextColor(0xFF94A3B8);
-        chart.getAxisLeft().setDrawGridLines(true);
-        chart.getAxisLeft().setGridColor(0xFF334155);
-        
-        chart.getXAxis().setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                int index = (int) value;
-                return (index >= 0 && index < labels.size()) ? labels.get(index) : "";
+        try {
+            List<BarEntry> entries = new ArrayList<>();
+            List<String> labels = new ArrayList<>();
+            int i = 0;
+            for (Map.Entry<String, Integer> entry : weeklyProgress.getStepsHistory().entrySet()) {
+                entries.add(new BarEntry(i, entry.getValue()));
+                String key = entry.getKey();
+                labels.add(key.substring(Math.max(0, key.length() - 5))); // MM-DD
+                i++;
             }
-        });
 
-        chart.invalidate();
+            BarDataSet dataSet = new BarDataSet(entries, "Steps");
+            dataSet.setColor(0xFF3B82F6);
+            dataSet.setDrawValues(false);
+
+            BarData barData = new BarData(dataSet);
+            barData.setBarWidth(0.6f);
+            chart.setData(barData);
+
+            chart.getDescription().setEnabled(false);
+            chart.getLegend().setEnabled(false);
+            chart.getAxisRight().setEnabled(false);
+            chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart.getXAxis().setTextColor(0xFF94A3B8);
+            chart.getXAxis().setDrawGridLines(false);
+            chart.getAxisLeft().setTextColor(0xFF94A3B8);
+            chart.getAxisLeft().setDrawGridLines(true);
+            chart.getAxisLeft().setGridColor(0xFF334155);
+            
+            chart.getXAxis().setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    int index = (int) value;
+                    return (index >= 0 && index < labels.size()) ? labels.get(index) : "";
+                }
+            });
+
+            chart.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (chart != null) chart.setNoDataText("Error loading chart");
+        }
     }
 
     private void shareToPlatform(String platform) {
-        if (infographicView == null) return;
+        if (infographicView == null || weeklyProgress == null) {
+            Toast.makeText(this, "Data not ready yet", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         loadingOverlay.setVisibility(View.VISIBLE);
         // Reset scale before capture to ensure high res
@@ -166,19 +177,25 @@ public class ProgressShareActivity extends BaseActivity {
         infographicView.setScaleY(1f);
 
         infographicView.post(() -> {
-            Bitmap bitmap = ShareUtils.getBitmapFromView(infographicView);
-            
-            // Restore scale for preview
-            infographicView.setScaleX(oldScaleX);
-            infographicView.setScaleY(oldScaleY);
+            try {
+                Bitmap bitmap = ShareUtils.getBitmapFromView(infographicView);
+                
+                // Restore scale for preview
+                infographicView.setScaleX(oldScaleX);
+                infographicView.setScaleY(oldScaleY);
 
-            Uri uri = ShareUtils.saveBitmapToCache(this, bitmap);
-            if (uri != null) {
-                ShareUtils.shareImage(this, uri, platform);
-            } else {
-                Toast.makeText(this, "Failed to generate image", Toast.LENGTH_SHORT).show();
+                Uri uri = ShareUtils.saveBitmapToCache(this, bitmap);
+                if (uri != null) {
+                    ShareUtils.shareImage(this, uri, platform);
+                } else {
+                    Toast.makeText(this, "Failed to generate image", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            } finally {
+                loadingOverlay.setVisibility(View.GONE);
             }
-            loadingOverlay.setVisibility(View.GONE);
         });
     }
 }

@@ -79,16 +79,24 @@ public class FoodLogManager {
     }
 
     public static void getLastNDaysCalories(int days, CalorieHistoryCallback callback) {
-        getFoodLogRef().addListenerForSingleValueEvent(new ValueEventListener() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Calendar cal = Calendar.getInstance();
+        String endDate = sdf.format(cal.getTime());
+        cal.add(Calendar.DAY_OF_YEAR, -(days - 1));
+        String startDate = sdf.format(cal.getTime());
+
+        getFoodLogRef().orderByKey().startAt(startDate).endAt(endDate)
+            .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Integer> history = new LinkedHashMap<>();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.DAY_OF_YEAR, -(days - 1));
+                
+                // Reset calendar to start date for the loop
+                Calendar loopCal = Calendar.getInstance();
+                loopCal.add(Calendar.DAY_OF_YEAR, -(days - 1));
 
                 for (int i = 0; i < days; i++) {
-                    String dateKey = sdf.format(cal.getTime());
+                    String dateKey = sdf.format(loopCal.getTime());
                     int totalCalories = 0;
                     DataSnapshot daySnapshot = dataSnapshot.child(dateKey);
                     for (DataSnapshot itemSnapshot : daySnapshot.getChildren()) {
@@ -98,7 +106,7 @@ public class FoodLogManager {
                         }
                     }
                     history.put(dateKey, totalCalories);
-                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                    loopCal.add(Calendar.DAY_OF_YEAR, 1);
                 }
                 callback.onCalorieHistoryReceived(history);
             }
