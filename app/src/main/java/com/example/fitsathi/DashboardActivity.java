@@ -64,8 +64,6 @@ public class DashboardActivity extends BaseActivity {
                 selectedFragment = new ProfileFragment();
             } else if (itemId == R.id.nav_community) {
                 selectedFragment = new com.example.fitsathi.fragments.SquadsFragment();
-            } else if (itemId == R.id.nav_settings) {
-                selectedFragment = new SettingsFragment();
             }
 
             if (selectedFragment != null) {
@@ -194,5 +192,9 @@ public class DashboardActivity extends BaseActivity {
 
     public void openHealthSyncFragment() {
         openFragment(new com.example.fitsathi.fragments.HealthSyncFragment(), true);
+    }
+
+    public void openSettingsFragment() {
+        openFragment(new SettingsFragment(), true);
     }
 }

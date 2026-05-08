@@ -178,6 +178,21 @@
                             app:iconTint="?attr/colorPrimary"
                             android:textColor="?attr/colorPrimary" />
 
+                        <!-- Settings Button -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/settings_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:text="App Settings"
+                            android:textAllCaps="false"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="12dp"
+                            app:cornerRadius="24dp"
+                            app:icon="@drawable/ic_settings"
+                            app:iconGravity="textStart"
+                            app:iconPadding="8dp"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
                         <!-- Logout Button -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/logout_button"

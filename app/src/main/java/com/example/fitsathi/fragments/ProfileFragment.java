@@ -139,6 +139,12 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        binding.settingsButton.setOnClickListener(v -> {
+            if (getActivity() instanceof DashboardActivity) {
+                ((DashboardActivity) getActivity()).openSettingsFragment();
+            }
+        });
+
         binding.logoutButton.setOnClickListener(v -> {
             mAuth.signOut();
             Intent intent = new Intent(requireActivity(), LoginActivity.class);
