@@ -76,14 +76,7 @@ public class HomeFragment extends Fragment {
     private StepCounterService mService;
     private boolean mBound = false;
 
-    private final ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    startStepCounterService();
-                } else {
-                    Toast.makeText(getContext(), "Permission denied. Step counter will not work.", Toast.LENGTH_SHORT).show();
-                }
-            });
+
 
     private final ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -221,7 +214,6 @@ public class HomeFragment extends Fragment {
 
         initCircularProgressBar();
         initQuickAccessCards();
-        initStepCounter();
         startStepCounterService();
 
         changeGoalButton.setOnClickListener(v -> openGoalActivity());
@@ -303,20 +295,19 @@ public class HomeFragment extends Fragment {
         quickAccessWater.setOnClickListener(listener);
     }
 
-    private void initStepCounter() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-                ContextCompat.checkSelfPermission(requireContext(),
-                        Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION);
-        }
-    }
+
 
     private void startStepCounterService() {
-        Intent serviceIntent = new Intent(requireContext(), StepCounterService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            requireContext().startForegroundService(serviceIntent);
-        } else {
-            requireContext().startService(serviceIntent);
+        if (getContext() == null) return;
+        
+        // Only start if we have the necessary permission
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
+            Intent serviceIntent = new Intent(requireContext(), StepCounterService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                requireContext().startForegroundService(serviceIntent);
+            } else {
+                requireContext().startService(serviceIntent);
+            }
         }
     }
 

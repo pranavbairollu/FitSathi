@@ -59,7 +59,15 @@ public class NutritionixManager {
                         callback.onError("Failed to parse nutrition data.");
                     }
                 },
-                error -> callback.onError("Network error. Please try again.")
+                error -> {
+                    if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
+                        callback.onError("Nutritionix API Error: Unauthorized (Check your API Keys).");
+                    } else if (error.networkResponse != null && error.networkResponse.statusCode == 403) {
+                        callback.onError("Nutritionix API Error: Forbidden (Over limit).");
+                    } else {
+                        callback.onError("Network error. Please try again.");
+                    }
+                }
         ) {
             @Override
             public Map<String, String> getHeaders() {

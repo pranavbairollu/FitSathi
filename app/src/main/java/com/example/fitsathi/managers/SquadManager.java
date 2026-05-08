@@ -225,29 +225,51 @@ public class SquadManager {
             return;
         }
 
+        final java.util.concurrent.atomic.AtomicBoolean isFinished = new java.util.concurrent.atomic.AtomicBoolean(false);
+
+        // Timeout fallback
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+            if (!isFinished.get()) {
+                isFinished.set(true);
+                android.util.Log.w("SquadManager", "Squad loading timed out.");
+                callback.onComplete(new ArrayList<>(), "Loading timed out. Check your connection.");
+            }
+        }, 12000);
+
         getBaseRef().child(USER_SQUADS_KEY).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isFinished.get()) return;
+
                 final List<String> squadIds = new ArrayList<>();
                 for (DataSnapshot ds : snapshot.getChildren()) {
-                    squadIds.add(ds.getKey());
+                    if (ds.getKey() != null) {
+                        squadIds.add(ds.getKey());
+                    }
                 }
 
                 if (squadIds.isEmpty()) {
-                    callback.onComplete(new ArrayList<>(), null);
+                    if (!isFinished.get()) {
+                        isFinished.set(true);
+                        callback.onComplete(new ArrayList<>(), null);
+                    }
                     return;
                 }
 
                 final List<Squad> squads = new ArrayList<>();
-                final java.util.concurrent.atomic.AtomicInteger count = new java.util.concurrent.atomic.AtomicInteger(
-                        0);
+                final java.util.concurrent.atomic.AtomicInteger count = new java.util.concurrent.atomic.AtomicInteger(0);
+                final int total = squadIds.size();
 
                 for (String id : squadIds) {
                     getSquadDetails(id, (squad, error) -> {
-                        if (squad != null)
+                        if (squad != null) {
                             squads.add(squad);
-                        if (count.incrementAndGet() == squadIds.size()) {
-                            callback.onComplete(squads, null);
+                        }
+                        if (count.incrementAndGet() >= total) {
+                            if (!isFinished.get()) {
+                                isFinished.set(true);
+                                callback.onComplete(squads, null);
+                            }
                         }
                     });
                 }
@@ -255,7 +277,10 @@ public class SquadManager {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                callback.onComplete(null, error.getMessage());
+                if (!isFinished.get()) {
+                    isFinished.set(true);
+                    callback.onComplete(null, error.getMessage());
+                }
             }
         });
     }

@@ -30,9 +30,9 @@ public class CalorieTrackerActivity extends BaseActivity {
     private Button trackButton;
     private PieChart pieChart;
 
-    // Replace with your keys
-    private static final String APP_ID = "YOUR_APP_ID";
-    private static final String API_KEY = "YOUR_API_KEY";
+    // Uses keys from local.properties (via BuildConfig)
+    private static final String APP_ID = com.example.fitsathi.BuildConfig.NUTRITIONIX_APP_ID;
+    private static final String API_KEY = com.example.fitsathi.BuildConfig.NUTRITIONIX_APP_KEY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

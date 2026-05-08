@@ -112,7 +112,17 @@ public class StepCounterService extends Service implements SensorEventListener {
         calendar.set(java.util.Calendar.MILLISECOND, 0);
 
         if (alarmManager != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                // Android 12+ requires special permission for exact alarms
+                if (alarmManager.canScheduleExactAlarms()) {
+                    alarmManager.setExactAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP, 
+                            calendar.getTimeInMillis(), pendingIntent);
+                } else {
+                    // Fallback to inexact alarm which is fine for midnight reset
+                    alarmManager.setAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP, 
+                            calendar.getTimeInMillis(), pendingIntent);
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager.setExactAndAllowWhileIdle(android.app.AlarmManager.RTC_WAKEUP, 
                         calendar.getTimeInMillis(), pendingIntent);
             } else {
@@ -123,7 +133,21 @@ public class StepCounterService extends Service implements SensorEventListener {
     }
 
     private void startForeground(Notification notification) {
+        boolean hasRecognitionPermission = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            hasRecognitionPermission = androidx.core.content.ContextCompat.checkSelfPermission(this, 
+                    android.Manifest.permission.ACTIVITY_RECOGNITION) == android.content.pm.PackageManager.PERMISSION_GRANTED;
+        }
+
+        if (Build.VERSION.SDK_INT >= 34) { // Android 14+
+            if (hasRecognitionPermission) {
+                startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH);
+            } else {
+                // Use dataSync as fallback if health permission is not yet granted.
+                // dataSync requires FOREGROUND_SERVICE_DATA_SYNC which is a normal permission.
+                startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH);
         } else {
             startForeground(1, notification);
