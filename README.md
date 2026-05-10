@@ -8,7 +8,7 @@
 
 > **"Your health is your greatest wealth. FitSathi is the companion that helps you manage it."**
 
-**FitSathi** (Healthy Companion) is a comprehensive, privacy-focused fitness and nutrition tracking application for Android. It combines high-precision activity monitoring with deep nutritional insights and personalized workout plans, all backed by a robust, secure offline-first architecture.
+**FitSathi** (Healthy Companion) is a comprehensive, privacy-focused fitness and nutrition tracking application for Android. It combines high-precision activity monitoring with deep nutritional insights, community engagement, and AI-driven predictive analytics, all backed by a robust, secure offline-first architecture.
 
 <p align="center">
   <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="128" alt="FitSathi Logo">
@@ -18,13 +18,13 @@
 
 ## ⚡ The Core Systems
 
-FitSathi is built on four pillars of health, each powered by dedicated intelligence modules and persistent data layers.
+FitSathi is built on six pillars of health and community, each powered by dedicated intelligence modules and persistent data layers.
 
 ### 🏃‍♂️ 1. The Kinetic Engine (Activity Tracking)
 - **High-Precision Monitoring:** Direct integration with hardware sensors (Step Counter/Detector).
-- **Infinite Tracking:** A hardened **Android Foreground Service** ensures steps are logged accurately even under system pressure or background execution.
+- **Infinite Tracking:** A hardened **Android Foreground Service** ensures steps are logged accurately even under system pressure.
 - **Biometric Analytics:** Real-time calculation of Kcal and Distance tailored to user-specific biometrics.
-- **Goal Rituals:** Interactive Circular Progress Dashboards with dynamic **Konfetti** celebrations.
+- **Health Connect Sync:** Bidirectional synchronization with the Android Health ecosystem for a unified health profile.
 
 ### 🥗 2. The Macro Intelligence (Nutrition)
 - **Dual-API Ecosystem:** Synergetic integration with **Nutritionix** and **Open Food Facts**.
@@ -37,10 +37,20 @@ FitSathi is built on four pillars of health, each powered by dedicated intellige
 - **Contextual Awareness:** Smart filtering for location (Home/Gym) and intensity levels.
 - **Visual Library:** 150+ exercises with high-fidelity visual guides and precise instruction sets.
 
-### 💧 4. The Vitality Tracker (Hydration)
-- **Atomic Persistence:** Reliable water intake tracking with immediate persistence.
-- **Hydration Rituals:** Customizable daily goals with quick-action logging.
-- **Smart Reminders:** Intelligent notification system to maintain optimal hydration levels.
+### 📈 4. Predictive Analytics (Weight Projection)
+- **AI-Driven Forecasting:** Advanced mathematical models to project weight trends based on current activity and caloric intake.
+- **Goal Estimation:** Real-time feedback on when you'll reach your target weight based on current performance.
+- **Trend Visualization:** Interactive charts showing projected vs. actual weight progress.
+
+### 👥 5. Social Squads & Community
+- **Global Leaderboards:** Compete with friends and the community in real-time step challenges.
+- **Squad Engagement:** Join or create squads to stay motivated and track collective progress.
+- **Real-time Syncing:** Powered by Firebase Realtime Database for instantaneous leaderboard updates.
+
+### 📱 6. Visual Progress Sharing
+- **Progress Cards:** Generate stunning, Material 3 styled infographics of your weekly progress.
+- **Social Integration:** One-tap sharing to Instagram, WhatsApp, and other social platforms.
+- **Customizable Insights:** Highlight your best streaks, total steps, and nutritional milestones.
 
 ---
 
@@ -51,9 +61,12 @@ FitSathi utilizes a modern, modular architecture that prioritizes data integrity
 ```mermaid
 graph TD
     UI["📱 Material 3 UI"] --> VM["⚙️ Intelligence Managers"]
-    VM --> Room["💾 SQLite Database (Room)"]
+    VM --> Room["💾 Room Database (Local)"]
+    VM --> HC["🏥 Health Connect"]
     VM --> Secure["🔐 EncryptedSharedPreferences"]
-    VM --> Cloud["☁️ Firebase Realtime DB"]
+    
+    Sync["🔄 SyncWorker"] --> Room
+    Sync --> Cloud["☁️ Firebase Realtime DB"]
     
     Service["🏃 Foreground Step Service"] --> Hardware["🔌 Device Sensors"]
     Hardware --> Service
@@ -64,6 +77,7 @@ graph TD
     style Room fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
     style Secure fill:#2196F3,stroke:#333,stroke-width:2px,color:#fff
     style Cloud fill:#ffca28,stroke:#333,stroke-width:2px
+    style HC fill:#e91e63,stroke:#333,stroke-width:2px,color:#fff
 ```
 
 ---
@@ -73,9 +87,9 @@ graph TD
 Data privacy is the foundation of FitSathi. The application implements industry-standard security protocols:
 
 - **AES-256 Encryption:** All sensitive user preferences and biometrics are stored using **Jetpack Security (EncryptedSharedPreferences)**, backed by hardware-level keystores.
-- **SQLite Persistence:** Historical logs migrated from legacy storage to **Room Database** for ACID compliance and performance.
-- **Credential Masking:** API keys are never hardcoded; they are injected via `local.properties` and `BuildConfig`.
-- **Atomic Reset:** A "Global Reset" mechanism ensures 100% data purgation upon user request, maintaining absolute privacy sovereignty.
+- **ACID Compliance:** Historical logs are managed via **Room Database** to ensure data integrity even during crashes or power loss.
+- **Background Synchronization:** **SyncWorker** handles secure, periodic synchronization between local Room storage and Firebase, ensuring your data is always backed up and consistent.
+- **Credential Masking:** API keys are injected via `local.properties` and `BuildConfig`, never exposed in the source code.
 
 ---
 
@@ -84,6 +98,7 @@ Data privacy is the foundation of FitSathi. The application implements industry-
 FitSathi supports a global user base with seamless language switching:
 - 🇺🇸 **English** (Standard)
 - 🇮🇳 **Hindi** (Regional)
+- 🇪🇸 **Spanish** (International)
 - 🇫🇷 **French** (International)
 
 ---
@@ -92,12 +107,13 @@ FitSathi supports a global user base with seamless language switching:
 
 - **Language:** Java (Modern SDK 34+)
 - **Database:** Room (SQLite)
+- **Health Integration:** Google Health Connect
 - **Security:** Jetpack Security (Crypto)
 - **Cloud:** Firebase (Auth, Realtime DB)
 - **Networking:** OkHttp, Volley
 - **UI/UX:** Material 3, MPAndroidChart, Glide, Konfetti
 - **Vision:** Google ML Kit
-- **Core:** Android Foreground Services, WorkManager, AlarmManager
+- **Core:** Android Foreground Services, WorkManager (SyncWorker), AlarmManager
 
 ---
 
@@ -107,12 +123,13 @@ FitSathi supports a global user base with seamless language switching:
 - Android Studio Hedgehog (or newer)
 - Nutritionix API Credentials
 - Firebase `google-services.json`
+- Health Connect API setup
 
 ### Setup
 1. **Clone:** `git clone https://github.com/pranavbairollu/FitSathi.git`
 2. **Configure Security:** Add `nutritionix.app.id` and `nutritionix.app.key` to `local.properties`.
 3. **Add Firebase:** Place `google-services.json` in the `app/` folder.
-4. **Deploy:** Sync Gradle and run on a physical device for full sensor support.
+4. **Deploy:** Sync Gradle and run on a physical device for full sensor and Health Connect support.
 
 ---
 
